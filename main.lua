@@ -11,6 +11,7 @@ love.filesystem.load("lib/include.lua")()
 love.filesystem.load("utils.lua")()
 love.filesystem.load("obj.base.lua")()
 love.filesystem.load("lib.game.lua")()
+love.filesystem.load("lib.mapload.lua")()
 
 gShowDebug = false
 
@@ -30,6 +31,7 @@ end
 
 function love.keyreleased( key, unicode )
 	--~ if (key == "f1") then end
+	gKeyPressed[key] = false
 end
 
 function love.keypressed( key, unicode ) 
@@ -44,8 +46,10 @@ end
 
 function love.update( dt )
 	UpdateMyTicks()
+	GameStep(dt)
 end
 
 function love.draw()
 	UpdateMyTicks()
+	GameDraw()
 end
