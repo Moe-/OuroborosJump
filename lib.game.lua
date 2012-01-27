@@ -38,7 +38,7 @@ function GameDraw ()
 	
 	local x,y = 0,kTileSize*4
 	love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
-	love.graphics.draw(gImgPlayer, 100,100)
+	love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
 	--~ Objects_Draw()
 end
 
