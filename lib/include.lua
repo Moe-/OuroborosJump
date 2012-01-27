@@ -1,7 +1,7 @@
 basedir = "lib/"
 
 love.filesystem.load(basedir .. "AnAL.lua")()
-love.filesystem.load(basedir .. "TEsound.lua")()
+--~ love.filesystem.load(basedir .. "TEsound.lua")()
 
 love.filesystem.load(basedir .. "lib.oop.lua")()
 love.filesystem.load(basedir .. "lib.vector2.lua")()
@@ -21,11 +21,11 @@ love.filesystem.load(basedir .. "lib.string.lua")()
 love.filesystem.load(basedir .. "lib.util.lua")()
 love.filesystem.load(basedir .. "lib.vardump.lua")()
 love.filesystem.load(basedir .. "lib.xml.lua")()
-love.filesystem.load(basedir .. "lib.invokelater.lua")()
+--~ love.filesystem.load(basedir .. "lib.invokelater.lua")()
 love.filesystem.load(basedir .. "lib.draw.lua")()
 
 love.filesystem.load(basedir .. "class.objectPool.lua")()
 love.filesystem.load(basedir .. "class.tiledMap.lua")()
 love.filesystem.load(basedir .. "class.timer.lua")()
 love.filesystem.load(basedir .. "class.grid.lua")()
-love.filesystem.load(basedir .. "class.aStar.lua")()
+--~ love.filesystem.load(basedir .. "class.aStar.lua")()

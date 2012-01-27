@@ -107,26 +107,3 @@ function Point2PointDistance(x1, y1, x2, y2) return VectorLength(x2 - x1,y2 - y1
 
 function rand2 (vmin,vmax) return vmin + (vmax-vmin)*math.random() end
 
-
--- a chain that applies varying force to pull 2 bodys together, 0 if distance below chainLenMinF
-function RobApplyChainForce (bodyA,bodyB, anchorAx,anchorAy, anchorBx,anchorBy, forceMin,forceMax, chainLenMinF,chainLenMaxF) 
-	local x1,y1 = bodyA:getWorldCenter( )
-	local x2,y2 = bodyB:getWorldCenter( )
-	local d = Point2PointDistance(x1, y1, x2, y2)
-	if (d >= chainLenMinF) then
-		local f = max(0,min(1, (d-chainLenMinF) / (chainLenMaxF-chainLenMinF) ))
-		if (gKeyPressed["lshift"]) then print("chainforce:",f) end
-		local m1 = bodyA:getMass()
-		local m2 = bodyB:getMass()
-		local force = forceMin + (forceMax-forceMin) * f
-		local vx,vy = VectorNormalized(x1-x2,y1-y2)
-		
-		local ax1,ay1 = bodyA:getWorldPoint(anchorAx,anchorAy)
-		local ax2,ay2 = bodyB:getWorldPoint(anchorBx,anchorBy)
-		
-		bodyA:applyForce(-force*vx,-force*vy, ax1,ay1)
-		bodyB:applyForce( force*vx, force*vy, ax2,ay2)
-	end
-end
-
-
