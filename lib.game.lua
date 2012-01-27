@@ -1,6 +1,6 @@
 
 Objects_InitLayerOrder({
-	"layer1",
+	"asdasd",
 })
 
 

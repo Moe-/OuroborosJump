@@ -1,6 +1,5 @@
 -- oruborum: the snake eating itself, endless repetition of jump+run with level becoming harder
--- todo : ballon air angle, chain connect ? destroy phys obj : payer balloon would be enough
--- todo : palmen auf inseln
+-- sizes : player 128x64 block 64x64
 
 
 -- Initialization
