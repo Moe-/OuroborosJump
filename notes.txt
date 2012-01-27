@@ -1,0 +1,4 @@
+http://www.lua.org/manual/5.1/index.html
+
+
+http://ghoulsblade.schattenkind.net/wiki/index.php/Gamecamp
