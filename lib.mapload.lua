@@ -47,7 +47,9 @@ function TiledMap_GetMapWUsed ()
 	for layerid,layer in pairs(gMapLayers) do 
 		if (type(layer) == "table") then for ty,row in pairs(layer) do
 			if (type(row) == "table") then for tx,t in pairs(row) do 
-				maxx = max(maxx,tx)
+				if (t and t ~= kMapTileTypeEmpty) then 
+					maxx = max(maxx,tx)
+				end
 			end end
 		end end
 	end
