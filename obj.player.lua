@@ -128,7 +128,20 @@ function PlayerUpdate(dt)
     --~ if (bPressed_Right) then gPlayer.x = gPlayer.x + s end
 	
 	HandleCollision(gPlayer)
+	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
+	
+	if (bIsOnGround) then 
+		local ground_tx = floor((o.x)/kTileSize)
+		local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
+		--~ CollisionDrawDebug_Add(gImgMarkTile_white,ground_tx*kTileSize,ground_ty*kTileSize)
+		if (o.ground_tx ~= ground_tx or 
+			o.ground_ty ~= ground_ty) then
+			o.ground_tx  = ground_tx
+			o.ground_ty  = ground_ty
+			GameDamageBlock(ground_tx,ground_ty)
+		end
+	end
 	
 	
 	-- jump and left-right movement
