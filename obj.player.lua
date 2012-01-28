@@ -1,5 +1,5 @@
 
-gPlayer = {x=0,y=0,vx=0,vy=0,r=64,drawx=-64,drawy=-64}
+gPlayer = {x=0,y=0,vx=0,vy=0,r=55,drawx=-64,drawy=-64}
 gPlayerGravity = 9.81 * 200
 gPlayerOnGroundStopXMult = 0.70
 gPlayerJumpVY = -800
@@ -25,8 +25,8 @@ function PlayerInit ()
 	gCamX = screen_w/2
 	gCamY = screen_h/2 + 0.5*kTileSize
 
-	gPlayerAnimationIdleRight = newAnimation(gImgPlayer, 128, 128, 0.01, 60, 1, 30)
-	gPlayerAnimationIdleLeft = newAnimation(gImgPlayer, 128, 128, 0.01, 66, 33, 62)
+	gPlayerAnimationIdleRight = newAnimation(gImgPlayer, 128, 128, 0.01, 60, 1, 32) -- num frames bei idle von 30 auf 32 10:58
+	gPlayerAnimationIdleLeft = newAnimation(gImgPlayer, 128, 128, 0.01, 66, 33, 64) 
 end
 
 function PlayerSpawnAtStart ()
@@ -48,20 +48,19 @@ function PlayerDraw ()
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
 	
   if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationIdleLeft:draw(gPlayer.x+gCamAddX, gPlayer.y+gCamAddY, 0, 1, 1, 0, 0)
+		gPlayerAnimationIdleLeft:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
 	elseif (gPlayerState == kPlayerStateIdleRight or gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationIdleRight:draw(gPlayer.x+gCamAddX, gPlayer.y+gCamAddY, 0, 1, 1, 0, 0)
+		gPlayerAnimationIdleRight:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
 	end
 	
-	local l,t,r,b = GetPlayerBBox()
+	--~ local l,t,r,b = GetPlayerBBox()
+	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
-	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	
-	local mx = 0.5*(l+r)
-	local my = 0.5*(t+b)
+	--~ local mx = 0.5*(l+r)
+	--~ local my = 0.5*(t+b)
 	
 end
 
@@ -131,11 +130,6 @@ function PlayerUpdate(dt)
 	HandleCollision(gPlayer)
 	local bIsOnGround = gPlayer.bIsOnGround
 	
-	local bottom_y = 9*kTileSize
-	if (gPlayer.y > bottom_y) then
-		gPlayer.y = bottom_y
-		if (gPlayer.vy > 0) then gPlayer.vy = 0 bIsOnGround = true end
-	end
 	
 	-- jump and left-right movement
 	if (bPressed_Up and bIsOnGround) then gPlayer.vy = gPlayerJumpVY end
@@ -156,7 +150,8 @@ function PlayerUpdate(dt)
 	-- apply velocity and gravity
 	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
 	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
-	if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
+	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
+	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
 	
 	
 	
