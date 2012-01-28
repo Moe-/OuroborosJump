@@ -14,6 +14,16 @@ gPlayerAnimationIdleLeft = nil
 gPlayerAnimationMoveRight = nil
 gPlayerAnimationMoveLeft = nil
 
+gPlayerAnimationJumpUpLeft = nil
+gPlayerAnimationJumpTurnLeft = nil
+gPlayerAnimationJumpFallLeft = nil
+gPlayerAnimationFallLeft = nil
+
+gPlayerAnimationJumpUpRight = nil
+gPlayerAnimationJumpTurnRight = nil
+gPlayerAnimationJumpFallRight = nil
+gPlayerAnimationFallRight = nil
+
 kPlayerStateMoveRight = 0
 kPlayerStateMoveLeft = 1
 kPlayerStateIdleRight = 2
