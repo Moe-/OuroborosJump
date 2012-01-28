@@ -195,7 +195,7 @@ function PlayerUpdate(dt)
 	end
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2
-	print("player: " .. gPlayer.x .. " min " .. screenMin)
+--	print("player: " .. gPlayer.x .. " min " .. screenMin)
 	if (bPressed_Left and gPlayer.x >= screenMin) and abs(gPlayer.x - screenMin) < screen_w then 
 		vxadd = vxadd + -gPlayer.vxAccelPerSecond 
 	end
