@@ -35,8 +35,9 @@ animation.__index = animation
 -- @param frames The number of frames, 0 for autodetect
 -- @param position_first The number of the first used frame, nil for autodetect
 -- @param position_last The number of the last used frame, nil for autodetect
+-- @param callback A method that is called when the animation is stopped
 -- @return The created animation
-function newAnimation(image, fw, fh, delay, frames, position_first, position_last)
+function newAnimation(image, fw, fh, delay, frames, position_first, position_last, callback)
 	local a = {}
 	a.img = image
 	a.frames = {}
@@ -48,6 +49,7 @@ function newAnimation(image, fw, fh, delay, frames, position_first, position_las
 	a.playing = true
 	a.speed = 1
 	a.mode = 1
+	a.callback = callback 
 	a.direction = 1	
 	local imgw = image:getWidth()
 	local imgh = image:getHeight()
@@ -140,7 +142,11 @@ end
 
 --- Stop the animation
 function animation:stop()
+	print("stopped animation ", self)
 	self.playing = false
+	if (self.callback) then
+		self.callback(self)
+	end
 end
 
 --- Reset
