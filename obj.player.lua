@@ -9,6 +9,7 @@ gPlayerJumpVY = -1300
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
+kDestoyBlockDelay = 0.5 -- in seconds
 
 gPlayerAnimationIdleRight = nil
 gPlayerAnimationIdleLeft = nil
@@ -173,13 +174,16 @@ function PlayerUpdate(dt)
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
 	local ground_ty = floor((o.y + o.ry + 0.1*kTileSize)/kTileSize)
-	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
+	CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
 		if (o.ground_tx ~= ground_tx or 
 			o.ground_ty ~= ground_ty) then
 			o.ground_tx  = ground_tx
 			o.ground_ty  = ground_ty
-			GameDamageBlock(ground_tx,ground_ty)
+			--~ GameDamageBlock(ground_tx,ground_ty)
+			if (IsBlockDestructible(ground_tx,ground_ty)) then 
+				InvokeLater(kDestoyBlockDelay,function () GameDamageBlock(ground_tx,ground_ty) end)
+			end
 		end
 	end
 	
