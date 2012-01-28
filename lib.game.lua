@@ -54,6 +54,9 @@ function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,
 
 function GameInit ()
 	for row=0,8 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
+	gMapIsBlockSolid[8] = nil
+	gMapIsBlockSolid[9] = nil
+	gMapIsBlockSolid[10] = nil
 	-- solid block types : 1,2,3
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
@@ -126,8 +129,13 @@ function GameDraw ()
 	
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
-    TiledMap_DrawNearCam(gCamX,gCamY)
 	
+	EnemyDraw()
+	PlayerDraw()
+	
+	
+	
+    TiledMap_DrawNearCam(gCamX,gCamY)
 	local mapw = gMapUsedW*kTileSize
 	if (gCamX < 0.5*mapw) then 
 		TiledMap_DrawNearCam(gCamX+mapw,gCamY)
@@ -136,8 +144,7 @@ function GameDraw ()
 		TiledMap_DrawNearCam(gCamX-mapw,gCamY)
 	end
 	
-	EnemyDraw()
-	PlayerDraw()
+	
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
 	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
@@ -146,6 +153,8 @@ function GameDraw ()
 	Objects_Draw()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
+	
+	
 end
 
 function GameStep (dt)
