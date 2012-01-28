@@ -121,7 +121,7 @@ function GameInit ()
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
 
-
+	gMyFont = love.graphics.newFont( 48 )
 
 	print("GameInit")
 		
@@ -231,7 +231,7 @@ function GameDraw ()
 	CollisionDebugDraw()
 	
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.setFont(48)
+	love.graphics.setFont(gMyFont)
 	love.graphics.print("Points: " .. floor(kPointsPlayer), 30, 650)
 	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
 	love.graphics.setColor(255, 0, 0)
