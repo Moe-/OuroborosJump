@@ -38,18 +38,55 @@ function PlayerDraw ()
 	--~ love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
 	
+	local l,t,r,b = GetPlayerBBox()
+	
+	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	
+	local mx = 0.5*(l+r)
+	local my = 0.5*(t+b)
+	
+	local minx,maxx,miny,maxy = GetPlayerPosLimits(true)
+	if (minx) then local x,y = minx,my love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
+	if (maxx) then local x,y = maxx,my love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
+	if (miny) then local x,y = mx,miny love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
+	if (maxy) then local x,y = mx,maxy love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
+
 end
 
+function DrawDebugBlock (tx,ty) 
+	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTileGreen or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+end
 
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () return gPlayerX,gPlayerY,gPlayerX+gPlayerW,gPlayerY+gPlayerH end
 
 -- local minx,maxx,miny,maxy = GetPlayerPosLimits()
-function GetPlayerPosLimits ()
+function GetPlayerPosLimits (bDraw)
 	local minx,maxx,miny,maxy
 	local l,t,r,b = GetPlayerBBox()
+	local mx = 0.5*(l+r)
+	local my = 0.5*(t+b)
+	local e = kTileSize
+	
 	-- vertical : 
-	--~ local tx1 = 
+	local tx0,tx1 = floor(l/e),floor(r/e)
+	local ty0,ty1 = floor(b/e-1),floor(b/e+1)
+	for tx = tx0,tx1 do 
+	for ty = ty0,ty1 do 
+		if (IsMapBlockSolid(tx,ty)) then maxy = min(maxy or ty*e,ty*e) end
+	end
+	end
+	
+
+	--~ local ty0,ty1 = floor(t/e-1),floor(t/e)
+	--~ for tx = tx0,tx1 do 
+	--~ for ty = ty0,ty1 do 
+		--~ if (IsMapBlockSolid(tx,ty)) then miny = max(miny or ty*e,ty*e) end
+	--~ end
+	--~ end
 	
 	maxy = kTileSize * 8
 	return minx,maxx,miny,maxy
