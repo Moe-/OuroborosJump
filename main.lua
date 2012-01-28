@@ -1,7 +1,6 @@
 -- oruborum: the snake eating itself, endless repetition of jump+run with level becoming harder
 -- sizes : player 128x64 block 64x64
 -- TODO : hiscore/meter
--- TODO : startscreen 
 -- TODO : game over screen 
 -- TODO : partikel 
 -- TODO : sounds / musik 
@@ -25,6 +24,9 @@ love.filesystem.load("lib.button.lua")()
 love.filesystem.load("lib.background.lua")()
 love.filesystem.load("obj.enemy.lua")()
 love.filesystem.load("obj.coin.lua")()
+love.filesystem.load("screen.menu.lua")()
+love.filesystem.load("screen.game.lua")()
+love.filesystem.load("screen.gameover.lua")()
 
 gShowDebug = false
 
@@ -52,67 +54,43 @@ function love.load()
 	print("bla1", love.joystick)
 	mapKeys()
 	UpdateMyTicks()
-	GameInit()
+		
+	cScreenMenu:LoadData()
+	cScreenGame:LoadData()
+	cScreenGameOver:LoadData()
+
+	cScreenMenu:Start()
 end
 
 	
 function love.keypressed( key, unicode ) 
 	gMyKeyPressed[key] = true
-
-	if key == "up" or key == "w" then
-		keyboard[kUp] = 1
-	end
-	if key == "down" or key == "s" then
-		keyboard[kDown] = 1
-	end
-	if key == "left" or key == "a" then
-		keyboard[kLeft] = 1
-	end
-	if key == "right" or key == "d" then
-		keyboard[kRight] = 1
-	end
-
-	if key == "f5" then CheatShowMapMetaData() end
 	if key == "escape" then os.exit() end
+	if (gCurrentScreen and gCurrentScreen.keypressed) then gCurrentScreen:keypressed( key, unicode )  end
 end
 
 function love.keyreleased( key, unicode )
 	gMyKeyPressed[key] = false
-	if key == "up" or key == "w" then
-		keyboard[kUp] = 0
-	end
-	if key == "down" or key == "s" then
-		keyboard[kDown] = 0
-	end
-	if key == "left" or key == "a" then
-		keyboard[kLeft] = 0
-	end
-	if key == "right" or key == "d" then
-		keyboard[kRight] = 0
-	end
+	if (gCurrentScreen and gCurrentScreen.keyreleased) then gCurrentScreen:keyreleased( key, unicode )  end
 end
 
 function love.mousepressed( x, y, button )
-	DebugMouseClick(x,y,button)
-	if button == "r" then gPlayer.x = x - gCamAddX  gPlayer.y = y - gCamAddY end
+	if (gCurrentScreen and gCurrentScreen.mousepressed) then gCurrentScreen:mousepressed( x, y, button )  end
 end
 
 function love.mousereleased( x, y, button )
+	if (gCurrentScreen and gCurrentScreen.mousereleased) then gCurrentScreen:mousereleased( x, y, button )  end
 end
 
 function love.update( dt )
 	UpdateMyTicks()
-	GameStep(dt)
+	if (gCurrentScreen and gCurrentScreen.update) then gCurrentScreen:update(dt)  end
 	StepStepper(gMyTicks/1000)
 end
 
 function love.draw()
 	UpdateMyTicks()
-	GameDraw()
-
-	if (button.drawAndCheckIfClicked(10, 10, "data/button/button_text_help.png")) then
-		print("click help")
-	end
+	if (gCurrentScreen and gCurrentScreen.draw) then gCurrentScreen:draw()  end
 end
 
 function mapKeys()
@@ -152,10 +130,12 @@ function mapKeys()
 end
 
 function love.joystickpressed( joystick, button )
+	if (gCurrentScreen and gCurrentScreen.joystickpressed) then gCurrentScreen:joystickpressed(joystick, button )  end
 	joystickbuttons[button] = 1
 end
 
 function love.joystickreleased( joystick, button )
+	if (gCurrentScreen and gCurrentScreen.joystickreleased) then gCurrentScreen:joystickreleased(joystick, button )  end
 	joystickbuttons[button] = 0
 end
 

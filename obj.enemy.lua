@@ -31,6 +31,10 @@ gEnemiesListType1 = { }
 gEnemiesListType2 = { }
 gEnemiesListType3 = { }
 gEnemiesListType4 = { }
+gEnemiesKillParticleSystems = { }
+gEnemiesKillParticlePosition = { }
+gEnemiesKillParticleSystemTimeLeft = { }
+gEnemiesPSCur = 1
 
 kWalkSpeed = 1.0
 kWalkSpeedDiag = 0,707 * kWalkSpeed
@@ -70,8 +74,17 @@ function loadEnemies()
 end
 
 function EnemiesSpawnAtStart()
+	gEnemiesListType1 = { }
+	gEnemiesListType2 = { }
+	gEnemiesListType3 = { }
+	gEnemiesListType4 = { }
+	gEnemiesType1 = { }
+	gEnemiesType2 = { }
+	gEnemiesType3 = { }
+	gEnemiesType4 = { }
 	loadEnemies()
 	EnemiesRespawn(0)
+	createEnemyParticleSystems()
 end
 
 function EnemiesRespawn(runCount)
@@ -149,6 +162,13 @@ function EnemyUpdate(dt)
 
 	for k, v in pairs(gEnemyDyingAnimations) do
 		k:update(dt)
+	end
+	for psId = 1, 5 do
+		if(gEnemiesKillParticleSystemTimeLeft[psId] > 0) then
+			gEnemiesKillParticleSystems[psId]:start()
+			gEnemiesKillParticleSystems[psId]:update(dt)
+			gEnemiesKillParticleSystemTimeLeft[psId] = gEnemiesKillParticleSystemTimeLeft[psId] - dt
+		end
 	end
 end
 
@@ -246,6 +266,12 @@ function EnemyDraw()
 			gEnemy4Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 		end
 	end
+
+	for psId = 1, 5 do
+		if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
+			love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + gCamAddX, gEnemiesKillParticlePosition[psId].y + gCamAddY)
+		end
+	end
 end
 
 function CheckEnemyCollision(player)
@@ -286,6 +312,14 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					enemyDyingAnimation.enemyNumber = i
 					gEnemyDyingAnimations[enemyDyingAnimation] = true
 					gJumpEnemyKill = true
+					gEnemiesKillParticleSystems[gEnemiesPSCur]:reset()
+					gEnemiesKillParticlePosition[gEnemiesPSCur].x = v.x + kTileSize / 2
+					gEnemiesKillParticlePosition[gEnemiesPSCur].y = v.y + kTileSize / 2
+					gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
+					gEnemiesPSCur = gEnemiesPSCur + 1
+					if gEnemiesPSCur == 6 then
+						gEnemiesPSCur = 1
+					end
 				else
 					died = true	
 				end
@@ -293,4 +327,39 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 		end
 	end
 	return died;
+end
+
+function createEnemyParticleSystems()
+	for psId = 1, 5 do
+		id = love.image.newImageData(32, 32)
+		for x = 0, 31 do
+			for y = 0, 31 do
+				local gradient = 1 - ((x-15)^2+(y-15)^2)/40
+				id:setPixel(x, y, 255, 255, 255, 255*(gradient<0 and 0 or gradient))
+			end
+		end
+	  
+		i = love.graphics.newImage(id)
+		p = love.graphics.newParticleSystem(i, 256)
+		p:setEmissionRate          (75 )
+		p:setLifetime              (0.5)
+		p:setParticleLife          (0.5, 0.75)
+		p:setPosition              (0, 0)
+		p:setDirection             (0)
+		p:setSpread                (3.14)
+		p:setSpeed                 (10, 30)
+		p:setGravity               (30)
+		p:setRadialAcceleration    (10)
+		p:setTangentialAcceleration(0)
+		p:setSize                  (1)
+		p:setSizeVariation         (0.5)
+		p:setRotation              (0)
+		p:setSpin                  (0)
+		p:setSpinVariation         (0)
+		p:setColor                 (255, 50, 50, 240, 128, 256, 50, 10)
+		p:stop();
+		gEnemiesKillParticleSystems[psId] = p
+		gEnemiesKillParticlePosition[psId] = { x = -500, y = -500 }
+		gEnemiesKillParticleSystemTimeLeft[psId] = 0
+	end
 end

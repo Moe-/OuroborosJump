@@ -1,6 +1,4 @@
 
-gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
-gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
@@ -9,10 +7,10 @@ gPlayerJumpVY = -1300
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
 
-gPlayer.vxMax = 400
-gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
 kDestoyBlockDelay = 0.5 -- in seconds
+
+kGameOverDelayAfterDeath = 3 -- in seconds
 
 gPlayerAnimationIdleRight = nil
 gPlayerAnimationIdleLeft = nil
@@ -54,12 +52,23 @@ kPlayerStateDied = 16
 
 gPlayerState = kPlayerStateIdleRight
 
+gPlayerKillParticleSystems = { }
+gPlayerKillParticlePosition = { }
+gPlayerKillParticleSystemTimeLeft = { }
+gPlayerPSCur = 1
+
 kPlayerNumberAnimations = 8*32
 function PlayerCheatStep ()
 	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
 end
 
 function PlayerInit ()
+
+	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
+	gPlayer.bJumpRecharged = false
+	gPlayer.vxMax = 400
+	gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
+
 	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
 	
 	local screen_w = love.graphics.getWidth()
@@ -72,6 +81,7 @@ function PlayerInit ()
 		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1)
 		animationStartIndex = animationStartIndex + kPlayerAnimationFrameNumbers[k]
 	end
+	createPlayerParticleSystems()
 end
 
 function PlayerSpawnAtStart ()
@@ -107,7 +117,11 @@ function PlayerDraw ()
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)
-	
+	for psId = 1, 12 do
+		if gPlayerKillParticleSystemTimeLeft[psId] > 0 then
+			love.graphics.draw(gPlayerKillParticleSystems[psId], gPlayerKillParticlePosition[psId].x + gCamAddX, gPlayerKillParticlePosition[psId].y + gCamAddY)
+		end
+	end
 end
 
 function DrawDebugBlock (img,tx,ty) 
@@ -117,6 +131,13 @@ end
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
+function isWater(tileid)
+	for i = 4, 11 do if tileid == 6 + 8*i then return true end end
+	for i = 5, 11 do if tileid == 5 + 8*i then return true end end
+	if tileid == 88 or tileid == 89 or tileid == 90 then return true end
+	return false
+end
+
 function CheckPlayerTouchesDeadlyBlock ()
 	local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
 	local e = kTileSize
@@ -124,7 +145,24 @@ function CheckPlayerTouchesDeadlyBlock ()
 	local ty0,ty1 = floor((y-ry)/e),floor((y+ry)/e)
 	for tx = tx0,tx1 do
 	for ty = ty0,ty1 do
-		if (IsTileDeadly(tx,ty)) then print("player touch deadly tile",tx,ty) return true end
+		if (IsTileDeadly(tx,ty)) then
+			print("player touch deadly tile",tx,ty) 
+			tileid = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
+			if (isWater(tileid) == true) then
+				print("water")
+				gPlayerKillParticleSystems[12]:reset()
+				gPlayerKillParticlePosition[12].x = x
+				gPlayerKillParticlePosition[12].y = y + kTileSize / 2
+				gPlayerKillParticleSystemTimeLeft[12] = 15.0
+			else
+				print("floor")
+				gPlayerKillParticleSystems[11]:reset()
+				gPlayerKillParticlePosition[11].x = x
+				gPlayerKillParticlePosition[11].y = y + kTileSize / 2
+				gPlayerKillParticleSystemTimeLeft[11] = 15.0
+			end
+			return true 
+		end
 	end
 	end
 end
@@ -214,6 +252,14 @@ function PlayerUpdate(dt)
 			o.ground_ty  = ground_ty
 			--~ GameDamageBlock(ground_tx,ground_ty)
 			if (IsBlockDestructible(ground_tx,ground_ty)) then 
+				gPlayerKillParticleSystems[gPlayerPSCur]:reset()
+				gPlayerKillParticlePosition[gPlayerPSCur].x = o.x + kTileSize / 2
+				gPlayerKillParticlePosition[gPlayerPSCur].y = o.y + kTileSize
+				gPlayerKillParticleSystemTimeLeft[gPlayerPSCur] = 1.0
+				gPlayerPSCur = gPlayerPSCur + 1
+				if gPlayerPSCur == 11 then
+					gPlayerPSCur = 1
+				end
 				InvokeLater(kDestoyBlockDelay,function () GameDamageBlock(ground_tx,ground_ty) end)
 			end
 		end
@@ -275,6 +321,7 @@ function PlayerUpdate(dt)
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
 			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
+			InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 		end
 	end
 
@@ -298,5 +345,101 @@ function PlayerUpdate(dt)
 	gPlayerAnimations[gPlayerState]:update(dt)
 	
 	CheckCoinCollision(gPlayer.x, gPlayer.y)
+
+	for psId = 1, 12 do
+		if(gPlayerKillParticleSystemTimeLeft[psId] > 0) then
+			gPlayerKillParticleSystems[psId]:start()
+			gPlayerKillParticleSystems[psId]:update(dt)
+			gPlayerKillParticleSystemTimeLeft[psId] = gPlayerKillParticleSystemTimeLeft[psId] - dt
+		end
+	end
 end
-	
+
+function createPlayerParticleSystems()
+	for psId = 1, 10 do
+		id = love.image.newImageData(32, 32)
+		for x = 0, 31 do
+			for y = 0, 31 do
+				local gradient = 1 - ((x-15)^2+(y-15)^2)/40
+				id:setPixel(x, y, 255, 255, 255, 255*(gradient<0 and 0 or gradient))
+			end
+		end
+	  
+		i = love.graphics.newImage(id)
+		p = love.graphics.newParticleSystem(i, 256)
+		p:setEmissionRate          (45 )
+		p:setLifetime              (0.5)
+		p:setParticleLife          (0.5, 0.75)
+		p:setPosition              (0, 0)
+		p:setDirection             (0)
+		p:setSpread                (2.09)
+		p:setSpeed                 (20, 45)
+		p:setGravity               (30)
+		p:setRadialAcceleration    (10)
+		p:setTangentialAcceleration(0)
+		p:setSize                  (1)
+		p:setSizeVariation         (0.5)
+		p:setRotation              (0)
+		p:setSpin                  (0)
+		p:setSpinVariation         (0)
+		p:setColor                 (179, 56, 0, 240, 140, 48, 0, 10)
+		p:stop();
+		gPlayerKillParticleSystems[psId] = p
+		gPlayerKillParticlePosition[psId] = { x = -500, y = -500 }
+		gPlayerKillParticleSystemTimeLeft[psId] = 0
+	end
+
+	id = love.image.newImageData(32, 32)
+	for x = 0, 31 do
+		for y = 0, 31 do
+			local gradient = 1 - ((x-15)^2+(y-15)^2)/40
+			id:setPixel(x, y, 255, 255, 255, 255*(gradient<0 and 0 or gradient))
+		end
+	end
+  
+	i = love.graphics.newImage(id)
+	p = love.graphics.newParticleSystem(i, 256)
+	p:setEmissionRate          (75 )
+	p:setLifetime              (15)
+	p:setParticleLife          (1.5, 3.75)
+	p:setPosition              (0, 0)
+	p:setDirection             (3)
+	p:setSpread                (6.28)
+	p:setSpeed                 (20, 50)
+	p:setGravity               (30)
+	p:setRadialAcceleration    (20)
+	p:setTangentialAcceleration(10)
+	p:setSize                  (2)
+	p:setSizeVariation         (1.5)
+	p:setRotation              (0)
+	p:setSpin                  (1)
+	p:setSpinVariation         (3)
+	p:setColor                 (255, 0, 0, 255, 192, 16, 0, 10)
+	p:stop();
+	gPlayerKillParticleSystems[11] = p
+	gPlayerKillParticlePosition[11] = { x = -500, y = -500 }
+	gPlayerKillParticleSystemTimeLeft[11] = 0
+
+	i = love.graphics.newImage(id)
+	p = love.graphics.newParticleSystem(i, 256)
+	p:setEmissionRate          (75 )
+	p:setLifetime              (15)
+	p:setParticleLife          (1.5, 3.75)
+	p:setPosition              (0, 0)
+	p:setDirection             (3)
+	p:setSpread                (6.28)
+	p:setSpeed                 (20, 50)
+	p:setGravity               (30)
+	p:setRadialAcceleration    (20)
+	p:setTangentialAcceleration(10)
+	p:setSize                  (2)
+	p:setSizeVariation         (1.5)
+	p:setRotation              (0)
+	p:setSpin                  (1)
+	p:setSpinVariation         (3)
+	p:setColor                 (192, 192, 255, 255, 128, 128, 192, 10)
+	p:stop();
+	gPlayerKillParticleSystems[12] = p
+	gPlayerKillParticlePosition[12] = { x = -500, y = -500 }
+	gPlayerKillParticleSystemTimeLeft[12] = 0
+end
