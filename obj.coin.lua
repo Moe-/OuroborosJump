@@ -1,3 +1,5 @@
+kPlayerCoinCollectRadius = 40
+
 
 gCoinAnimation = nil
 gCoins = {}
@@ -29,10 +31,12 @@ function CheckCoinCollision(posX, posY)
 		local coinMidX = k.x + kTileSize / 2
 		local coinMidY = k.y + kTileSize / 2
 		
+		
+		
 		local posXPow = math.pow(posX-coinMidX,2)
 		local posYPow = math.pow(posY-coinMidY,2)
 		local	distance = math.sqrt(posXPow + posYPow)
-		if (distance < (kTileSize / 2)) then
+		if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then
 			gCoins[k] = false
 		end
 	end
