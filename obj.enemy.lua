@@ -4,6 +4,25 @@ gEnemiesType2 = { }
 gEnemiesType3 = { }
 gEnemiesType4 = { }
 
+kEnemyMove = 1
+kEnemyDie = 2
+
+kEnemyAnimationFrameNumbers = {32}
+kEnemyAnimationDelay = {0.08}
+
+-- maximum number of frames for each enemy type
+kEnemy1NumberAnimations = {32}
+kEnemy2NumberAnimations = {32}
+kEnemy3NumberAnimations = {32}
+kEnemy4NumberAnimations = {32}
+
+gEnemy1Animations = {}
+gEnemy2Animations = {}
+gEnemy3Animations = {}
+gEnemy4Animations = {}
+
+gEnemyState = kEnemyMove
+
 kWalkSpeed = 1.0
 kWalkSpeedDiag = 0,707 * kWalkSpeed
 
@@ -60,10 +79,35 @@ function EnemiesSpawnAtStart()
 end
 
 function EnemyInit()
-	gImgEnemy1		= getCachedPaddedImage("data/enemy.png")
-	gImgEnemy2		= getCachedPaddedImage("data/enemy.png")
-	gImgEnemy3		= getCachedPaddedImage("data/enemy.png")
-	gImgEnemy4		= getCachedPaddedImage("data/enemy.png")
+	gImgEnemy1		= getCachedPaddedImage("data/enemy_floater.png")
+	gImgEnemy2		= getCachedPaddedImage("data/enemy_floater.png")
+	gImgEnemy3		= getCachedPaddedImage("data/enemy_floater.png")
+	gImgEnemy4		= getCachedPaddedImage("data/enemy_floater.png")
+	
+	local animationStartIndex = 1
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy1Animations[k] = newAnimation(gImgEnemy1, 64, 64, kEnemyAnimationDelay[k], kEnemy1NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
+		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+	end
+
+  animationStartIndex = 1
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy2Animations[k] = newAnimation(gImgEnemy2, 64, 64,kEnemyAnimationDelay[k], kEnemy2NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
+		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+	end
+
+	animationStartIndex = 1
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy3Animations[k] = newAnimation(gImgEnemy3, 64, 64, kEnemyAnimationDelay[k], kEnemy3NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
+		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+	end
+
+	animationStartIndex = 1
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy4Animations[k] = newAnimation(gImgEnemy4, 64, 64, kEnemyAnimationDelay[k], kEnemy4NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
+		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+	end
+	
 end
 
 function EnemyUpdate(dt)
@@ -71,6 +115,19 @@ function EnemyUpdate(dt)
 	EnemyGroupUpdate(dt, gEnemiesType2)
 	EnemyGroupUpdate(dt, gEnemiesType3)
 	EnemyGroupUpdate(dt, gEnemiesType4)
+
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy1Animations[k]:update(dt)
+	end
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy2Animations[k]:update(dt)
+	end
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy3Animations[k]:update(dt)
+	end
+	for k, v in pairs(kEnemyAnimationFrameNumbers) do
+		gEnemy4Animations[k]:update(dt)
+	end
 end
 
 function EnemyGroupUpdate(dt, group)
@@ -131,20 +188,21 @@ end
 
 function EnemyDraw()
 	for i,v in pairs(gEnemiesType1) do
-		love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
+		gEnemy1Animations[gEnemyState]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		--love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
 --		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
 --		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
 		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
 
 	end
 	for i,v in pairs(gEnemiesType2) do
-		love.graphics.draw(gImgEnemy2, v.x+gCamAddX, v.y+gCamAddY )
+		gEnemy2Animations[gEnemyState]:draw(v.x+gCamAddX, v.y+gCamAddY)
 	end
 	for i,v in pairs(gEnemiesType3) do
-		love.graphics.draw(gImgEnemy3, v.x+gCamAddX, v.y+gCamAddY )
+		gEnemy3Animations[gEnemyState]:draw(v.x+gCamAddX, v.y+gCamAddY)
 	end
 	for i,v in pairs(gEnemiesType4) do
-		love.graphics.draw(gImgEnemy4, v.x+gCamAddX, v.y+gCamAddY )
+		gEnemy4Animations[gEnemyState]:draw(v.x+gCamAddX, v.y+gCamAddY)
 	end
 end
 
