@@ -21,7 +21,7 @@ min = math.min
 gCamAddX = 0
 gCamAddY = 0
 gMinCamX = 0
-
+gRunCount = 0
 
 kTileType_DBlock_1 = 8
 kTileType_DBlock_2 = 16
@@ -262,6 +262,10 @@ function GameStep (dt)
 	
 	local mapw = gMapUsedW*kTileSize
 	if (gPlayer.x > mapw) then 
+		if gMinCamX > 0 then
+			gRunCount = gRunCount + 1
+			EnemiesRespawn(gRunCount)
+		end	
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
 		gMinCamX = gCamX
