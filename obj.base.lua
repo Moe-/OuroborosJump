@@ -31,6 +31,7 @@ function Objects_Draw ()
 		end
 	end
 end
+
 function Objects_Step (dt)
 	assert(dt)
 	for layer,arr in pairs(gGameObjects) do for o,v in pairs(arr) do o:Step(dt) end end

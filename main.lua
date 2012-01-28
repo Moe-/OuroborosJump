@@ -92,11 +92,11 @@ end
 function mapKeys()
 	home = os.getenv("HOME")
 	if(home == nil) then
-		os = "windows"
+		usedOS = "windows"
 	elseif(string.find(home, "/Users/") ~= nil) then
-		os = "mac"
+		usedOS = "mac"
 	else
-		os = "linux"
+		usedOS = "linux"
 	end
 
 	kLeft = 1
@@ -104,7 +104,7 @@ function mapKeys()
 	kUp = 3
 	kDown = 4	
 
-	if(os == "mac") then
+	if(usedOS == "mac") then
 		kA = 11
 		kB = 12
 		kX = 13

@@ -58,10 +58,30 @@ end
 function PlayerUpdate(dt)
     local s = 500*dt
 	
-	local bPressed_Left		= gKeyPressed.left
-	local bPressed_Right	= gKeyPressed.right
-	local bPressed_Up		= gKeyPressed.up
-	local bPressed_Down		= gKeyPressed.down
+	local bPressed_Left	= 0
+	local bPressed_Right	= 0
+	local bPressed_Up		= 0
+	local bPressed_Down	= 0
+	if keyboard[kUp] == 1 or joystickaxes[kUp] == 1 then
+		bPressed_Up = true
+	else
+		bPressed_Up = false
+	end
+	if keyboard[kDown] == 1 or joystickaxes[kDown] == 1 then
+		bPressed_Down = true
+	else
+		bPressed_Down = false
+	end
+	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
+		bPressed_Left = true
+	else
+		bPressed_Left = false
+	end
+	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
+		bPressed_Right = true
+	else
+		bPressed_Right = false
+	end
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end
     --~ if (bPressed_Down) then gCamY = gCamY + s end
