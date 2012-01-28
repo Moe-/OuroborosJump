@@ -60,28 +60,27 @@ end
 
 function EnemyUpdate(dt)
 	for i,v in pairs(gEnemiesType1) do
-		tiletype = TiledMap_GetMapTile(v.x,v.y,kMapLayer_Meta)
-		print("tiletype " .. tiletype)
+		tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + sign(v.x)),floor(v.y/kTileSize + sign(v.y)),kMapLayer_AI)
 		if(tiletype == 23) then --up
-			v.y = -kWalkSpeed * v.y * v.walkDir * kTileSize * dt
+			v.y = v.y - kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 31) then --right
-			v.x = kWalkSpeed * v.x * v.walkDir * kTileSize * dt
+			v.x = v.x + kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 39) then --down
-			v.y = kWalkSpeed * v.y * v.walkDir * kTileSize * dt
+			v.y = v.y + kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 47) then --left
-			v.x = -kWalkSpeed * v.x * v.walkDir * kTileSize * dt
+			v.x = v.x - kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 55) then --upright
-			v.x = kWalkSpeedDiag * v.x * v.walkDir * kTileSize * dt
-			v.y = -kWalkSpeedDiag * v.y * v.walkDir * kTileSize * dt
+			v.x = v.x + kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			v.y =  v.y - kWalkSpeedDiag * v.walkDir * kTileSize * dt
 		elseif(tiletype == 63) then --downleft
-			v.x = -kWalkSpeedDiag * v.x * v.walkDir * kTileSize * dt
-			v.y = kWalkSpeedDiag * v.y * v.walkDir * kTileSize * dt
+			v.x = v.x - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			v.y = v.y + kWalkSpeedDiag * v.walkDir * kTileSize * dt
 		elseif(tiletype == 71) then --upleft
-			v.x = -kWalkSpeedDiag * v.x * v.walkDir * kTileSize * dt
-			v.y = -kWalkSpeedDiag * v.y * v.walkDir * kTileSize * dt
+			v.x = v.x - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			v.y = v.y - kWalkSpeedDiag * v.walkDir * kTileSize * dt
 		elseif(tiletype == 79) then --downleft
-			v.x = -kWalkSpeedDiag * v.x * v.walkDir * kTileSize * dt
-			v.y = kWalkSpeedDiag * v.y * v.walkDir * kTileSize * dt
+			v.x = v.x - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			v.y = v.y + kWalkSpeedDiag * v.walkDir * kTileSize * dt
 		elseif(tiletype == 87) then --normal mode
 			v.walkDir = 1;
 		elseif(tiletype == 95) then --invert mode
