@@ -40,6 +40,7 @@ function CheckCoinCollision(posX, posY)
 			if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then
 				gCoins[k] = false
 				gCoinsCollected = gCoinsCollected + 1
+				kPointsPlayer = kPointsPlayer + 10000
 			end
 		end
 	end

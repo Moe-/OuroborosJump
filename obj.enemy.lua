@@ -320,6 +320,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					if gEnemiesPSCur == 6 then
 						gEnemiesPSCur = 1
 					end
+					kPointsPlayer = kPointsPlayer + 7500
 				else
 					died = true	
 				end
