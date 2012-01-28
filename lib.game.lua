@@ -34,8 +34,6 @@ end
 
 
 
-gPlayerX = 0
-gPlayerY = 0
 
 function GameInit ()
 
@@ -44,21 +42,19 @@ function GameInit ()
 	local screen_h = love.graphics.getHeight()
 	gCamX,gCamY = screen_w/2,screen_h/2
 	
-	gImgPlayer		= getCachedPaddedImage("data/player.png")
 	gImgMarkTile	= getCachedPaddedImage("data/mark-tile.png")
 	gImgDot			= getCachedPaddedImage("data/dot.png")
 
-	TiledMap_Load("data/level01.tmx",nil,nil,gMapGfxPrefix)
+	gMapPath = "data/level01.tmx"
+	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
 	
 	for k,v in pairs(gMapLayers) do print("maplayer",type(k),k) end
 	
-	local startpos = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Start)
-	local o = startpos[1]
-	print("startpos",o and o.x,o and o.y)
-	gPlayerX = 0
-	gPlayerY = 0
-	if (o) then gPlayerX = o.x * kTileSize  gPlayerY = o.y * kTileSize - kTileSize end
+	PlayerInit()
+	PlayerSpawnAtStart()
+	
 end
+
 
 function UpdateMousePos ()
 	gMouseX = love.mouse.getX()
@@ -97,10 +93,7 @@ function GameDraw ()
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
     TiledMap_DrawNearCam(gCamX,gCamY)
 	
-	local x,y = 0,kTileSize*4
-	love.graphics.draw(gImgPlayer, gPlayerX+gCamAddX, gPlayerY+gCamAddY )
-	--~ love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
-	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
+	PlayerDraw()
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
 	love.graphics.draw(gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
@@ -110,12 +103,7 @@ function GameDraw ()
 end
 
 function GameStep (dt)
-    local s = 500*dt
-    if (gKeyPressed.up) then gCamY = gCamY - s end
-    if (gKeyPressed.down) then gCamY = gCamY + s end
-    if (gKeyPressed.left) then gCamX = gCamX - s end
-    if (gKeyPressed.right) then gCamX = gCamX + s end
-	
+	PlayerUpdate(dt)
 	Objects_Step(dt)
 end
 

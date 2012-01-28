@@ -10,6 +10,7 @@ love.filesystem.load("lib/include.lua")()
 
 love.filesystem.load("utils.lua")()
 love.filesystem.load("obj.base.lua")()
+love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
 love.filesystem.load("lib.mapload.lua")()
 
