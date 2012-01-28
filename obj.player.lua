@@ -1,8 +1,10 @@
 
 gPlayer = {x=0,y=0,vx=0,vy=0,r=55,drawx=-64,drawy=-64}
-gPlayerGravity = 9.81 * 200
 gPlayerOnGroundStopXMult = 0.70
-gPlayerJumpVY = -800
+
+gPlayerGravity = 9.81 * 300
+gPlayerJumpVY = -1200
+
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
@@ -176,5 +178,6 @@ function PlayerUpdate(dt)
 	local fi = 1-f
 	
 	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayer.x + 0.2*screen_w))
+	gCamY = max(screen_h/2,fi * gCamY + f * (gPlayer.y + 0.0*screen_h))
 end
 	

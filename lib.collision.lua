@@ -28,11 +28,11 @@ function HandleCollision (o)
 	
 	HandleCollision2(o)
 	
-	local bottom_y = 11*kTileSize
-	if (o.y > bottom_y) then
-		o.y = bottom_y
-		if (o.vy > 0) then o.vy = 0 o.bIsOnGround = true end
-	end
+	--~ local bottom_y = 11*kTileSize
+	--~ if (o.y > bottom_y) then
+		--~ o.y = bottom_y
+		--~ if (o.vy > 0) then o.vy = 0 o.bIsOnGround = true end
+	--~ end
 end
 
 function HandleCollision2 (o)
