@@ -14,6 +14,7 @@ love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
 love.filesystem.load("lib.mapload.lua")()
 love.filesystem.load("lib.collision.lua")()
+love.filesystem.load("lib.button.lua")()
 love.filesystem.load("obj.enemy.lua")()
 
 gShowDebug = false
@@ -87,6 +88,10 @@ end
 function love.draw()
 	UpdateMyTicks()
 	GameDraw()
+
+	if (button.drawAndCheckIfClicked(10, 10, "data/button/button_text_help.png")) then
+		print("click help")
+	end
 end
 
 function mapKeys()
