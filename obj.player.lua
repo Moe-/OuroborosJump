@@ -46,8 +46,13 @@ function GetPlayerBBox () return gPlayerX,gPlayerY,gPlayerX+gPlayerW,gPlayerY+gP
 
 -- local minx,maxx,miny,maxy = GetPlayerPosLimits()
 function GetPlayerPosLimits ()
+	local minx,maxx,miny,maxy
+	local l,t,r,b = GetPlayerBBox()
+	-- vertical : 
+	--~ local tx1 = 
 	
-
+	maxy = kTileSize * 8
+	return minx,maxx,miny,maxy
 end
 
 function PlayerUpdate(dt)
@@ -75,7 +80,6 @@ function PlayerUpdate(dt)
 	
 	
 	local minx,maxx,miny,maxy = GetPlayerPosLimits()
-	maxy = kTileSize * 8
 
 	if (maxy) then 
 		if (gPlayerY >= maxy) then
