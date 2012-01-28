@@ -16,8 +16,6 @@ love.filesystem.load("lib.mapload.lua")()
 
 gShowDebug = false
 
-gKeyPressed = {}
-
 gCamX, gCamY = 0,0
 gGameState = 0
 timePassed = 0
