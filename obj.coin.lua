@@ -31,7 +31,7 @@ end
 
 function CheckCoinCollision(posX, posY)
 	for k, v in pairs(gCoins) do
-		if (gCoins[k]) == true) then
+		if (gCoins[k] == true) then
 			local coinMidX = k.x + kTileSize / 2
 			local coinMidY = k.y + kTileSize / 2
 			local posXPow = math.pow(posX-coinMidX,2)
