@@ -90,11 +90,45 @@ function GameDraw ()
 end
 
 function GameStep (dt)
-    local s = 500*dt
-    if (gKeyPressed.up) then gCamY = gCamY - s end
-    if (gKeyPressed.down) then gCamY = gCamY + s end
-    if (gKeyPressed.left) then gCamX = gCamX - s end
-    if (gKeyPressed.right) then gCamX = gCamX + s end
+  local s = 500*dt
+	joystick0 = 0
+	if(love.joystick.getNumJoysticks( ) > 0) then
+		-- leftRightAxis -1 left +1 right
+		-- up -1 down 1
+		leftRightAxis, upDownAxis = love.joystick.getAxes( joystick0 )
+		if (upDownAxis > joysticksensitivity) then
+			joystickaxes[kDown] = 1
+			joystickaxes[kUp] = 0
+		elseif (upDownAxis < -joysticksensitivity) then
+			joystickaxes[kDown] = 0
+			joystickaxes[kUp] = 1
+		else 
+			joystickaxes[kDown] = 0
+			joystickaxes[kUp] = 0
+		end
+		if (leftRightAxis > joysticksensitivity) then
+			joystickaxes[kRight] = 1
+			joystickaxes[kLeft] = 0
+		elseif (leftRightAxis < -joysticksensitivity) then
+			joystickaxes[kRight] = 0
+			joystickaxes[kLeft] = 1
+		else 
+			joystickaxes[kRight] = 0
+			joystickaxes[kLeft] = 0
+		end	
+	end
+	if keyboard[kUp] == 1 or joystickaxes[kUp] == 1 then
+		gCamY = gCamY - s
+	end
+	if keyboard[kDown] == 1 or joystickaxes[kDown] == 1 then
+		gCamY = gCamY + s
+	end
+	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
+		gCamX = gCamX - s
+	end
+	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
+		gCamX = gCamX + s
+	end
 	
 	--~ Objects_Step(dt)
 end
@@ -102,3 +136,4 @@ end
 function GameCleanUp ()
 	-- after delete 
 end
+
