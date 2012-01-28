@@ -159,8 +159,8 @@ end
 function CheckEnemyGroupCollision(player, group)
 	local died = false
 	for i,v in pairs(group) do
-		if v.x <= player.x and v.x + kTileSize > player.x and v.y <= player.y and v.y + kTileSize > player.y then
-			if v.y + kTileSize/4 >= player.y and player.vy > 0 then
+		if v.x - kTileSize/2 <= player.x and v.x + kTileSize > player.x and v.y <= player.y and v.y + kTileSize > player.y then
+			if v.y + kTileSize/2 >= player.y and player.vy > 0 then
 				table.remove(group, i)
 				gJumpEnemyKill = true
 			else
