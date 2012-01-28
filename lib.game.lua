@@ -51,9 +51,6 @@ function GameInit ()
 
 
 	print("GameInit")
-	local screen_w = love.graphics.getWidth()
-	local screen_h = love.graphics.getHeight()
-	gCamX,gCamY = screen_w/2,screen_h/2
 		
 	gImgMarkTile		= getCachedPaddedImage("data/mark-tile.png")
 	gImgMarkTileGreen	= getCachedPaddedImage("data/mark-tile-green.png")

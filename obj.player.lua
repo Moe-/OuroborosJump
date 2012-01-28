@@ -5,13 +5,21 @@ gPlayerVX = 0
 gPlayerVY = 0
 gPlayerGravity = 9.81 * 200
 gPlayerOnGroundStopXMult = 0.90
-gPlayerJumpVY = -600
+gPlayerJumpVY = -800
 gPlayerVXMax = 400
 gPlayerVXAccelPerSecond = gPlayerVXMax * 200
 
+gPlayerW = 128
+gPlayerH = 128
 
 function PlayerInit ()
-	gImgPlayer		= getCachedPaddedImage("data/player.png")
+	gImgPlayer		= getCachedPaddedImage("data/player2.png")
+	
+	local screen_w = love.graphics.getWidth()
+	local screen_h = love.graphics.getHeight()
+	gCamX = screen_w/2
+	gCamY = screen_h/2 + 0.5*kTileSize
+	
 end
 
 function PlayerSpawnAtStart ()
@@ -29,8 +37,18 @@ function PlayerDraw ()
 	love.graphics.draw(gImgPlayer, gPlayerX+gCamAddX, gPlayerY+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
+	
 end
 
+
+-- local l,t,r,b = GetPlayerBBox()
+function GetPlayerBBox () return gPlayerX,gPlayerY,gPlayerX+gPlayerW,gPlayerY+gPlayerH end
+
+-- local minx,maxx,miny,maxy = GetPlayerPosLimits()
+function GetPlayerPosLimits ()
+	
+
+end
 
 function PlayerUpdate(dt)
     local s = 500*dt
@@ -52,15 +70,14 @@ function PlayerUpdate(dt)
 	
 	
 	
-    --~ if (bPressed_Up) then gPlayerY = gPlayerY - s end
-    --~ if (bPressed_Down) then gPlayerY = gPlayerY + s end
-    --~ if (bPressed_Left) then gPlayerX = gPlayerX - s end
-    --~ if (bPressed_Right) then gPlayerX = gPlayerX + s end
-	
 	
 	local bOnGround = false
-	if (gPlayerY >= 8*kTileSize) then
-		gPlayerY = 8*kTileSize 
+	
+	local ground_ty = 8
+	--~ local 
+	
+	if (gPlayerY >= ground_ty*kTileSize) then
+		gPlayerY = ground_ty*kTileSize 
 		bOnGround = true
 		if (gPlayerVY > 0) then gPlayerVY = 0 end
 	end
