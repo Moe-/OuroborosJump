@@ -1,5 +1,5 @@
 
-gPlayer = {x=0,y=0,vx=0,vy=0,r=55,drawx=-64,drawy=-64}
+gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
@@ -88,7 +88,7 @@ function DrawDebugBlock (img,tx,ty)
 end
 
 -- local l,t,r,b = GetPlayerBBox()
-function GetPlayerBBox () local x,y,r = gPlayer.x,gPlayer.y,gPlayer.r return x-r,y-r,x+r,y+r end
+function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
 
 function PlayerUpdate(dt)
@@ -159,7 +159,7 @@ function PlayerUpdate(dt)
 	
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
-	local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
+	local ground_ty = floor((o.y + o.ry + 0.1*kTileSize)/kTileSize)
 	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
 		if (o.ground_tx ~= ground_tx or 
