@@ -21,6 +21,11 @@ kTileType_DBlock_3 = 24
 kTileType_DBlock_4 = 32
 kTileType_DBlock_5 = 40
 kTileType_Start = 7
+kTileType_Enemy_Type1 = 6
+kTileType_Enemy_Type2 = 14
+kTileType_Enemy_Type3 = 22
+kTileType_Enemy_Type4 = 30
+
 
 function GameDamageBlock (tx,ty) 
 	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
@@ -64,7 +69,9 @@ function GameInit ()
 	for k,v in pairs(gMapLayers) do print("maplayer",type(k),k) end
 	
 	PlayerInit()
+	EnemyInit()
 	PlayerSpawnAtStart()
+	EnemiesSpawnAtStart()
 	
 end
 
@@ -106,6 +113,7 @@ function GameDraw ()
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
     TiledMap_DrawNearCam(gCamX,gCamY)
 	
+	EnemyDraw()
 	PlayerDraw()
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
@@ -157,6 +165,7 @@ function GameStep (dt)
 --	end
 	
 	PlayerUpdate(dt)
+	EnemyUpdate(dt)
 	Objects_Step(dt)
 	
 end
