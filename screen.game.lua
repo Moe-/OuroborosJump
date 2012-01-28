@@ -5,6 +5,7 @@ function cScreenGame:LoadData	() end
 function cScreenGame:Start		()
 	gCurrentScreen = self
 	kPointsPlayer = 0
+	gCoinsCollected = 0
 	GameInit()
 end
 

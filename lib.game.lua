@@ -230,7 +230,14 @@ function GameDraw ()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
 	
-	
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.setFont(48)
+	love.graphics.print("Points: " .. floor(kPointsPlayer), 30, 650)
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.print("Points: " .. floor(kPointsPlayer), 26, 650)
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 896, 650)
+	love.graphics.setColor(255, 255, 255)
 end
 
 function GameNotifyNextMapCycle()
