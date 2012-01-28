@@ -31,15 +31,27 @@ kTileType_Enemy_Type1 = 6
 kTileType_Enemy_Type2 = 14
 kTileType_Enemy_Type3 = 22
 kTileType_Enemy_Type4 = 30
+kTileType_Coin = 12 * 8 + 7
+
+gDestroyBlockSequence = {}
+gDestroyBlockSequence[kTileType_DBlock_1] = kTileType_DBlock_2
+gDestroyBlockSequence[kTileType_DBlock_2] = kTileType_DBlock_3
+gDestroyBlockSequence[kTileType_DBlock_3] = kTileType_DBlock_4
+gDestroyBlockSequence[kTileType_DBlock_4] = kTileType_DBlock_5
+gDestroyBlockSequence[kTileType_DBlock_5] = kMapTileTypeEmpty
+ 
+--~ print("gDestroyBlockSequence 5:",kTileType_DBlock_5,kMapTileTypeEmpty)
+ 
+ 
+ 
 
 
+function IsBlockDestructible (tx,ty) return gDestroyBlockSequence[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] end
 function GameDamageBlock (tx,ty) 
 	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
-	if (t == kTileType_DBlock_1) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_2) end
-	if (t == kTileType_DBlock_2) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_3) end
-	if (t == kTileType_DBlock_3) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_4) end
-	if (t == kTileType_DBlock_4) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_5) end
-	if (t == kTileType_DBlock_5) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kMapTileTypeEmpty) end
+	local t2 = gDestroyBlockSequence[t]
+	--~ print("GameDamageBlock",tx,ty,t,t2)
+	if (t2) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,t2) end
 end
 
 gMapIsBlockSolid = {}
@@ -99,6 +111,7 @@ function GameInit ()
 	
 	PlayerInit()
 	EnemyInit()
+	CoinInit()
 	PlayerSpawnAtStart()
 	EnemiesSpawnAtStart()
 	
@@ -142,6 +155,7 @@ function GameDraw ()
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
 	
+	CoinDraw()
 	EnemyDraw()
 	PlayerDraw()
 	
@@ -213,6 +227,7 @@ function GameStep (dt)
 	
 	PlayerUpdate(dt)
 	EnemyUpdate(dt)
+	CoinUpdate(dt)
 	Objects_Step(dt)
 	CollisionDebugStep()
 	
