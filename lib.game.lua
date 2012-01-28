@@ -7,6 +7,7 @@ gMapGfxPrefix = "data/"
 
 gMapPath = "data/level01.tmx"
 gMapPath = "data/level02.tmx"
+gMapPath = "data/level03.tmx"
 
 gMapMetaInvis = true
 

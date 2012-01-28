@@ -130,10 +130,12 @@ function mapKeys()
 end
 
 function love.joystickpressed( joystick, button )
+	if (gCurrentScreen and gCurrentScreen.joystickpressed) then gCurrentScreen:joystickpressed(joystick, button )  end
 	joystickbuttons[button] = 1
 end
 
 function love.joystickreleased( joystick, button )
+	if (gCurrentScreen and gCurrentScreen.joystickreleased) then gCurrentScreen:joystickreleased(joystick, button )  end
 	joystickbuttons[button] = 0
 end
 
