@@ -41,10 +41,10 @@ function HandleCollision2 (o)
 	--~ love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
 	local e = kTileSize
-	local x,y,r = o.x,o.y,o.r
+	local x,y,rx,ry = o.x,o.y,o.rx,o.ry
 	local b = 0.1*e
-	local tx0,tx1 = floor((x-r-b)/e)-1,floor((x+r+b)/e)+1
-	local ty0,ty1 = floor((y-r-b)/e)-1,floor((y+r+b)/e)+1
+	local tx0,tx1 = floor((x-rx-b)/e)-1,floor((x+rx+b)/e)+1
+	local ty0,ty1 = floor((y-ry-b)/e)-1,floor((y+ry+b)/e)+1
 	for tx = tx0,tx1 do
 	for ty = ty0,ty1 do
 		if (IsMapBlockSolid(tx,ty)) then CollisionPushOutBox(o,tx*e,ty*e,e,e) end
@@ -70,11 +70,11 @@ function HandleCollision2 (o)
 end
 
 function CollisionPushOutBox (o,bx,by,bw,bh) 
-	local x,y,r = o.x,o.y,o.r
-	if (y+r < by   ) then return end
-	if (y-r > by+bh) then return end
-	if (x+r < bx   ) then return end
-	if (x-r > bx+bw) then return end
+	local x,y,rx,ry = o.x,o.y,o.rx,o.ry
+	if (y+ry < by   ) then return end
+	if (y-ry > by+bh) then return end
+	if (x+rx < bx   ) then return end
+	if (x-rx > bx+bw) then return end
 	local out_x
 	local out_y
 	
@@ -84,16 +84,16 @@ function CollisionPushOutBox (o,bx,by,bw,bh)
 	-- calc moved-out-positions, either x or y
 	local bDebugDraw = false
 	--~ local bDebugDraw = true
-	if (x < bx   ) then out_x = bx   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
-	if (x > bx+bw) then out_x = bx+bw+r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
-	if (y < by   ) then out_y = by   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
-	if (y > by+bh) then out_y = by+bh+r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (x < bx   ) then out_x = bx   -rx if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (x > bx+bw) then out_x = bx+bw+rx if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (y < by   ) then out_y = by   -ry if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (y > by+bh) then out_y = by+bh+ry if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
 	--~ print("CollisionPushOutBox",out_x,out_y)
 	
 	-- if both moveouts are possible, choose the shorter distance and disable the other
 	if (out_x and out_y) then
 		local bAvoidJumpWallBlock -- without this when running towards a wall you cannot jump up, due to diagonal top wall thing blocking
-		local m = o.r*0.5
+		local m = rx*0.5
 		if (o.vy < 0 and by+bh < y) then 
 			--~ CollisionDrawDebug_Add(gImgMarkTile_white,bx,by)
 			if (bx+bw < x-m) then bAvoidJumpWallBlock = true end

@@ -1,5 +1,6 @@
 
-gPlayer = {x=0,y=0,vx=0,vy=0,r=55,drawx=-64,drawy=-64}
+gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
+gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
@@ -46,6 +47,9 @@ gPlayerStateJumpLandRight = 13
 gPlayerState = kPlayerStateIdleRight
 
 kPlayerNumberAnimations = 6*32
+function PlayerCheatStep ()
+	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
+end
 
 function PlayerInit ()
 	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
@@ -69,7 +73,7 @@ function PlayerSpawnAtStart ()
 	assert(o,"startpos not found on "..tostring(gMapPath))
 	gPlayer.x = 0
 	gPlayer.y = 0
-	if (o) then gPlayer.x = o.x * kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
+	if (o) then gPlayer.x = o.x * kTileSize + kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
 end
 
 function PlayerDraw ()
@@ -85,11 +89,11 @@ function PlayerDraw ()
 	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
 	gPlayerAnimations[gPlayerState]:draw(px, py, 0, 1,1, 0, 0)
 	
-	--~ local l,t,r,b = GetPlayerBBox()
-	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local l,t,r,b = GetPlayerBBox()
+	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)
@@ -101,11 +105,12 @@ function DrawDebugBlock (img,tx,ty)
 end
 
 -- local l,t,r,b = GetPlayerBBox()
-function GetPlayerBBox () local x,y,r = gPlayer.x,gPlayer.y,gPlayer.r return x-r,y-r,x+r,y+r end
+function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
 
 function PlayerUpdate(dt)
   local s = 500*dt
+	PlayerCheatStep()
 	
 	local bPressed_Left	= 0
 	local bPressed_Right	= 0
@@ -159,9 +164,11 @@ function PlayerUpdate(dt)
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
 	
+	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
+	
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
-	local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
+	local ground_ty = floor((o.y + o.ry + 0.1*kTileSize)/kTileSize)
 	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
 		if (o.ground_tx ~= ground_tx or 
@@ -174,7 +181,12 @@ function PlayerUpdate(dt)
 	
 	
 	-- jump and left-right movement
-	if (bPressed_Up and bIsOnGround) then gPlayer.vy = gPlayerJumpVY end
+	if (bPressed_Up and gPlayer.bJumpRecharged) then
+		gPlayer.bJumpRecharged = false 
+		gPlayer.vy = gPlayerJumpVY 
+		o.ground_tx = nil
+		o.ground_ty = nil
+	end
 	local vxadd = 0
 	if (bPressed_Left ) then vxadd = vxadd + -gPlayer.vxAccelPerSecond end
 	if (bPressed_Right) then vxadd = vxadd +  gPlayer.vxAccelPerSecond end
@@ -204,7 +216,9 @@ function PlayerUpdate(dt)
 	local f = 0.05
 	local fi = 1-f
 	
-	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayer.x + 0.2*screen_w))
-	gCamY = max(screen_h/2,fi * gCamY + f * (gPlayer.y + 0.0*screen_h))
+	gCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)
+	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
+	--~ gCamX = max(screen_w/2,gCamX)
+	--~ gCamY = max(screen_h/2,gCamY)
 end
 	
