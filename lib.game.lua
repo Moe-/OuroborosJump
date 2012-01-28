@@ -265,6 +265,7 @@ function GameStep (dt)
 		if gMinCamX > 0 then
 			gRunCount = gRunCount + 1
 			EnemiesRespawn(gRunCount)
+			RespawnCoins()
 		end	
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
