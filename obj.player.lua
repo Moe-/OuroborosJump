@@ -172,7 +172,12 @@ function PlayerUpdate(dt)
 	
 	
 	-- jump and left-right movement
-	if (bPressed_Up and gPlayer.bJumpRecharged) then gPlayer.bJumpRecharged = false gPlayer.vy = gPlayerJumpVY end
+	if (bPressed_Up and gPlayer.bJumpRecharged) then
+		gPlayer.bJumpRecharged = false 
+		gPlayer.vy = gPlayerJumpVY 
+		o.ground_tx = nil
+		o.ground_ty = nil
+	end
 	local vxadd = 0
 	if (bPressed_Left ) then vxadd = vxadd + -gPlayer.vxAccelPerSecond end
 	if (bPressed_Right) then vxadd = vxadd +  gPlayer.vxAccelPerSecond end
@@ -202,7 +207,9 @@ function PlayerUpdate(dt)
 	local f = 0.05
 	local fi = 1-f
 	
-	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayer.x + 0.2*screen_w))
-	gCamY = max(screen_h/2,fi * gCamY + f * (gPlayer.y + 0.0*screen_h))
+	gCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)
+	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
+	--~ gCamX = max(screen_w/2,gCamX)
+	--~ gCamY = max(screen_h/2,gCamY)
 end
 	

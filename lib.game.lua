@@ -73,9 +73,9 @@ function GameInit ()
 	gImgDot				= getCachedPaddedImage("data/dot.png")
 
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
-	kMapLayer_Meta = TiledMap_GetLayerZByName("meta")
-	kMapLayer_Main = TiledMap_GetLayerZByName("main")
-	kMapLayer_AI = TiledMap_GetLayerZByName("ai")
+	local lname = "meta"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Meta = lid
+	local lname = "main"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Main = lid
+	local lname = "ai"		local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_AI = lid
 	
 	gMapUsedW = TiledMap_GetMapWUsed()
 	print("gMapUsedW",gMapUsedW)
@@ -127,8 +127,14 @@ function GameDraw ()
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
     TiledMap_DrawNearCam(gCamX,gCamY)
-	-- draw 2nd level loop
-    TiledMap_DrawNearCam(gCamX-gMapUsedW*kTileSize,gCamY)
+	
+	local mapw = gMapUsedW*kTileSize
+	if (gCamX < 0.5*mapw) then 
+		TiledMap_DrawNearCam(gCamX+mapw,gCamY)
+	else 
+		-- draw 2nd level loop
+		TiledMap_DrawNearCam(gCamX-mapw,gCamY)
+	end
 	
 	EnemyDraw()
 	PlayerDraw()
@@ -187,6 +193,15 @@ function GameStep (dt)
 	EnemyUpdate(dt)
 	Objects_Step(dt)
 	CollisionDebugStep()
+	
+	local mapw = gMapUsedW*kTileSize
+	if (gPlayer.x > mapw) then 
+		gPlayer.x = gPlayer.x - mapw
+		gCamX = gCamX - mapw
+	elseif (gPlayer.x < 0) then 
+		gPlayer.x = gPlayer.x + mapw
+		gCamX = gCamX + mapw
+	end
 end
 
 function GameCleanUp ()
