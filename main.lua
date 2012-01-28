@@ -1,6 +1,8 @@
 -- oruborum: the snake eating itself, endless repetition of jump+run with level becoming harder
 -- sizes : player 128x64 block 64x64
 
+-- NOTE : wegen map tile grafiken 17:40 nochmal zusammensprechen
+
 
 -- Initialization
 --~ anim = require 'anim/anim'
