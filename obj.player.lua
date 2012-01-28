@@ -128,13 +128,11 @@ function PlayerUpdate(dt)
 	end
 	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
 		bPressed_Left = true
-		gPlayerState = kPlayerStateMoveLeft
 	else
 		bPressed_Left = false
 	end
 	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
 		bPressed_Right = true
-		gPlayerState = kPlayerStateMoveRight
 	else
 		bPressed_Right = false
 	end
@@ -168,11 +166,6 @@ function PlayerUpdate(dt)
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
 
-	if (bIsOnGround) then
-		gPlayerState = kPlayerStateIdleRight
-	else
-		gPlayerState = kPlayerStateJumpFallRight
-	end
 	--~ print("bIsOnGround",bIsOnGround)
 	
 	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
@@ -228,6 +221,19 @@ function PlayerUpdate(dt)
 	--~ gCamY = max(screen_h/2,gCamY)
 
 	-- update player animation depending on state of player
+	if (bIsOnGround and bPressed_Right) then
+		gPlayerState = kPlayerStateMoveRight
+	elseif (bIsOnGround and bPressed_Left) then
+		gPlayerState = kPlayerStateMoveLeft
+	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
+		gPlayerState = kPlayerStateIdleRight
+	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
+		gPlayerState = kPlayerStateIdleLeft
+	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
+		gPlayerState = kPlayerStateJumpFallRight
+	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
+		gPlayerState = kPlayerStateJumpFallLeft
+	end
 	gPlayerAnimations[gPlayerState]:update(dt)
 end
 	
