@@ -80,6 +80,7 @@ end
 
 function love.mousepressed( x, y, button )
 	DebugMouseClick(x,y,button)
+	if button == "r" then gPlayer.x = x - gCamAddX  gPlayer.y = y - gCamAddY end
 end
 
 function love.mousereleased( x, y, button )

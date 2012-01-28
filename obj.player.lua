@@ -15,13 +15,38 @@ gPlayerAnimationIdleLeft = nil
 gPlayerAnimationMoveRight = nil
 gPlayerAnimationMoveLeft = nil
 
-kPlayerStateMoveRight = 0
-kPlayerStateMoveLeft = 1
-kPlayerStateIdleRight = 2
-kPlayerStateIdleLeft = 3
+gPlayerAnimationJumpUpLeft = nil
+gPlayerAnimationJumpTurnLeft = nil
+gPlayerAnimationJumpFallLeft = nil
+gPlayerAnimationJumpLandLeft = nil
+
+gPlayerAnimationJumpUpRight = nil
+gPlayerAnimationJumpTurnRight = nil
+gPlayerAnimationJumpFallRight = nil
+gPlayerAnimationJumpLandRight = nil
+
+gPlayerAnimations = {}
+kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
+
+kPlayerStateIdleRight = 1
+kPlayerStateIdleLeft = 2
+kPlayerStateMoveRight = 3
+kPlayerStateMoveLeft = 4
+
+kPlayerStateJumpUpRight = 5
+kPlayerStateJumpTurnRight = 6
+kPlayerStateJumpFallRight = 7
+kPlayerStateJumpLandRight = 8
+
+kPlayerStateJumpUpLeft = 10
+kPlayerStateJumpTurnLeft = 11
+kPlayerStateJumpFallLeft = 12
+kPlayerStateJumpLandLeft = 13
 
 gPlayerState = kPlayerStateIdleRight
 
+kPlayerNumberAnimations = 6*32
 function PlayerCheatStep ()
 	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
 end
@@ -34,10 +59,11 @@ function PlayerInit ()
 	gCamX = screen_w/2
 	gCamY = screen_h/2 + 0.5*kTileSize
 
-	gPlayerAnimationIdleRight = newAnimation(gImgPlayer, 128, 128, 0.06, 4*32, 1, 1*32)
-	gPlayerAnimationIdleLeft = newAnimation(gImgPlayer, 128, 128, 0.06, 4*32, 1*32+1, 2*32)
-	gPlayerAnimationMoveRight = newAnimation(gImgPlayer, 128, 128, 0.02, 4*32, 2*32+1, 3*32)
-	gPlayerAnimationMoveLeft = newAnimation(gImgPlayer, 128, 128, 0.02, 4*32, 3*32+1, 4*32)
+	local animationStartIndex = 1
+	for k, v in pairs(kPlayerAnimationFrameNumbers) do
+		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1)
+		animationStartIndex = animationStartIndex + kPlayerAnimationFrameNumbers[k]
+	end
 end
 
 function PlayerSpawnAtStart ()
@@ -61,16 +87,7 @@ function PlayerDraw ()
 	-- draw idle animation
 	local px = floor(gPlayer.x+gPlayer.drawx+gCamAddX)
 	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
-	if (gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerAnimationIdleLeft:draw(px,py, 0, 1, 1, 0, 0)
-	elseif (gPlayerState == kPlayerStateIdleRight) then
-		gPlayerAnimationIdleRight:draw(px,py, 0, 1, 1, 0, 0)
-	-- draw move animation
-	elseif (gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationMoveLeft:draw(px,py, 0, 1, 1, 0, 0)
-	elseif (gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationMoveRight:draw(px,py, 0, 1, 1, 0, 0)
-	end
+	gPlayerAnimations[gPlayerState]:draw(px, py, 0, 1,1, 0, 0)
 	
 	local l,t,r,b = GetPlayerBBox()
 	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
@@ -129,17 +146,6 @@ function PlayerUpdate(dt)
 			gPlayerState = kPlayerStateIdleRight
 		end
 	end
-
-	-- update player animation depending on state of player
-	if (gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerAnimationIdleLeft:update(dt)
-	elseif (gPlayerState == kPlayerStateIdleRight) then
-		gPlayerAnimationIdleRight:update(dt)
-	elseif (gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationMoveLeft:update(dt)
-	elseif (gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationMoveRight:update(dt)
-	end
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end
     --~ if (bPressed_Down) then gCamY = gCamY + s end
@@ -151,9 +157,23 @@ function PlayerUpdate(dt)
     --~ if (bPressed_Left) then gPlayer.x = gPlayer.x - s end
     --~ if (bPressed_Right) then gPlayer.x = gPlayer.x + s end
 	
+	-- apply velocity and gravity
+	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
+	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
+	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
+	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
+	
 	HandleCollision(gPlayer)
+	
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
+
+	if (bIsOnGround) then
+		gPlayerState = kPlayerStateIdleRight
+	else
+		gPlayerState = kPlayerStateJumpFallRight
+	end
+	--~ print("bIsOnGround",bIsOnGround)
 	
 	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
 	
@@ -192,11 +212,6 @@ function PlayerUpdate(dt)
 	-- limit x speed
 	gPlayer.vx = max(-gPlayer.vxMax,min(gPlayer.vxMax,gPlayer.vx))
 	
-	-- apply velocity and gravity
-	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
-	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
-	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
-	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
 	
 	
 	
@@ -211,5 +226,8 @@ function PlayerUpdate(dt)
 	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
+
+	-- update player animation depending on state of player
+	gPlayerAnimations[gPlayerState]:update(dt)
 end
 	
