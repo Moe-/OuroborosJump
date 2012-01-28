@@ -4,7 +4,7 @@ gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
-gPlayerJumpVY = -1200
+gPlayerJumpVY = -1300
 
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
