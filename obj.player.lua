@@ -73,15 +73,20 @@ function PlayerUpdate(dt)
 	
 	local bOnGround = false
 	
-	local ground_ty = 8
-	--~ local 
 	
-	if (gPlayerY >= ground_ty*kTileSize) then
-		gPlayerY = ground_ty*kTileSize 
-		bOnGround = true
-		if (gPlayerVY > 0) then gPlayerVY = 0 end
+	local minx,maxx,miny,maxy = GetPlayerPosLimits()
+	maxy = kTileSize * 8
+
+	if (maxy) then 
+		if (gPlayerY >= maxy) then
+			gPlayerY = maxy
+			bOnGround = true
+			if (gPlayerVY > 0) then gPlayerVY = 0 end
+		end
 	end
-	
+	if (miny and gPlayerY < miny) then gPlayerY = miny if (gPlayerVY < 0) then gPlayerVY = 0 end end
+	if (minx and gPlayerX < minx) then gPlayerX = minx if (gPlayerVX < 0) then gPlayerVX = 0 end end
+	if (maxx and gPlayerX > maxx) then gPlayerX = maxx if (gPlayerVX > 0) then gPlayerVX = 0 end end
 	
 	
 	if (bPressed_Up and bOnGround) then gPlayerVY = gPlayerJumpVY end
