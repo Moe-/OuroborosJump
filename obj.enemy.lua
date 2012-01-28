@@ -92,6 +92,7 @@ function EnemiesRespawnTable(inArray, outArray, distance)
 			outArray[insertIndex].walkDir = 1
 			outArray[insertIndex].dX = 0
 			outArray[insertIndex].dY = 0
+			outArray[insertIndex].dying = false
 		end
 	end
 end
@@ -242,6 +243,7 @@ function CheckEnemyCollision(player)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType2)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType3)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType4)
+	kEnemy1
 	return died
 end
 

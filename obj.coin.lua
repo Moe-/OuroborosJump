@@ -5,6 +5,8 @@ gCoinAnimation = nil
 gCoins = {}
 kCoinPropability = 4
 
+gCoinsCollected = 0
+
 function CoinInit()
 	local gImgCoin = getCachedPaddedImage("data/coins.png")
 	gCoinAnimation = newAnimation(gImgCoin, 64, 64, 0.02, 0)
@@ -29,16 +31,16 @@ end
 
 function CheckCoinCollision(posX, posY)
 	for k, v in pairs(gCoins) do
-		local coinMidX = k.x + kTileSize / 2
-		local coinMidY = k.y + kTileSize / 2
-		
-		
-		
-		local posXPow = math.pow(posX-coinMidX,2)
-		local posYPow = math.pow(posY-coinMidY,2)
-		local	distance = math.sqrt(posXPow + posYPow)
-		if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then
-			gCoins[k] = false
+		if (gCoins[k]) == true) then
+			local coinMidX = k.x + kTileSize / 2
+			local coinMidY = k.y + kTileSize / 2
+			local posXPow = math.pow(posX-coinMidX,2)
+			local posYPow = math.pow(posY-coinMidY,2)
+			local	distance = math.sqrt(posXPow + posYPow)
+			if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then
+				gCoins[k] = false
+				gCoinsCollected = gCoinsCollected + 1
+			end
 		end
 	end
 end
