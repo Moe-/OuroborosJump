@@ -12,7 +12,7 @@ max = math.max
 min = math.min
 
 --~ kTileSize = 64 -- see lib.mapload.lua
-kMapLayer_Main = 1
+
 
 
 kTileType_DBlock_1 = 8
@@ -58,6 +58,8 @@ function GameInit ()
 
 	gMapPath = "data/level01.tmx"
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
+	kMapLayer_Meta = TiledMap_GetLayerZByName("meta")
+	kMapLayer_Main = TiledMap_GetLayerZByName("main")
 	
 	for k,v in pairs(gMapLayers) do print("maplayer",type(k),k) end
 	

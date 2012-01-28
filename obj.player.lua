@@ -23,7 +23,7 @@ function PlayerInit ()
 end
 
 function PlayerSpawnAtStart ()
-	local startpos = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Start)
+	local startpos = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Start)
 	local o = startpos[1]
 	print("startpos",o and o.x,o and o.y)
 	assert(o,"startpos not found on "..tostring(gMapPath))
