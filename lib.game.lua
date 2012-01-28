@@ -54,9 +54,9 @@ function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,
 
 function GameInit ()
 	for row=0,8 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
-	gMapIsBlockSolid[8] = nil
 	gMapIsBlockSolid[9] = nil
 	gMapIsBlockSolid[10] = nil
+	gMapIsBlockSolid[11] = nil
 	-- solid block types : 1,2,3
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
