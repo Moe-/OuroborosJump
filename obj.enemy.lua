@@ -243,7 +243,6 @@ function CheckEnemyCollision(player)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType2)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType3)
 	died = died or CheckEnemyGroupCollision(player, gEnemiesType4)
-	kEnemy1
 	return died
 end
 
