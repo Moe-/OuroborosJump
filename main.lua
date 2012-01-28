@@ -92,6 +92,7 @@ end
 function love.update( dt )
 	UpdateMyTicks()
 	GameStep(dt)
+	StepStepper(gMyTicks/1000)
 end
 
 function love.draw()
@@ -146,3 +147,18 @@ end
 function love.joystickreleased( joystick, button )
 	joystickbuttons[button] = 0
 end
+
+
+gStepper = {}
+function RegisterStepper (fun) gStepper[fun] = true end
+function StepStepper (t) 
+	for fun,v in pairs(gStepper) do 
+		if (fun()) then gStepper[fun] = nil end 
+	end -- t in seconds
+end
+function InvokeLater (dt,fun) 
+	local ti = gMyTicks/1000 + dt 
+	RegisterStepper(function (t) 
+		if (t > ti) then fun() return true end 
+		end) 
+end -- dt in seconds from now

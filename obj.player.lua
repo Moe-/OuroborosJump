@@ -9,6 +9,7 @@ gPlayerJumpVY = -1300
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
+kDestoyBlockDelay = 0.5 -- in seconds
 
 gPlayerAnimationIdleRight = nil
 gPlayerAnimationIdleLeft = nil
@@ -179,7 +180,9 @@ function PlayerUpdate(dt)
 			o.ground_ty ~= ground_ty) then
 			o.ground_tx  = ground_tx
 			o.ground_ty  = ground_ty
-			GameDamageBlock(ground_tx,ground_ty)
+			if (IsBlockDestructible(ground_tx,ground_ty)) then 
+				InvokeLater(kDestoyBlockDelay,function () GameDamageBlock(ground_tx,ground_ty) end)
+			end
 		end
 	end
 	

@@ -20,9 +20,6 @@ gCamAddX = 0
 gCamAddY = 0
 gMinCamX = 0
 
---~ gInvokeLaterList = {}
---~ function InvokeLater (t,fun) gInvokeLaterList[{t,fun}] = true end
---~ function InvokeLaterStep (t) 
 
 kTileType_DBlock_1 = 8
 kTileType_DBlock_2 = 16
@@ -36,14 +33,24 @@ kTileType_Enemy_Type3 = 22
 kTileType_Enemy_Type4 = 30
 kTileType_Coin = 12 * 8 + 7
 
+gDestroyBlockSequence = {}
+gDestroyBlockSequence[kTileType_DBlock_1] = kTileType_DBlock_2
+gDestroyBlockSequence[kTileType_DBlock_2] = kTileType_DBlock_3
+gDestroyBlockSequence[kTileType_DBlock_3] = kTileType_DBlock_4
+gDestroyBlockSequence[kTileType_DBlock_4] = kTileType_DBlock_5
+gDestroyBlockSequence[kTileType_DBlock_5] = kMapTileTypeEmpty
+ 
+ 
+ 
+ 
+ 
 
+
+function IsBlockDestructible (tx,ty) return gDestroyBlockSequence[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] end
 function GameDamageBlock (tx,ty) 
 	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
-	if (t == kTileType_DBlock_1) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_2) end
-	if (t == kTileType_DBlock_2) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_3) end
-	if (t == kTileType_DBlock_3) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_4) end
-	if (t == kTileType_DBlock_4) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kTileType_DBlock_5) end
-	if (t == kTileType_DBlock_5) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kMapTileTypeEmpty) end
+	local t2 = gDestroyBlockSequence[t]
+	if (t2) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,t2) end
 end
 
 gMapIsBlockSolid = {}
