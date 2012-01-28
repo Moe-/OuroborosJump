@@ -62,7 +62,7 @@ function PlayerUpdate(dt)
 	local bPressed_Right	= 0
 	local bPressed_Up		= 0
 	local bPressed_Down	= 0
-	if keyboard[kUp] == 1 or joystickaxes[kUp] == 1 then
+	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 then
 		bPressed_Up = true
 	else
 		bPressed_Up = false
