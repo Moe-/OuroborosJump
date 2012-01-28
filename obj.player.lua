@@ -141,9 +141,9 @@ function CheckPlayerTouchesDeadlyBlock ()
 		if (IsTileDeadly(tx,ty)) then
 			print("player touch deadly tile",tx,ty) 
 			gPlayerKillParticleSystems[11]:reset()
-			gPlayerKillParticlePosition[11].x = x + kTileSize / 2
+			gPlayerKillParticlePosition[11].x = x
 			gPlayerKillParticlePosition[11].y = y + kTileSize / 2
-			gPlayerKillParticleSystemTimeLeft[11] = 45.0
+			gPlayerKillParticleSystemTimeLeft[11] = 15.0
 			return true 
 		end
 	end
@@ -355,8 +355,8 @@ function createPlayerParticleSystems()
 		p:setParticleLife          (0.5, 0.75)
 		p:setPosition              (0, 0)
 		p:setDirection             (0)
-		p:setSpread                (3.14)
-		p:setSpeed                 (10, 30)
+		p:setSpread                (2.09)
+		p:setSpeed                 (20, 45)
 		p:setGravity               (30)
 		p:setRadialAcceleration    (10)
 		p:setTangentialAcceleration(0)
@@ -386,9 +386,9 @@ function createPlayerParticleSystems()
 	p:setLifetime              (15)
 	p:setParticleLife          (1.5, 3.75)
 	p:setPosition              (0, 0)
-	p:setDirection             (0)
+	p:setDirection             (3)
 	p:setSpread                (6.28)
-	p:setSpeed                 (10, 30)
+	p:setSpeed                 (20, 50)
 	p:setGravity               (30)
 	p:setRadialAcceleration    (20)
 	p:setTangentialAcceleration(10)
@@ -396,7 +396,7 @@ function createPlayerParticleSystems()
 	p:setSizeVariation         (1.5)
 	p:setRotation              (0)
 	p:setSpin                  (1)
-	p:setSpinVariation         (0)
+	p:setSpinVariation         (3)
 	p:setColor                 (255, 0, 0, 255, 192, 16, 0, 10)
 	p:stop();
 	gPlayerKillParticleSystems[11] = p
