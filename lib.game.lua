@@ -75,6 +75,7 @@ function GameInit ()
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
 	kMapLayer_Meta = TiledMap_GetLayerZByName("meta")
 	kMapLayer_Main = TiledMap_GetLayerZByName("main")
+	kMapLayer_AI = TiledMap_GetLayerZByName("ai")
 	
 	gMapUsedW = TiledMap_GetMapWUsed()
 	print("gMapUsedW",gMapUsedW)
