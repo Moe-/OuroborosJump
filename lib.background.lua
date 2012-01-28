@@ -13,7 +13,7 @@ function Background_Draw ()
 	-- gMapUsedW
 	local camx = gCamX + gAbsoluteCamAddX
 	local camy = gCamY
-	print(camx)
+	--~ print(camx)
 	local mx = 1024 -camx * 1 / 4
 	local my = 256 - camy * 1 / 4
 	local w = 1024 -- width of mountain
