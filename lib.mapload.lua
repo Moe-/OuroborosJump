@@ -74,7 +74,7 @@ end
 function TiledMap_ListAllOfTypeOnLayer (layerid,iTileType)
 	local res = {}
 	local w = TiledMap_GetMapW()
-	local h = TiledMap_GetMapW()
+	local h = TiledMap_GetMapH()
 	for x=0,w-1 do 
 	for y=0,h-1 do 
 		if (TiledMap_GetMapTile(x,y,layerid) == iTileType) then table.insert(res,{x=x,y=y}) end
