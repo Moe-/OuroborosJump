@@ -5,6 +5,12 @@ Objects_InitLayerOrder({
 
 gMapGfxPrefix = "data/"
 
+floor = math.floor
+ceil = math.ceil
+abs = math.abs
+max = math.max
+min = math.min
+
 --~ kTileSize = 64 -- see lib.mapload.lua
 
 function GameInit ()
@@ -14,16 +20,17 @@ function GameInit ()
 	local screen_h = love.graphics.getHeight()
 	gCamX,gCamY = screen_w/2,screen_h/2
 	
-	gImgPlayer = getCachedPaddedImage("data/player.png")
-	gImgPlayer = getCachedPaddedImage("data/player.png")
+	gImgPlayer		= getCachedPaddedImage("data/player.png")
+	gImgMarkTile	= getCachedPaddedImage("data/mark-tile.png")
+	gImgDot			= getCachedPaddedImage("data/dot.png")
 
 	TiledMap_Load("data/level01.tmx",nil,nil,gMapGfxPrefix)
 end
 
 
 function GameDraw ()
-	--~ gMouseX = love.mouse.getX()
-	--~ gMouseY = love.mouse.getY()
+	gMouseX = love.mouse.getX()
+	gMouseY = love.mouse.getY()
 	
 	local camx,camy = floor(gCamX),floor(gCamY)
     local screen_w = love.graphics.getWidth()
@@ -41,6 +48,14 @@ function GameDraw ()
 	local x,y = 0,kTileSize*4
 	love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
 	love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
+	
+	local mx = gMouseX - gCamAddX
+	local my = gMouseY - gCamAddY
+	local mtx = floor(mx/kTileSize)
+	local mty = floor(my/kTileSize)
+	love.graphics.draw(gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
+	
 	--~ Objects_Draw()
 end
 
