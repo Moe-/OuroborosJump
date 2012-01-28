@@ -11,6 +11,7 @@ kMapPath_Level02 = "data/level02.tmx"
 
 gFirstLevelStarted = 0
 kFirstLevelStartCount = 4
+kPointsPlayer = 0
 
 function MyStartLevel ()
 	if (gFirstLevelStarted < kFirstLevelStartCount) then 
@@ -237,6 +238,7 @@ function GameNotifyNextMapCycle()
 	gFirstLevelStarted = gFirstLevelStarted + 1
 end
 
+gScoreLastX = 0
 function GameStep (dt)
 	dt = min(0.1, dt)
   local s = 500*dt
@@ -286,6 +288,10 @@ function GameStep (dt)
 	CollisionDebugStep()
 	
 	local mapw = gMapUsedW*kTileSize
+	if abs(gPlayer.x - gScoreLastX) < love.graphics.getWidth() then
+		kPointsPlayer = kPointsPlayer + (gPlayer.x - gScoreLastX)
+	end
+	gScoreLastX = gPlayer.x
 	if (gPlayer.x > mapw) then 
 		if gMinCamX > 0 then
 			gRunCount = gRunCount + 1
