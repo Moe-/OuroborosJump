@@ -1,5 +1,6 @@
 
 gPlayer = {x=0,y=0,vx=0,vy=0,r=55,drawx=-64,drawy=-64}
+gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
@@ -71,11 +72,11 @@ function PlayerDraw ()
 		gPlayerAnimationMoveRight:draw(px,py, 0, 1, 1, 0, 0)
 	end
 	
-	--~ local l,t,r,b = GetPlayerBBox()
-	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	--~ local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local l,t,r,b = GetPlayerBBox()
+	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)
@@ -154,6 +155,8 @@ function PlayerUpdate(dt)
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
 	
+	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
+	
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
 	local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
@@ -169,7 +172,7 @@ function PlayerUpdate(dt)
 	
 	
 	-- jump and left-right movement
-	if (bPressed_Up and bIsOnGround) then gPlayer.vy = gPlayerJumpVY end
+	if (bPressed_Up and gPlayer.bJumpRecharged) then gPlayer.bJumpRecharged = false gPlayer.vy = gPlayerJumpVY end
 	local vxadd = 0
 	if (bPressed_Left ) then vxadd = vxadd + -gPlayer.vxAccelPerSecond end
 	if (bPressed_Right) then vxadd = vxadd +  gPlayer.vxAccelPerSecond end
