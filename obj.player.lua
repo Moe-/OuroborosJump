@@ -21,6 +21,10 @@ kPlayerStateIdleLeft = 3
 
 gPlayerState = kPlayerStateIdleRight
 
+function PlayerCheatStep ()
+	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
+end
+
 function PlayerInit ()
 	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
 	
@@ -42,7 +46,7 @@ function PlayerSpawnAtStart ()
 	assert(o,"startpos not found on "..tostring(gMapPath))
 	gPlayer.x = 0
 	gPlayer.y = 0
-	if (o) then gPlayer.x = o.x * kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
+	if (o) then gPlayer.x = o.x * kTileSize + kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
 end
 
 function PlayerDraw ()
@@ -88,6 +92,7 @@ function GetPlayerBBox () local x,y,r = gPlayer.x,gPlayer.y,gPlayer.r return x-r
 
 function PlayerUpdate(dt)
   local s = 500*dt
+	PlayerCheatStep()
 	
 	local bPressed_Left	= 0
 	local bPressed_Right	= 0

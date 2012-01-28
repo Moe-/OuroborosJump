@@ -76,6 +76,9 @@ function GameInit ()
 	kMapLayer_Meta = TiledMap_GetLayerZByName("meta")
 	kMapLayer_Main = TiledMap_GetLayerZByName("main")
 	
+	gMapUsedW = TiledMap_GetMapWUsed()
+	print("gMapUsedW",gMapUsedW)
+	
 	for k,v in pairs(gMapLayers) do print("maplayer",type(k),k) end
 	
 	PlayerInit()
@@ -119,9 +122,12 @@ function GameDraw ()
 	
 	asd = 1123
 	
+	
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
     TiledMap_DrawNearCam(gCamX,gCamY)
+	-- draw 2nd level loop
+    TiledMap_DrawNearCam(gCamX-gMapUsedW*kTileSize,gCamY)
 	
 	EnemyDraw()
 	PlayerDraw()

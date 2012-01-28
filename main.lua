@@ -28,6 +28,7 @@ joystickaxes = {0, 0, 0, 0}
 keyboard = { 0, 0, 0, 0 }
 axis = { 0, 0 }
 
+gMyKeyPressed = {}
 -- this can be a value between 0 and 1 the lower the value the more sensitive the joystick will react towards input and move already for minor movements only
 joysticksensitivity = 0.3
 
@@ -41,7 +42,10 @@ function love.load()
 	GameInit()
 end
 
+	
 function love.keypressed( key, unicode ) 
+	gMyKeyPressed[key] = true
+
 	if key == "up" or key == "w" then
 		keyboard[kUp] = 1
 	end
@@ -59,6 +63,7 @@ function love.keypressed( key, unicode )
 end
 
 function love.keyreleased( key, unicode )
+	gMyKeyPressed[key] = false
 	if key == "up" or key == "w" then
 		keyboard[kUp] = 0
 	end

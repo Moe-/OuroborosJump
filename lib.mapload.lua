@@ -41,6 +41,19 @@ end
 function TiledMap_GetMapW () return gMapLayers.width end
 function TiledMap_GetMapH () return gMapLayers.height end
 
+-- returns the mapwidth actually used by tiles
+function TiledMap_GetMapWUsed ()
+	local maxx = 0
+	for layerid,layer in pairs(gMapLayers) do 
+		if (type(layer) == "table") then for ty,row in pairs(layer) do
+			if (type(row) == "table") then for tx,t in pairs(row) do 
+				maxx = max(maxx,tx)
+			end end
+		end end
+	end
+	return maxx + 1
+end
+
 -- x,y= position for nearest-distance(square,not round), z= layer, maxrad= optional limit for searching
 -- returns x,y
 -- if x,y can be far outside map, set a sensible maxrad, otherwise it'll get very slow since searching outside map isn't optimized
