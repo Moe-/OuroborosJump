@@ -42,7 +42,7 @@ function PlayerSpawnAtStart ()
 	assert(o,"startpos not found on "..tostring(gMapPath))
 	gPlayer.x = 0
 	gPlayer.y = 0
-	if (o) then gPlayer.x = o.x * kTileSize  gPlayer.y = o.y * kTileSize - kTileSize end
+	if (o) then gPlayer.x = o.x * kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
 end
 
 function PlayerDraw ()
