@@ -149,6 +149,7 @@ function GameDraw ()
 end
 
 function GameStep (dt)
+	dt = min(0.1, dt)
   local s = 500*dt
 	joystick0 = 0
 	if(love.joystick.getNumJoysticks( ) > 0) then
