@@ -36,9 +36,11 @@ end
 
 function love.keypressed( key, unicode ) 
 	gKeyPressed[key] = true
+	if key == "escape" then os.exit() end
 end
 
 function love.mousepressed( x, y, button )
+	DebugMouseClick(x,y,button)
 end
 
 function love.mousereleased( x, y, button )

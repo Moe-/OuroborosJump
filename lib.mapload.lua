@@ -64,6 +64,12 @@ function TiledMap_GetMapTile (tx,ty,layerid) -- coords in tiles
     return row and row[tx] or kMapTileTypeEmpty
 end
 
+function TiledMap_SetMapTile (tx,ty,layerid,v) -- coords in tiles
+    local row = gMapLayers[layerid][ty]
+	if (not row) then row = {} gMapLayers[layerid][ty] = row end
+	row[tx] = v
+end
+
 -- todo : maybe optimize during parse xml for types registered as to-be-listed before parsing ?
 function TiledMap_ListAllOfTypeOnLayer (layerid,iTileType)
 	local res = {}
