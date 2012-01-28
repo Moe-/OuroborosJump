@@ -62,6 +62,7 @@ function love.keypressed( key, unicode )
 		keyboard[kRight] = 1
 	end
 
+	if key == "f5" then CheatShowMapMetaData() end
 	if key == "escape" then os.exit() end
 end
 
