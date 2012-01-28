@@ -7,6 +7,7 @@ gPlayerGravity = 9.81 * 300
 gPlayerJumpVY = -1300
 
 gCamAdjustSpeed = 0.1
+kPlayerHideAfterDeathTime = 0.7
 
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
@@ -84,6 +85,8 @@ function PlayerSpawnAtStart ()
 end
 
 function PlayerDraw ()
+	if (gPlayer.dead_hide_after and gMyTime > gPlayer.dead_hide_after) then return end
+
 	local x,y = 0,kTileSize*4
 
 	--~ love.graphics.draw(gImgPlayer, gPlayer.x+gCamAddX, gPlayer.y+gCamAddY )
@@ -159,6 +162,13 @@ function PlayerUpdate(dt)
 	else
 		bPressed_Right = false
 	end
+	
+	if (gPlayer.bDead) then 
+		bPressed_Left = false
+		bPressed_Right = false
+		bPressed_Up = false
+		bPressed_Down = false
+	end
 
 	if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
 		if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
@@ -213,6 +223,7 @@ function PlayerUpdate(dt)
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	-- jump and left-right movement
+	
 	if (bPressed_Up and (gPlayer.bJumpRecharged or gJumpEnemyKill)) then
 		gPlayer.bJumpRecharged = false 
 		gPlayer.vy = gPlayerJumpVY 
@@ -259,7 +270,13 @@ function PlayerUpdate(dt)
 	--~ gCamY = max(screen_h/2,gCamY)
 
 	local died = CheckPlayerDied()
-	if (died) then print("died? ", died) end
+	if (died) then 
+		if (not gPlayer.bDead) then 
+			print("PLAYER DIED!", died) 
+			gPlayer.bDead = true
+			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
+		end
+	end
 
 	-- update player animation depending on state of player
 	if (died == true or gPlayerState == kPlayerStateDied) then

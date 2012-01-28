@@ -35,8 +35,12 @@ gMyKeyPressed = {}
 -- this can be a value between 0 and 1 the lower the value the more sensitive the joystick will react towards input and move already for minor movements only
 joysticksensitivity = 0.3
 
+gMyTime = 0
 gMyTicks = 0
-function UpdateMyTicks () gMyTicks = floor(love.timer.getTime() * 1000) end
+function UpdateMyTicks ()
+	gMyTime = love.timer.getTime()
+	gMyTicks = floor(gMyTime * 1000)
+end
 
 function love.load()
 	print("bla1", love.joystick)
