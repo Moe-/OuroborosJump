@@ -245,6 +245,8 @@ function PlayerUpdate(dt)
 	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
 		gPlayerState = kPlayerStateJumpFallLeft
 	end
+	
+	survived = CheckEnemyCollision(gPlayer)
 	gPlayerAnimations[gPlayerState]:update(dt)
 end
 	

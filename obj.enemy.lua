@@ -67,7 +67,14 @@ function EnemyInit()
 end
 
 function EnemyUpdate(dt)
-	for i,v in pairs(gEnemiesType1) do
+	EnemyGroupUpdate(dt, gEnemiesType1)
+	EnemyGroupUpdate(dt, gEnemiesType2)
+	EnemyGroupUpdate(dt, gEnemiesType3)
+	EnemyGroupUpdate(dt, gEnemiesType4)
+end
+
+function EnemyGroupUpdate(dt, group)
+	for i,v in pairs(group) do
 --		local diffX = v.x/kTileSize - floor(v.x/kTileSize + 0.5);
 --		local diffY = v.y/kTileSize - floor(v.y/kTileSize + 0.5);
 --		if(v.lastTiletype == 47 or tiletype == 71 or tiletype == 79) then -- left
@@ -141,3 +148,23 @@ function EnemyDraw()
 	end
 end
 
+function CheckEnemyCollision(player)
+	CheckEnemyGroupCollision(player, gEnemiesType1)
+	CheckEnemyGroupCollision(player, gEnemiesType2)
+	CheckEnemyGroupCollision(player, gEnemiesType3)
+	CheckEnemyGroupCollision(player, gEnemiesType4)
+end
+
+function CheckEnemyGroupCollision(player, group)
+	local died = false
+	for i,v in pairs(group) do
+		if v.x <= player.x and v.x + kTileSize > player.x and v.y <= player.y and v.y + kTileSize > player.y then
+			if v.y + kTileSize/4 >= player.y and player.vy > 0 then
+				table.remove(group, i)
+			else
+				died = true	
+			end
+		end
+	end
+	return died;
+end
