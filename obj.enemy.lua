@@ -8,23 +8,23 @@ kWalkSpeed = 1.0
 kWalkSpeedDiag = 0,707 * kWalkSpeed
 
 function EnemiesSpawnAtStart()
-	gEnemiesType1 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type1)
-	gEnemiesType2 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type2)
-	gEnemiesType3 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type3)
-	gEnemiesType4 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type4)
-	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type1)
+	gEnemiesType1 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type1)
+	gEnemiesType2 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type2)
+	gEnemiesType3 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type3)
+	gEnemiesType4 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type4)
+	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type1)
 	for i,v in pairs(temp) do
 		gEnemiesType1[#gEnemiesType1 + 1] = v
 	end
-	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type2)
+	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type2)
 	for i,v in pairs(temp) do
 		gEnemiesType2[#gEnemiesType2 + 1] = v
 	end
-	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type3)
+	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type3)
 	for i,v in pairs(temp) do
 		gEnemiesType3[#gEnemiesType3 + 1] = v
 	end
-	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type4)
+	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type4)
 	for i,v in pairs(temp) do
 		gEnemiesType4[#gEnemiesType4 + 1] = v
 	end
@@ -60,7 +60,19 @@ end
 
 function EnemyUpdate(dt)
 	for i,v in pairs(gEnemiesType1) do
-		tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + sign(v.x)),floor(v.y/kTileSize + sign(v.y)),kMapLayer_AI)
+--		local diffX = v.x/kTileSize - floor(v.x/kTileSize + 0.5);
+--		local diffY = v.y/kTileSize - floor(v.y/kTileSize + 0.5);
+--		if(v.lastTiletype == 47 or tiletype == 71 or tiletype == 79) then -- left
+--			diffX = -diffX;
+--		end
+--		if(v.lastTiletype == 31 or tiletype == 55 or tiletype == 71) then --top
+--			diffY = -diffY;
+--		end
+		local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.5),floor(v.y/kTileSize + 0.5),kMapLayer_AI)
+--		if(diffX ~= 0 and diffY ~= 0) then
+--			print("diffX " .. diffX .. " diffY " .. diffY);	
+--		end
+--		local dist = sqrt(diffX * diffX + diffY * diffY);
 		if(tiletype == 23) then --up
 			v.y = v.y - kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 31) then --right
@@ -71,9 +83,9 @@ function EnemyUpdate(dt)
 			v.x = v.x - kWalkSpeed * v.walkDir * kTileSize * dt
 		elseif(tiletype == 55) then --upright
 			v.x = v.x + kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			v.y =  v.y - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-		elseif(tiletype == 63) then --downleft
-			v.x = v.x - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			v.y = v.y - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+		elseif(tiletype == 63) then --downright
+			v.x = v.x + kWalkSpeedDiag * v.walkDir * kTileSize * dt
 			v.y = v.y + kWalkSpeedDiag * v.walkDir * kTileSize * dt
 		elseif(tiletype == 71) then --upleft
 			v.x = v.x - kWalkSpeedDiag * v.walkDir * kTileSize * dt
