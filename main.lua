@@ -1,5 +1,10 @@
 -- oruborum: the snake eating itself, endless repetition of jump+run with level becoming harder
 -- sizes : player 128x64 block 64x64
+-- TODO : hiscore/meter
+-- TODO : startscreen 
+-- TODO : game over screen 
+-- TODO : partikel 
+-- TODO : sounds / musik 
 
 -- NOTE : wegen map tile grafiken 17:40 nochmal zusammensprechen
 
@@ -17,6 +22,7 @@ love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
 love.filesystem.load("lib.collision.lua")()
 love.filesystem.load("lib.button.lua")()
+love.filesystem.load("lib.background.lua")()
 love.filesystem.load("obj.enemy.lua")()
 love.filesystem.load("obj.coin.lua")()
 

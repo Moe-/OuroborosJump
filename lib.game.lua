@@ -118,6 +118,7 @@ function GameInit ()
 	gImgMarkTile_blue	= getCachedPaddedImage("data/mark-tile-blue.png")
 	
 	gImgDot				= getCachedPaddedImage("data/dot.png")
+	
 
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
 	local lname = "meta"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Meta = lid
@@ -132,6 +133,8 @@ function GameInit ()
 	if (gMapMetaInvis) then gTileMap_LayerInvisByName["meta"] = true end
 	if (gMapMetaInvis) then gTileMap_LayerInvisByName["ai"] = true end
 
+	Background_Init()
+	
 	PlayerInit()
 	EnemyInit()
 	CoinInit()
@@ -184,6 +187,8 @@ function GameDraw ()
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
 	
+	Background_Draw()
+	
 	CoinDraw()
 	EnemyDraw()
 	PlayerDraw()
@@ -210,6 +215,10 @@ function GameDraw ()
 	CollisionDebugDraw()
 	
 	
+end
+
+function GameNotifyNextMapCycle()
+	Background_NotifyNextMapCycle()
 end
 
 function GameStep (dt)
@@ -269,6 +278,7 @@ function GameStep (dt)
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
 		gMinCamX = gCamX
+		GameNotifyNextMapCycle()
 	elseif (gPlayer.x < 0) then 
 		gPlayer.x = gPlayer.x + mapw
 		gCamX = gCamX + mapw

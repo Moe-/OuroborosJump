@@ -44,16 +44,20 @@ function TiledMap_GetMapH () return gMapLayers.height end
 -- returns the mapwidth actually used by tiles
 function TiledMap_GetMapWUsed ()
 	local maxx = 0
+	local miny = 0
+	local maxy = 0
 	for layerid,layer in pairs(gMapLayers) do 
 		if (type(layer) == "table") then for ty,row in pairs(layer) do
 			if (type(row) == "table") then for tx,t in pairs(row) do 
 				if (t and t ~= kMapTileTypeEmpty) then 
+					miny = min(miny,ty)
+					maxy = max(maxy,ty)
 					maxx = max(maxx,tx)
 				end
 			end end
 		end end
 	end
-	return maxx + 1
+	return maxx + 1,miny,maxy+1
 end
 
 -- x,y= position for nearest-distance(square,not round), z= layer, maxrad= optional limit for searching
