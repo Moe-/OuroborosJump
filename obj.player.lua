@@ -25,6 +25,7 @@ gPlayerAnimationJumpUpRight = nil
 gPlayerAnimationJumpTurnRight = nil
 gPlayerAnimationJumpFallRight = nil
 gPlayerAnimationJumpLandRight = nil
+gJumpEnemyKill = false
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12, 32, 32}
@@ -120,7 +121,7 @@ function PlayerUpdate(dt)
 	local bPressed_Right	= 0
 	local bPressed_Up		= 0
 	local bPressed_Down	= 0
-	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 then
+	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 or gJumpEnemyKill then
 		bPressed_Up = true
 	else
 		bPressed_Up = false
@@ -194,11 +195,12 @@ function PlayerUpdate(dt)
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	-- jump and left-right movement
-	if (bPressed_Up and gPlayer.bJumpRecharged) then
+	if (bPressed_Up and (gPlayer.bJumpRecharged or gJumpEnemyKill)) then
 		gPlayer.bJumpRecharged = false 
 		gPlayer.vy = gPlayerJumpVY 
 		o.ground_tx = nil
 		o.ground_ty = nil
+		gJumpEnemyKill = false
 	end
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2
