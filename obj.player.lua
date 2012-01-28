@@ -27,10 +27,20 @@ end
 
 function PlayerUpdate(dt)
     local s = 500*dt
-    if (gKeyPressed.up) then gCamY = gCamY - s end
-    if (gKeyPressed.down) then gCamY = gCamY + s end
-    if (gKeyPressed.left) then gCamX = gCamX - s end
-    if (gKeyPressed.right) then gCamX = gCamX + s end
+    --~ if (gKeyPressed.up) then gCamY = gCamY - s end
+    --~ if (gKeyPressed.down) then gCamY = gCamY + s end
+    --~ if (gKeyPressed.left) then gCamX = gCamX - s end
+    --~ if (gKeyPressed.right) then gCamX = gCamX + s end
 	
+    if (gKeyPressed.up) then gPlayerY = gPlayerY - s end
+    if (gKeyPressed.down) then gPlayerY = gPlayerY + s end
+    if (gKeyPressed.left) then gPlayerX = gPlayerX - s end
+    if (gKeyPressed.right) then gPlayerX = gPlayerX + s end
+	
+	local screen_w = love.graphics.getWidth()
+	local screen_h = love.graphics.getHeight()
+	local f = 0.05
+	local fi = 1-f
+	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayerX + 0.2*screen_w))
 end
 	
