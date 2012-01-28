@@ -7,14 +7,14 @@ gEnemiesType4 = { }
 kEnemyMove = 1
 kEnemyDie = 2
 
-kEnemyAnimationFrameNumbers = {32}
+kEnemyAnimationFrameNumbers = {48}
 kEnemyAnimationDelay = {0.08}
 
 -- maximum number of frames for each enemy type
-kEnemy1NumberAnimations = {32}
-kEnemy2NumberAnimations = {32}
-kEnemy3NumberAnimations = {32}
-kEnemy4NumberAnimations = {32}
+kEnemy1NumberAnimations = {32, 16}
+kEnemy2NumberAnimations = {32, 16}
+kEnemy3NumberAnimations = {32, 16}
+kEnemy4NumberAnimations = {32, 16}
 
 gEnemy1Animations = {}
 gEnemy2Animations = {}
@@ -86,26 +86,26 @@ function EnemyInit()
 	
 	local animationStartIndex = 1
 	for k, v in pairs(kEnemyAnimationFrameNumbers) do
-		gEnemy1Animations[k] = newAnimation(gImgEnemy1, 64, 64, kEnemyAnimationDelay[k], kEnemy1NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
-		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+		gEnemy1Animations[k] = newAnimation(gImgEnemy1, 64, 64, kEnemyAnimationDelay[k], kEnemy1NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemy1NumberAnimations[k] -1)
+		animationStartIndex = animationStartIndex + kEnemy1NumberAnimations[k]
 	end
 
   animationStartIndex = 1
 	for k, v in pairs(kEnemyAnimationFrameNumbers) do
-		gEnemy2Animations[k] = newAnimation(gImgEnemy2, 64, 64,kEnemyAnimationDelay[k], kEnemy2NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
-		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+		gEnemy2Animations[k] = newAnimation(gImgEnemy2, 64, 64,kEnemyAnimationDelay[k], kEnemy2NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemy2NumberAnimations[k] -1)
+		animationStartIndex = animationStartIndex + kEnemy2NumberAnimations[k]
 	end
 
 	animationStartIndex = 1
 	for k, v in pairs(kEnemyAnimationFrameNumbers) do
-		gEnemy3Animations[k] = newAnimation(gImgEnemy3, 64, 64, kEnemyAnimationDelay[k], kEnemy3NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
-		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+		gEnemy3Animations[k] = newAnimation(gImgEnemy3, 64, 64, kEnemyAnimationDelay[k], kEnemy3NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemy3NumberAnimations[k] -1)
+		animationStartIndex = animationStartIndex + kEnemy3NumberAnimations[k]
 	end
 
 	animationStartIndex = 1
 	for k, v in pairs(kEnemyAnimationFrameNumbers) do
-		gEnemy4Animations[k] = newAnimation(gImgEnemy4, 64, 64, kEnemyAnimationDelay[k], kEnemy4NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemyAnimationFrameNumbers[k] -1)
-		animationStartIndex = animationStartIndex + kEnemyAnimationFrameNumbers[k]
+		gEnemy4Animations[k] = newAnimation(gImgEnemy4, 64, 64, kEnemyAnimationDelay[k], kEnemy4NumberAnimations[k], animationStartIndex, animationStartIndex + kEnemy4NumberAnimations[k] -1)
+		animationStartIndex = animationStartIndex + kEnemy4NumberAnimations[k]
 	end
 	
 end
