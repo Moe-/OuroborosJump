@@ -31,19 +31,33 @@ function GameDamageBlock (tx,ty)
 	if (t == kTileType_DBlock_5) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,kMapTileTypeEmpty) end
 end
 
+gMapIsBlockSolid = {}
+gMapIsBlockSolid[kTileType_DBlock_1] = true
+gMapIsBlockSolid[kTileType_DBlock_2] = true
+gMapIsBlockSolid[kTileType_DBlock_3] = true
+gMapIsBlockSolid[kTileType_DBlock_4] = true
+gMapIsBlockSolid[kTileType_DBlock_5] = true
 
+function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] end
 
 
 
 function GameInit ()
+	for row=0,8 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
+	-- solid block types : 1,2,3
+	-- solid block types : 9,10,11
+	-- solid block types : 57,58,59
+
+
 
 	print("GameInit")
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	gCamX,gCamY = screen_w/2,screen_h/2
-	
-	gImgMarkTile	= getCachedPaddedImage("data/mark-tile.png")
-	gImgDot			= getCachedPaddedImage("data/dot.png")
+		
+	gImgMarkTile		= getCachedPaddedImage("data/mark-tile.png")
+	gImgMarkTileGreen	= getCachedPaddedImage("data/mark-tile-green.png")
+	gImgDot				= getCachedPaddedImage("data/dot.png")
 
 	gMapPath = "data/level01.tmx"
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
@@ -96,7 +110,7 @@ function GameDraw ()
 	PlayerDraw()
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
-	love.graphics.draw(gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTileGreen or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
 	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
 	
 	Objects_Draw()
