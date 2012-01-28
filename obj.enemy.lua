@@ -4,58 +4,71 @@ gEnemiesType2 = { }
 gEnemiesType3 = { }
 gEnemiesType4 = { }
 
+gEnemiesListType1 = { }
+gEnemiesListType2 = { }
+gEnemiesListType3 = { }
+gEnemiesListType4 = { }
+
 kWalkSpeed = 1.0
 kWalkSpeedDiag = 0,707 * kWalkSpeed
+kSpawnDistance = 4
 
-function EnemiesSpawnAtStart()
-	gEnemiesType1 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type1)
-	gEnemiesType2 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type2)
-	gEnemiesType3 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type3)
-	gEnemiesType4 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type4)
+function loadEnemies()
+	gEnemiesListType1 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type1)
+	gEnemiesListType2 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type2)
+	gEnemiesListType3 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type3)
+	gEnemiesListType4 = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta,kTileType_Enemy_Type4)
 	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type1)
 	for i,v in pairs(temp) do
-		gEnemiesType1[#gEnemiesType1 + 1] = v
+		gEnemiesListType1[#gEnemiesListType1 + 1] = v
 	end
 	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type2)
 	for i,v in pairs(temp) do
-		gEnemiesType2[#gEnemiesType2 + 1] = v
+		gEnemiesListType2[#gEnemiesListType2 + 1] = v
 	end
 	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type3)
 	for i,v in pairs(temp) do
-		gEnemiesType3[#gEnemiesType3 + 1] = v
+		gEnemiesListType3[#gEnemiesListType3 + 1] = v
 	end
 	temp = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Main,kTileType_Enemy_Type4)
 	for i,v in pairs(temp) do
-		gEnemiesType4[#gEnemiesType4 + 1] = v
+		gEnemiesListType4[#gEnemiesListType4 + 1] = v
 	end
-	
-	for i,v in pairs(gEnemiesType1) do
-		gEnemiesType1[i].x = gEnemiesType1[i].x *kTileSize;
-		gEnemiesType1[i].y = gEnemiesType1[i].y *kTileSize;
-		gEnemiesType1[i].walkDir = 1;
-		gEnemiesType1[i].dX = 0;
-		gEnemiesType1[i].dY = 0;
-	end
-	for i,v in pairs(gEnemiesType2) do
-		gEnemiesType2[i].x = gEnemiesType2[i].x *kTileSize;
-		gEnemiesType2[i].y = gEnemiesType2[i].y *kTileSize;
-		gEnemiesType2[i].walkDir = 1;
-		gEnemiesType2[i].dX = 0;
-		gEnemiesType2[i].dY = 0;
-	end
-	for i,v in pairs(gEnemiesType3) do
-		gEnemiesType3[i].x = gEnemiesType3[i].x *kTileSize;
-		gEnemiesType3[i].y = gEnemiesType3[i].y *kTileSize;
-		gEnemiesType3[i].walkDir = 1;
-		gEnemiesType3[i].dX = 0;
-		gEnemiesType3[i].dY = 0;
-	end
-	for i,v in pairs(gEnemiesType4) do
-		gEnemiesType4[i].x = gEnemiesType4[i].x *kTileSize;
-		gEnemiesType4[i].y = gEnemiesType4[i].y *kTileSize;
-		gEnemiesType4[i].walkDir = 1;
-		gEnemiesType4[i].dX = 0;
-		gEnemiesType4[i].dY = 0;
+
+	function comp(w1,w2)
+        if w1.x > w2.x then
+            return true
+        end
+    end
+	table.sort(gEnemiesListType1, comp)
+	table.sort(gEnemiesListType2, comp)
+	table.sort(gEnemiesListType3, comp)
+	table.sort(gEnemiesListType4, comp)
+end
+
+function EnemiesSpawnAtStart()
+	loadEnemies()
+	EnemiesRespawn(0)
+end
+
+function EnemiesRespawn(runCount)
+	EnemiesRespawnTable(gEnemiesListType1, gEnemiesType1, runCount + 1)
+	EnemiesRespawnTable(gEnemiesListType2, gEnemiesType2, runCount + 1)
+	EnemiesRespawnTable(gEnemiesListType3, gEnemiesType3, runCount + 1)
+	EnemiesRespawnTable(gEnemiesListType4, gEnemiesType4, runCount + 1)
+end
+
+function EnemiesRespawnTable(inArray, outArray, distance)
+	local index = min(distance, #inArray)
+	for i,v in pairs(inArray) do
+		if i%kSpawnDistance == index then
+			local insertIndex = #outArray + 1
+			outArray[insertIndex] = {x = v.x *kTileSize}
+			outArray[insertIndex].y = v.y *kTileSize
+			outArray[insertIndex].walkDir = 1
+			outArray[insertIndex].dX = 0
+			outArray[insertIndex].dY = 0
+		end
 	end
 end
 
