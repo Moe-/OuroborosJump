@@ -13,6 +13,7 @@ love.filesystem.load("obj.base.lua")()
 love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
 love.filesystem.load("lib.mapload.lua")()
+love.filesystem.load("lib.collision.lua")()
 
 gShowDebug = false
 

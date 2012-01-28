@@ -1,16 +1,11 @@
 
-gPlayerX = 0
-gPlayerY = 0
-gPlayerVX = 0
-gPlayerVY = 0
+gPlayer = {x=0,y=0,vx=0,vy=0,r=64,drawx=-64,drawy=-64}
 gPlayerGravity = 9.81 * 200
 gPlayerOnGroundStopXMult = 0.70
 gPlayerJumpVY = -800
-gPlayerVXMax = 400
-gPlayerVXAccelPerSecond = gPlayerVXMax * 200
+gPlayer.vxMax = 400
+gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
-gPlayerW = 128
-gPlayerH = 128
 
 function PlayerInit ()
 	gImgPlayer		= getCachedPaddedImage("data/player2.png")
@@ -27,14 +22,14 @@ function PlayerSpawnAtStart ()
 	local o = startpos[1]
 	print("startpos",o and o.x,o and o.y)
 	assert(o,"startpos not found on "..tostring(gMapPath))
-	gPlayerX = 0
-	gPlayerY = 0
-	if (o) then gPlayerX = o.x * kTileSize  gPlayerY = o.y * kTileSize - kTileSize end
+	gPlayer.x = 0
+	gPlayer.y = 0
+	if (o) then gPlayer.x = o.x * kTileSize  gPlayer.y = o.y * kTileSize - kTileSize end
 end
 
 function PlayerDraw ()
 	local x,y = 0,kTileSize*4
-	love.graphics.draw(gImgPlayer, gPlayerX+gCamAddX, gPlayerY+gCamAddY )
+	love.graphics.draw(gImgPlayer, gPlayer.x+gCamAddX, gPlayer.y+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
 	
@@ -48,12 +43,6 @@ function PlayerDraw ()
 	local mx = 0.5*(l+r)
 	local my = 0.5*(t+b)
 	
-	local minx,maxx,miny,maxy = GetPlayerPosLimits(true)
-	if (minx) then local x,y = minx,my love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
-	if (maxx) then local x,y = maxx,my love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
-	if (miny) then local x,y = mx,miny love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
-	if (maxy) then local x,y = mx,maxy love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY ) end
-
 end
 
 function DrawDebugBlock (img,tx,ty) 
@@ -61,54 +50,8 @@ function DrawDebugBlock (img,tx,ty)
 end
 
 -- local l,t,r,b = GetPlayerBBox()
-function GetPlayerBBox () return gPlayerX,gPlayerY,gPlayerX+gPlayerW,gPlayerY+gPlayerH end
+function GetPlayerBBox () local x,y,r = gPlayer.x,gPlayer.y,gPlayer.r return x-r,y-r,x+r,y+r end
 
-
--- local minx,maxx,miny,maxy = GetPlayerPosLimits()
-function GetPlayerPosLimits (bDraw)
-	local minx,maxx,miny,maxy
-	local l,t,r,b = GetPlayerBBox()
-	local mx = 0.5*(l+r)
-	local my = 0.5*(t+b)
-	local e = kTileSize
-	
-	local m = 10
-	
-	-- horizontal : right
-	local tx0,tx1 = floor(mx/e),floor(r/e)
-	local ty0,ty1 = floor((t+m)/e),floor((b-m)/e)
-	for tx = tx0,tx1 do 
-	for ty = ty0,ty1 do 
-		if (IsMapBlockSolid(tx,ty)) then local v = tx*e - gPlayerW maxx = min(maxx or v,v) end
-		if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
-	end
-	end
-	
-	
-	-- vertical : bottom
-	local tx0,tx1 = floor(l/e),floor(r/e)
-	local ty0,ty1 = floor(b/e-1),floor(b/e+1)
-	for tx = tx0,tx1 do 
-	for ty = ty0,ty1 do 
-		if (IsMapBlockSolid(tx,ty)) then local v = ty*e - gPlayerH maxy = min(maxy or v,v) end
-		--~ if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
-	end
-	end
-	
-	-- vertical : bottom
-	local ty0,ty1 = floor(t/e-1),floor(t/e)
-	for tx = tx0,tx1 do 
-	for ty = ty0,ty1 do 
-		if (IsMapBlockSolid(tx,ty)) then local v = ty*e + e miny = max(miny or v,v) end
-		--~ if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
-	end
-	end
-	
-	
-	
-	--~ maxy = kTileSize * 8
-	return minx,maxx,miny,maxy
-end
 
 function PlayerUpdate(dt)
     local s = 500*dt
@@ -143,55 +86,40 @@ function PlayerUpdate(dt)
     --~ if (bPressed_Left) then gCamX = gCamX - s end
     --~ if (bPressed_Right) then gCamX = gCamX + s end
 	
-    --~ if (bPressed_Up) then gPlayerY = gPlayerY - s end
-    --~ if (bPressed_Down) then gPlayerY = gPlayerY + s end
-    --~ if (bPressed_Left) then gPlayerX = gPlayerX - s end
-    --~ if (bPressed_Right) then gPlayerX = gPlayerX + s end
+    --~ if (bPressed_Up) then gPlayer.y = gPlayer.y - s end
+    --~ if (bPressed_Down) then gPlayer.y = gPlayer.y + s end
+    --~ if (bPressed_Left) then gPlayer.x = gPlayer.x - s end
+    --~ if (bPressed_Right) then gPlayer.x = gPlayer.x + s end
 	
+	HandleCollision(gPlayer)
+	local bIsOnGround = gPlayer.bIsOnGround
 	
-	
-	
-	local bOnGround = false
-	
-	
-
-	-- first x limit
-	local minx,maxx,miny,maxy = GetPlayerPosLimits()
-	if (minx and gPlayerX < minx) then gPlayerX = minx if (gPlayerVX < 0) then gPlayerVX = 0 end end
-	if (maxx and gPlayerX > maxx) then gPlayerX = maxx if (gPlayerVX > 0) then gPlayerVX = 0 end end
-	
-	
-	-- then top and bottom
-	local minx,maxx,miny,maxy = GetPlayerPosLimits()
-	if (miny and gPlayerY < miny) then gPlayerY = miny if (gPlayerVY < 0) then gPlayerVY = 0 end end
-	if (maxy) then 
-		if (gPlayerY >= maxy) then
-			gPlayerY = maxy
-			bOnGround = true
-			if (gPlayerVY > 0) then gPlayerVY = 0 end
-		end
+	local bottom_y = 9*kTileSize
+	if (gPlayer.y > bottom_y) then
+		gPlayer.y = bottom_y
+		if (gPlayer.vy > 0) then gPlayer.vy = 0 bIsOnGround = true end
 	end
 	
 	-- jump and left-right movement
-	if (bPressed_Up and bOnGround) then gPlayerVY = gPlayerJumpVY end
+	if (bPressed_Up and bIsOnGround) then gPlayer.vy = gPlayerJumpVY end
 	local vxadd = 0
-	if (bPressed_Left ) then vxadd = vxadd + -gPlayerVXAccelPerSecond end
-	if (bPressed_Right) then vxadd = vxadd +  gPlayerVXAccelPerSecond end
+	if (bPressed_Left ) then vxadd = vxadd + -gPlayer.vxAccelPerSecond end
+	if (bPressed_Right) then vxadd = vxadd +  gPlayer.vxAccelPerSecond end
 	
 	-- xspeed accell or friction
 	if (vxadd == 0) then 
-		gPlayerVX = gPlayerVX*gPlayerOnGroundStopXMult
+		gPlayer.vx = gPlayer.vx*gPlayerOnGroundStopXMult
 	else
-		gPlayerVX = gPlayerVX + vxadd*dt
+		gPlayer.vx = gPlayer.vx + vxadd*dt
 	end
 	
 	-- limit x speed
-	gPlayerVX = max(-gPlayerVXMax,min(gPlayerVXMax,gPlayerVX))
+	gPlayer.vx = max(-gPlayer.vxMax,min(gPlayer.vxMax,gPlayer.vx))
 	
 	-- apply velocity and gravity
-	gPlayerX = gPlayerX + gPlayerVX * dt 
-	gPlayerY = gPlayerY + gPlayerVY * dt 
-	if (not bOnGround) then gPlayerVY = gPlayerVY + gPlayerGravity*dt end
+	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
+	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
+	if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
 	
 	
 	
@@ -202,6 +130,6 @@ function PlayerUpdate(dt)
 	local f = 0.05
 	local fi = 1-f
 	
-	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayerX + 0.2*screen_w))
+	gCamX = max(screen_w/2,fi * gCamX + f * (gPlayer.x + 0.2*screen_w))
 end
 	
