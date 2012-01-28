@@ -127,6 +127,8 @@ function GameDraw ()
 	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
 	
 	Objects_Draw()
+	CollisionDrawDebug_Step()
+	CollisionDebugDraw()
 end
 
 function GameStep (dt)
@@ -173,7 +175,7 @@ function GameStep (dt)
 	PlayerUpdate(dt)
 	EnemyUpdate(dt)
 	Objects_Step(dt)
-	
+	CollisionDebugStep()
 end
 
 function GameCleanUp ()
