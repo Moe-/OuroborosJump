@@ -149,10 +149,11 @@ function EnemyDraw()
 end
 
 function CheckEnemyCollision(player)
-	CheckEnemyGroupCollision(player, gEnemiesType1)
-	CheckEnemyGroupCollision(player, gEnemiesType2)
-	CheckEnemyGroupCollision(player, gEnemiesType3)
-	CheckEnemyGroupCollision(player, gEnemiesType4)
+	local died = CheckEnemyGroupCollision(player, gEnemiesType1)
+	died = died or CheckEnemyGroupCollision(player, gEnemiesType2)
+	died = died or CheckEnemyGroupCollision(player, gEnemiesType3)
+	died = died or CheckEnemyGroupCollision(player, gEnemiesType4)
+	return died
 end
 
 function CheckEnemyGroupCollision(player, group)
@@ -161,6 +162,7 @@ function CheckEnemyGroupCollision(player, group)
 		if v.x <= player.x and v.x + kTileSize > player.x and v.y <= player.y and v.y + kTileSize > player.y then
 			if v.y + kTileSize/4 >= player.y and player.vy > 0 then
 				table.remove(group, i)
+				gJumpEnemyKill = true
 			else
 				died = true	
 			end
