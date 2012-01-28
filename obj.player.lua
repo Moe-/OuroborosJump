@@ -27,7 +27,7 @@ gPlayerAnimationJumpLandRight = nil
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12}
-kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
 
 kPlayerStateIdleRight = 1
 kPlayerStateIdleLeft = 2
@@ -146,9 +146,6 @@ function PlayerUpdate(dt)
 			gPlayerState = kPlayerStateIdleRight
 		end
 	end
-
-	-- update player animation depending on state of player
-	gPlayerAnimations[gPlayerState]:update(dt)
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end
     --~ if (bPressed_Down) then gCamY = gCamY + s end
@@ -163,6 +160,10 @@ function PlayerUpdate(dt)
 	HandleCollision(gPlayer)
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
+
+	if (not bIsOnGround) then
+		gPlayerState = gPlayerStateJumpFallRight
+	end
 	
 	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
 	
@@ -220,5 +221,8 @@ function PlayerUpdate(dt)
 	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
+
+	-- update player animation depending on state of player
+	gPlayerAnimations[gPlayerState]:update(dt)
 end
 	
