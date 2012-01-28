@@ -246,5 +246,7 @@ function PlayerUpdate(dt)
 		gPlayerState = kPlayerStateJumpFallLeft
 	end
 	gPlayerAnimations[gPlayerState]:update(dt)
+	
+	CheckCoinCollision(gPlayer.x, gPlayer.y)
 end
 	
