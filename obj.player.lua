@@ -6,6 +6,8 @@ gPlayerOnGroundStopXMult = 0.70
 gPlayerGravity = 9.81 * 300
 gPlayerJumpVY = -1300
 
+gCamAdjustSpeed = 0.1
+
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
@@ -194,7 +196,7 @@ function PlayerUpdate(dt)
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
 	local ground_ty = floor((o.y + o.ry + 0.1*kTileSize)/kTileSize)
-	CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
+	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
 		if (o.ground_tx ~= ground_tx or 
 			o.ground_ty ~= ground_ty) then
@@ -243,7 +245,7 @@ function PlayerUpdate(dt)
 	
 	-- move cam to player
 	
-	local f = 0.05
+	local f = gCamAdjustSpeed
 	local fi = 1-f
 	
 	local newCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)

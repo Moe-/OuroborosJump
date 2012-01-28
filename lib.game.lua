@@ -202,8 +202,8 @@ function GameDraw ()
 	
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
-	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
-	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
+	--~ love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+	--~ love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
 	
 	Objects_Draw()
 	CollisionDrawDebug_Step()
