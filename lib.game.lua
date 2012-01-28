@@ -66,7 +66,7 @@ function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,
 
 
 function GameInit ()
-	for row=0,8 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
+	for row=0,20 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
 	
 	gMapIsBlockSolid[9] = nil	-- gras invis top row 1
 	gMapIsBlockSolid[10] = nil	-- gras invis top row 1
