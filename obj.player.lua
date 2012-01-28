@@ -25,10 +25,11 @@ gPlayerAnimationJumpUpRight = nil
 gPlayerAnimationJumpTurnRight = nil
 gPlayerAnimationJumpFallRight = nil
 gPlayerAnimationJumpLandRight = nil
+gJumpEnemyKill = false
 
 gPlayerAnimations = {}
-kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12}
-kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
+kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12, 32, 32}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
 
 kPlayerStateIdleRight = 1
 kPlayerStateIdleLeft = 2
@@ -44,6 +45,9 @@ kPlayerStateJumpUpLeft = 10
 kPlayerStateJumpTurnLeft = 11
 kPlayerStateJumpFallLeft = 12
 kPlayerStateJumpLandLeft = 13
+
+kPlayerStateSpawn = 15
+kPlayerStateDied = 16
 
 gPlayerState = kPlayerStateIdleRight
 
@@ -117,7 +121,7 @@ function PlayerUpdate(dt)
 	local bPressed_Right	= 0
 	local bPressed_Up		= 0
 	local bPressed_Down	= 0
-	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 then
+	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 or gJumpEnemyKill then
 		bPressed_Up = true
 	else
 		bPressed_Up = false
@@ -191,11 +195,12 @@ function PlayerUpdate(dt)
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	-- jump and left-right movement
-	if (bPressed_Up and gPlayer.bJumpRecharged) then
+	if (bPressed_Up and (gPlayer.bJumpRecharged or gJumpEnemyKill)) then
 		gPlayer.bJumpRecharged = false 
 		gPlayer.vy = gPlayerJumpVY 
 		o.ground_tx = nil
 		o.ground_ty = nil
+		gJumpEnemyKill = false
 	end
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2
@@ -235,8 +240,13 @@ function PlayerUpdate(dt)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
 
+	local died = CheckEnemyCollision(gPlayer)
+	print("died? ", died)
+
 	-- update player animation depending on state of player
-	if (bIsOnGround and bPressed_Right) then
+	if (died == true or gPlayerState == kPlayerStateDied) then
+		gPlayerState = kPlayerStateDied
+	elseif (bIsOnGround and bPressed_Right) then
 		gPlayerState = kPlayerStateMoveRight
 	elseif (bIsOnGround and bPressed_Left) then
 		gPlayerState = kPlayerStateMoveLeft
@@ -249,8 +259,7 @@ function PlayerUpdate(dt)
 	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
 		gPlayerState = kPlayerStateJumpFallLeft
 	end
-	
-	survived = CheckEnemyCollision(gPlayer)
+
 	gPlayerAnimations[gPlayerState]:update(dt)
 	
 	CheckCoinCollision(gPlayer.x, gPlayer.y)
