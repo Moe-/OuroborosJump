@@ -18,6 +18,7 @@ min = math.min
 
 gCamAddX = 0
 gCamAddY = 0
+gMinCamX = 0
 
 
 kTileType_DBlock_1 = 8
@@ -208,9 +209,11 @@ function GameStep (dt)
 	if (gPlayer.x > mapw) then 
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
+		gMinCamX = gCamX
 	elseif (gPlayer.x < 0) then 
 		gPlayer.x = gPlayer.x + mapw
 		gCamX = gCamX + mapw
+		gMinCamX = 0
 	end
 end
 
