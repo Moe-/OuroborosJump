@@ -5,9 +5,22 @@ Objects_InitLayerOrder({
 
 gMapGfxPrefix = "data/"
 
-gMapPath = "data/level01.tmx"
-gMapPath = "data/level02.tmx"
-gMapPath = "data/level03.tmx"
+
+kMapPath_Level01 = "data/level03.tmx"
+kMapPath_Level02 = "data/level02.tmx"
+
+gFirstLevelStarted = 0
+kFirstLevelStartCount = 4
+
+function MyStartLevel ()
+	if (gFirstLevelStarted < kFirstLevelStartCount) then 
+		gMapPath = kMapPath_Level01
+	else
+		gMapPath = kMapPath_Level02
+	end
+	gFirstLevelStarted = gFirstLevelStarted + 1
+end
+
 
 gMapMetaInvis = true
 
@@ -121,7 +134,7 @@ function GameInit ()
 	
 	gImgDot				= getCachedPaddedImage("data/dot.png")
 	
-
+	MyStartLevel()
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
 	local lname = "meta"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Meta = lid
 	local lname = "main"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Main = lid
@@ -221,6 +234,7 @@ end
 
 function GameNotifyNextMapCycle()
 	Background_NotifyNextMapCycle()
+	gFirstLevelStarted = gFirstLevelStarted + 1
 end
 
 function GameStep (dt)
