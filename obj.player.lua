@@ -1,6 +1,4 @@
 
-gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
-gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
@@ -9,10 +7,10 @@ gPlayerJumpVY = -1300
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
 
-gPlayer.vxMax = 400
-gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
 kDestoyBlockDelay = 0.5 -- in seconds
+
+kGameOverDelayAfterDeath = 3 -- in seconds
 
 gPlayerAnimationIdleRight = nil
 gPlayerAnimationIdleLeft = nil
@@ -65,6 +63,12 @@ function PlayerCheatStep ()
 end
 
 function PlayerInit ()
+
+	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
+	gPlayer.bJumpRecharged = false
+	gPlayer.vxMax = 400
+	gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
+
 	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
 	
 	local screen_w = love.graphics.getWidth()
@@ -300,6 +304,7 @@ function PlayerUpdate(dt)
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
 			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
+			InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 		end
 	end
 

@@ -18,10 +18,6 @@ min = math.min
 
 --~ kTileSize = 64 -- see lib.mapload.lua
 
-gCamAddX = 0
-gCamAddY = 0
-gMinCamX = 0
-gRunCount = 0
 
 kTileType_DBlock_1 = 8
 kTileType_DBlock_2 = 16
@@ -86,6 +82,11 @@ function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,
 
 
 function GameInit ()
+	gCamAddX = 0
+	gCamAddY = 0
+	gMinCamX = 0
+	gRunCount = 0
+
 	for row=0,20 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
 	
 	gMapIsBlockSolid[9] = nil	-- gras invis top row 1
