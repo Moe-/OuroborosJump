@@ -30,6 +30,7 @@ kTileType_Enemy_Type1 = 6
 kTileType_Enemy_Type2 = 14
 kTileType_Enemy_Type3 = 22
 kTileType_Enemy_Type4 = 30
+kTileType_Coin = 12 * 8 + 7
 
 
 function GameDamageBlock (tx,ty) 
@@ -87,6 +88,7 @@ function GameInit ()
 	
 	PlayerInit()
 	EnemyInit()
+	CoinInit()
 	PlayerSpawnAtStart()
 	EnemiesSpawnAtStart()
 	
@@ -130,6 +132,7 @@ function GameDraw ()
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
 	
+	CoinDraw()
 	EnemyDraw()
 	PlayerDraw()
 	
@@ -201,6 +204,7 @@ function GameStep (dt)
 	
 	PlayerUpdate(dt)
 	EnemyUpdate(dt)
+	CoinUpdate(dt)
 	Objects_Step(dt)
 	CollisionDebugStep()
 	
