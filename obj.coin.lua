@@ -3,6 +3,7 @@ kPlayerCoinCollectRadius = 40
 
 gCoinAnimation = nil
 gCoins = {}
+kCoinPropability = 4
 
 function CoinInit()
 	local gImgCoin = getCachedPaddedImage("data/coins.png")
@@ -40,4 +41,13 @@ function CheckCoinCollision(posX, posY)
 			gCoins[k] = false
 		end
 	end
+end
+
+function RespawnCoins()
+	for k, v in pairs(gCoins) do
+		if gCoins[k] == false and math.random(kCoinPropability) == 1 then
+			gCoins[k] = true
+		end
+	end
+	
 end
