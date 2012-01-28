@@ -16,6 +16,8 @@ min = math.min
 
 --~ kTileSize = 64 -- see lib.mapload.lua
 
+gCamAddX = 0
+gCamAddY = 0
 
 
 kTileType_DBlock_1 = 8

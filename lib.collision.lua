@@ -83,6 +83,7 @@ function CollisionPushOutBox (o,bx,by,bw,bh)
 	
 	-- calc moved-out-positions, either x or y
 	local bDebugDraw = false
+	--~ local bDebugDraw = true
 	if (x < bx   ) then out_x = bx   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
 	if (x > bx+bw) then out_x = bx+bw+r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
 	if (y < by   ) then out_y = by   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
@@ -90,8 +91,21 @@ function CollisionPushOutBox (o,bx,by,bw,bh)
 	--~ print("CollisionPushOutBox",out_x,out_y)
 	
 	-- if both moveouts are possible, choose the shorter distance and disable the other
-	if (out_x and out_y) then 
-		if (abs(out_x-x) < abs(out_y-y)) then out_y = nil else out_x = nil end
+	if (out_x and out_y) then
+		local bAvoidJumpWallBlock -- without this when running towards a wall you cannot jump up, due to diagonal top wall thing blocking
+		local m = o.r*0.5
+		if (o.vy < 0 and by+bh < y) then 
+			--~ CollisionDrawDebug_Add(gImgMarkTile_white,bx,by)
+			if (bx+bw < x-m) then bAvoidJumpWallBlock = true end
+			if (bx    > x+m) then bAvoidJumpWallBlock = true end
+		end
+		
+		
+		if (bAvoidJumpWallBlock) then
+			out_y = nil 
+		else 
+			if (abs(out_x-x) <= abs(out_y-y)) then out_y = nil else out_x = nil end
+		end
 	end
 	
 	-- now only one of the two will be active
