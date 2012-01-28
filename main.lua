@@ -9,12 +9,12 @@
 --~ require"lib/TEsound"
 
 love.filesystem.load("lib/include.lua")()
+love.filesystem.load("lib.mapload.lua")()
 
 love.filesystem.load("utils.lua")()
 love.filesystem.load("obj.base.lua")()
 love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
-love.filesystem.load("lib.mapload.lua")()
 love.filesystem.load("lib.collision.lua")()
 love.filesystem.load("lib.button.lua")()
 love.filesystem.load("obj.enemy.lua")()
@@ -153,7 +153,7 @@ gStepper = {}
 function RegisterStepper (fun) gStepper[fun] = true end
 function StepStepper (t) 
 	for fun,v in pairs(gStepper) do 
-		if (fun()) then gStepper[fun] = nil end 
+		if (fun(t)) then gStepper[fun] = nil end 
 	end -- t in seconds
 end
 function InvokeLater (dt,fun) 

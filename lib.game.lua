@@ -40,7 +40,7 @@ gDestroyBlockSequence[kTileType_DBlock_3] = kTileType_DBlock_4
 gDestroyBlockSequence[kTileType_DBlock_4] = kTileType_DBlock_5
 gDestroyBlockSequence[kTileType_DBlock_5] = kMapTileTypeEmpty
  
- 
+--~ print("gDestroyBlockSequence 5:",kTileType_DBlock_5,kMapTileTypeEmpty)
  
  
  
@@ -50,6 +50,7 @@ function IsBlockDestructible (tx,ty) return gDestroyBlockSequence[TiledMap_GetMa
 function GameDamageBlock (tx,ty) 
 	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
 	local t2 = gDestroyBlockSequence[t]
+	--~ print("GameDamageBlock",tx,ty,t,t2)
 	if (t2) then TiledMap_SetMapTile(tx,ty,kMapLayer_Main,t2) end
 end
 
