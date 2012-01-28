@@ -2,3 +2,17 @@ http://www.lua.org/manual/5.1/index.html
 
 
 http://ghoulsblade.schattenkind.net/wiki/index.php/Gamecamp
+
+
+walk physic ai : http://www.youtube.com/watch?v=v2q5kuic6HA
+
+
+indie games : 
+24h gamejam 1mal im jahr : http://www.devmania.org
+indie game community : http://www.tigsource.com/
+grosses gamedev forum : http://www.gamedev.net/
+opensource gamedev blog/news : http://freegamer.blogspot.com/
+
+
+
+

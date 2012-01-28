@@ -15,6 +15,7 @@ function GameInit ()
 	gCamX,gCamY = screen_w/2,screen_h/2
 	
 	gImgPlayer = getCachedPaddedImage("data/player.png")
+	gImgPlayer = getCachedPaddedImage("data/player.png")
 
 	TiledMap_Load("data/level01.tmx",nil,nil,gMapGfxPrefix)
 end
@@ -31,6 +32,7 @@ function GameDraw ()
 	gCamAddX = -camx + screen_w/2
 	gCamAddY = -camy + screen_h/2
 	
+	asd = 1123
 	
 	love.graphics.setColor(255,255,255,255)
     love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
