@@ -230,14 +230,30 @@ function GameDraw ()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
 	
+	local ptxt = TausenderTrenner(max(0,floor(kPointsPlayer)))
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.setFont(gMyFont)
-	love.graphics.print("Points: " .. floor(kPointsPlayer), 30, 650)
+	love.graphics.print("Points: " .. ptxt, 30, 650)
 	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
 	love.graphics.setColor(255, 0, 0)
-	love.graphics.print("Points: " .. floor(kPointsPlayer), 26, 650)
+	love.graphics.print("Points: " .. ptxt, 26, 650)
 	love.graphics.print("Coins: " .. floor(gCoinsCollected), 896, 650)
 	love.graphics.setColor(255, 255, 255)
+end
+
+function TausenderTrenner (v)
+	local txt = tostring(abs(v))
+	local len = #txt
+	local res = ""
+	for i=1,len do 
+		local cpos = len-i+1
+		local c = string.sub(txt,cpos,cpos)
+		res = c .. res
+		if ((i % 3) == 0 and i < len) then res = "," .. res end
+	end
+	
+	
+	return (v<0) and ("-"..res) or res
 end
 
 function GameNotifyNextMapCycle()
