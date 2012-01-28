@@ -4,7 +4,7 @@ gPlayer.bJumpRecharged = false
 gPlayerOnGroundStopXMult = 0.70
 
 gPlayerGravity = 9.81 * 300
-gPlayerJumpVY = -1200
+gPlayerJumpVY = -1300
 
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
@@ -184,6 +184,8 @@ function PlayerUpdate(dt)
 	end
 	
 	
+	local screen_w = love.graphics.getWidth()
+	local screen_h = love.graphics.getHeight()
 	-- jump and left-right movement
 	if (bPressed_Up and gPlayer.bJumpRecharged) then
 		gPlayer.bJumpRecharged = false 
@@ -192,8 +194,14 @@ function PlayerUpdate(dt)
 		o.ground_ty = nil
 	end
 	local vxadd = 0
-	if (bPressed_Left ) then vxadd = vxadd + -gPlayer.vxAccelPerSecond end
-	if (bPressed_Right) then vxadd = vxadd +  gPlayer.vxAccelPerSecond end
+	local screenMin = gMinCamX - screen_w/2
+--	print("player: " .. gPlayer.x .. " min " .. screenMin)
+	if (bPressed_Left and gPlayer.x >= screenMin) and abs(gPlayer.x - screenMin) < screen_w then 
+		vxadd = vxadd + -gPlayer.vxAccelPerSecond 
+	end
+	if (bPressed_Right) then 
+		vxadd = vxadd +  gPlayer.vxAccelPerSecond 
+	end
 	
 	-- xspeed accell or friction
 	if (vxadd == 0) then 
@@ -210,12 +218,15 @@ function PlayerUpdate(dt)
 	
 	-- move cam to player
 	
-	local screen_w = love.graphics.getWidth()
-	local screen_h = love.graphics.getHeight()
 	local f = 0.05
 	local fi = 1-f
 	
-	gCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)
+	local newCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)
+--	print("camera: " .. newCamX .. " min " .. gMinCamX)
+	if(gMinCamX <= newCamX and gCamX - gMinCamX <= screen_w) then
+		gMinCamX = gCamX
+		gCamX = newCamX
+	end
 	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)

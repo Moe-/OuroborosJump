@@ -18,6 +18,7 @@ min = math.min
 
 gCamAddX = 0
 gCamAddY = 0
+gMinCamX = 0
 
 
 kTileType_DBlock_1 = 8
@@ -55,9 +56,20 @@ function IsMapBlockSolid (tx,ty) return gMapIsBlockSolid[TiledMap_GetMapTile(tx,
 
 function GameInit ()
 	for row=0,8 do for x=1,3 do gMapIsBlockSolid[row*8+x] = true end end
-	gMapIsBlockSolid[9] = nil
-	gMapIsBlockSolid[10] = nil
-	gMapIsBlockSolid[11] = nil
+	
+	gMapIsBlockSolid[9] = nil	-- gras invis top row 1
+	gMapIsBlockSolid[10] = nil	-- gras invis top row 1
+	gMapIsBlockSolid[11] = nil	-- gras invis top row 1
+	
+	gMapIsBlockSolid[41] = nil	-- gras invis top row 1
+	gMapIsBlockSolid[42] = nil	-- gras invis top row 2
+	gMapIsBlockSolid[43] = nil	-- gras invis top row 3
+	
+	
+	gMapIsBlockSolid[57] = nil	-- small stone bottom deco
+	gMapIsBlockSolid[58] = nil	-- small stone bottom deco
+	gMapIsBlockSolid[59] = nil	-- small stone bottom deco
+	
 	-- solid block types : 1,2,3
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
@@ -212,9 +224,11 @@ function GameStep (dt)
 	if (gPlayer.x > mapw) then 
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
+		gMinCamX = gCamX
 	elseif (gPlayer.x < 0) then 
 		gPlayer.x = gPlayer.x + mapw
 		gCamX = gCamX + mapw
+		gMinCamX = 0
 	end
 end
 

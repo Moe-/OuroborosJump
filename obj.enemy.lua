@@ -76,7 +76,7 @@ function EnemyUpdate(dt)
 --		if(v.lastTiletype == 31 or tiletype == 55 or tiletype == 71) then --top
 --			diffY = -diffY;
 --		end
-		local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.5),floor(v.y/kTileSize + 0.5),kMapLayer_AI)
+		local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.05 * v.dX + 0.5),floor(v.y/kTileSize + 0.05 * v.dY + 0.5),kMapLayer_AI)
 --		local tiletype = TiledMap_GetMapTile(floor((v.x + kTileSize/2)/kTileSize + 0.5)*kTileSize,floor((v.y + kTileSize/2)/kTileSize)*kTileSize,kMapLayer_AI)
 
 
@@ -127,7 +127,7 @@ function EnemyDraw()
 		love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
 --		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
 --		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
-		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize +gCamAddY )
+		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
 
 	end
 	for i,v in pairs(gEnemiesType2) do
