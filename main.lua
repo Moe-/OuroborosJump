@@ -18,6 +18,7 @@ love.filesystem.load("lib.mapload.lua")()
 love.filesystem.load("lib.collision.lua")()
 love.filesystem.load("lib.button.lua")()
 love.filesystem.load("obj.enemy.lua")()
+love.filesystem.load("obj.coin.lua")()
 
 gShowDebug = false
 
