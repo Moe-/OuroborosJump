@@ -20,6 +20,9 @@ gCamAddX = 0
 gCamAddY = 0
 gMinCamX = 0
 
+--~ gInvokeLaterList = {}
+--~ function InvokeLater (t,fun) gInvokeLaterList[{t,fun}] = true end
+--~ function InvokeLaterStep (t) 
 
 kTileType_DBlock_1 = 8
 kTileType_DBlock_2 = 16
