@@ -70,6 +70,14 @@ function loadEnemies()
 end
 
 function EnemiesSpawnAtStart()
+	gEnemiesListType1 = { }
+	gEnemiesListType2 = { }
+	gEnemiesListType3 = { }
+	gEnemiesListType4 = { }
+	gEnemiesType1 = { }
+	gEnemiesType2 = { }
+	gEnemiesType3 = { }
+	gEnemiesType4 = { }
 	loadEnemies()
 	EnemiesRespawn(0)
 	createEnemyParticleSystems()
