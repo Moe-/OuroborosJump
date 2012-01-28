@@ -7,14 +7,26 @@ gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
 
+gPlayerAnimationIdleRight = nil
+gPlayerAnimationIdleLeft = nil
+
+kPlayerStateMoveRight = 0
+kPlayerStateMoveLeft = 1
+kPlayerStateIdleRight = 2
+kPlayerStateIdleLeft = 3
+
+gPlayerState = kPlayerStateIdleRight
+
 function PlayerInit ()
-	gImgPlayer		= getCachedPaddedImage("data/player2.png")
+	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
 	
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	gCamX = screen_w/2
 	gCamY = screen_h/2 + 0.5*kTileSize
-	
+
+	gPlayerAnimationIdleRight = newAnimation(gImgPlayer, 128, 128, 0.01, 60, 1, 30)
+	gPlayerAnimationIdleLeft = newAnimation(gImgPlayer, 128, 128, 0.01, 66, 33, 62)
 end
 
 function PlayerSpawnAtStart ()
@@ -29,9 +41,17 @@ end
 
 function PlayerDraw ()
 	local x,y = 0,kTileSize*4
-	love.graphics.draw(gImgPlayer, gPlayer.x+gCamAddX, gPlayer.y+gCamAddY )
+
+	--~ love.graphics.draw(gImgPlayer, gPlayer.x+gCamAddX, gPlayer.y+gCamAddY )
+
 	--~ love.graphics.draw(gImgPlayer, x+gCamAddX, y+gCamAddY )
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
+	
+  if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
+		gPlayerAnimationIdleLeft:draw(gPlayer.x+gCamAddX, gPlayer.y+gCamAddY, 0, 1, 1, 0, 0)
+	elseif (gPlayerState == kPlayerStateIdleRight or gPlayerState == kPlayerStateMoveRight) then
+		gPlayerAnimationIdleRight:draw(gPlayer.x+gCamAddX, gPlayer.y+gCamAddY, 0, 1, 1, 0, 0)
+	end
 	
 	local l,t,r,b = GetPlayerBBox()
 	
@@ -54,7 +74,7 @@ function GetPlayerBBox () local x,y,r = gPlayer.x,gPlayer.y,gPlayer.r return x-r
 
 
 function PlayerUpdate(dt)
-    local s = 500*dt
+  local s = 500*dt
 	
 	local bPressed_Left	= 0
 	local bPressed_Right	= 0
@@ -72,13 +92,30 @@ function PlayerUpdate(dt)
 	end
 	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
 		bPressed_Left = true
+		gPlayerState = kPlayerStateIdleLeft
 	else
 		bPressed_Left = false
 	end
 	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
 		bPressed_Right = true
+		gPlayerState = kPlayerStateIdleRight
 	else
 		bPressed_Right = false
+	end
+
+	if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
+		if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
+			gPlayerState = kPlayerStateIdleLeft
+		else
+			gPlayerState = kPlayerStateIdleRight
+		end
+	end
+
+	-- update player animation depending on state of player
+	if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
+		gPlayerAnimationIdleLeft:update(dt)
+	elseif (gPlayerState == kPlayerStateIdleRight or gPlayerState == kPlayerStateMoveRight) then
+		gPlayerAnimationIdleRight:update(dt)
 	end
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end

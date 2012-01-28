@@ -14,6 +14,7 @@ love.filesystem.load("obj.player.lua")()
 love.filesystem.load("lib.game.lua")()
 love.filesystem.load("lib.mapload.lua")()
 love.filesystem.load("lib.collision.lua")()
+love.filesystem.load("obj.enemy.lua")()
 
 gShowDebug = false
 
