@@ -34,15 +34,15 @@ kPlayerStateIdleLeft = 2
 kPlayerStateMoveRight = 3
 kPlayerStateMoveLeft = 4
 
-gPlayerStateJumpUpLeft = 5
-gPlayerStateJumpTurnLeft = 6
-gPlayerStateJumpFallLeft = 7
-gPlayerStateJumpLandRight = 8
+kPlayerStateJumpUpRight = 5
+kPlayerStateJumpTurnRight = 6
+kPlayerStateJumpFallRight = 7
+kPlayerStateJumpLandRight = 8
 
-gPlayerStateJumpUpRight = 10
-gPlayerStateJumpTurnRight = 11
-gPlayerStateJumpFallRight = 12
-gPlayerStateJumpLandRight = 13
+kPlayerStateJumpUpLeft = 10
+kPlayerStateJumpTurnLeft = 11
+kPlayerStateJumpFallLeft = 12
+kPlayerStateJumpLandLeft = 13
 
 gPlayerState = kPlayerStateIdleRight
 
@@ -157,13 +157,23 @@ function PlayerUpdate(dt)
     --~ if (bPressed_Left) then gPlayer.x = gPlayer.x - s end
     --~ if (bPressed_Right) then gPlayer.x = gPlayer.x + s end
 	
+	-- apply velocity and gravity
+	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
+	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
+	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
+	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
+	
 	HandleCollision(gPlayer)
+	
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
 
-	if (not bIsOnGround) then
-		gPlayerState = gPlayerStateJumpFallRight
+	if (bIsOnGround) then
+		gPlayerState = kPlayerStateIdleRight
+	else
+		gPlayerState = kPlayerStateJumpFallRight
 	end
+	--~ print("bIsOnGround",bIsOnGround)
 	
 	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
 	
@@ -202,11 +212,6 @@ function PlayerUpdate(dt)
 	-- limit x speed
 	gPlayer.vx = max(-gPlayer.vxMax,min(gPlayer.vxMax,gPlayer.vx))
 	
-	-- apply velocity and gravity
-	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
-	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
-	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
-	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
 	
 	
 	
