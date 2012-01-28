@@ -6,6 +6,9 @@ gPlayerOnGroundStopXMult = 0.70
 gPlayerGravity = 9.81 * 300
 gPlayerJumpVY = -1300
 
+gCamAdjustSpeed = 0.1
+kPlayerHideAfterDeathTime = 0.7
+
 gPlayer.vxMax = 400
 gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
 
@@ -82,6 +85,8 @@ function PlayerSpawnAtStart ()
 end
 
 function PlayerDraw ()
+	if (gPlayer.dead_hide_after and gMyTime > gPlayer.dead_hide_after) then return end
+
 	local x,y = 0,kTileSize*4
 
 	--~ love.graphics.draw(gImgPlayer, gPlayer.x+gCamAddX, gPlayer.y+gCamAddY )
@@ -94,11 +99,11 @@ function PlayerDraw ()
 	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
 	gPlayerAnimations[gPlayerState]:draw(px, py, 0, 1,1, 0, 0)
 	
-	local l,t,r,b = GetPlayerBBox()
-	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local l,t,r,b = GetPlayerBBox()
+	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)
@@ -112,6 +117,22 @@ end
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
+function CheckPlayerTouchesDeadlyBlock ()
+	local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
+	local e = kTileSize
+	local tx0,tx1 = floor((x-rx)/e),floor((x+rx)/e)
+	local ty0,ty1 = floor((y-ry)/e),floor((y+ry)/e)
+	for tx = tx0,tx1 do
+	for ty = ty0,ty1 do
+		if (IsTileDeadly(tx,ty)) then print("player touch deadly tile",tx,ty) return true end
+	end
+	end
+end
+function CheckPlayerDied ()
+	local died = CheckEnemyCollision(gPlayer)
+	if (died) then return true end
+	if (CheckPlayerTouchesDeadlyBlock()) then return true end
+end
 
 function PlayerUpdate(dt)
   local s = 500*dt
@@ -140,6 +161,13 @@ function PlayerUpdate(dt)
 		bPressed_Right = true
 	else
 		bPressed_Right = false
+	end
+	
+	if (gPlayer.bDead) then 
+		bPressed_Left = false
+		bPressed_Right = false
+		bPressed_Up = false
+		bPressed_Down = false
 	end
 
 	if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
@@ -178,7 +206,7 @@ function PlayerUpdate(dt)
 	-- damage ground
 	local ground_tx = floor((o.x)/kTileSize)
 	local ground_ty = floor((o.y + o.ry + 0.1*kTileSize)/kTileSize)
-	CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
+	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
 		if (o.ground_tx ~= ground_tx or 
 			o.ground_ty ~= ground_ty) then
@@ -195,6 +223,7 @@ function PlayerUpdate(dt)
 	local screen_w = love.graphics.getWidth()
 	local screen_h = love.graphics.getHeight()
 	-- jump and left-right movement
+	
 	if (bPressed_Up and (gPlayer.bJumpRecharged or gJumpEnemyKill)) then
 		gPlayer.bJumpRecharged = false 
 		gPlayer.vy = gPlayerJumpVY 
@@ -227,7 +256,7 @@ function PlayerUpdate(dt)
 	
 	-- move cam to player
 	
-	local f = 0.05
+	local f = gCamAdjustSpeed
 	local fi = 1-f
 	
 	local newCamX = fi * gCamX + f * (gPlayer.x + 0.2*screen_w)
@@ -240,7 +269,14 @@ function PlayerUpdate(dt)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
 
-	local died = CheckEnemyCollision(gPlayer)
+	local died = CheckPlayerDied()
+	if (died) then 
+		if (not gPlayer.bDead) then 
+			print("PLAYER DIED!", died) 
+			gPlayer.bDead = true
+			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
+		end
+	end
 
 	-- update player animation depending on state of player
 	if (died == true or gPlayerState == kPlayerStateDied) then

@@ -8,6 +8,8 @@ gMapGfxPrefix = "data/"
 gMapPath = "data/level01.tmx"
 gMapPath = "data/level02.tmx"
 
+gMapMetaInvis = true
+
 floor = math.floor
 ceil = math.ceil
 abs = math.abs
@@ -19,7 +21,7 @@ min = math.min
 gCamAddX = 0
 gCamAddY = 0
 gMinCamX = 0
-
+gRunCount = 0
 
 kTileType_DBlock_1 = 8
 kTileType_DBlock_2 = 16
@@ -42,11 +44,29 @@ gDestroyBlockSequence[kTileType_DBlock_5] = kMapTileTypeEmpty
  
 --~ print("gDestroyBlockSequence 5:",kTileType_DBlock_5,kMapTileTypeEmpty)
  
- 
- 
+
+gTileIsDeadly = {}
+gTileIsDeadly[4] = true -- spike
+gTileIsDeadly[5] = true -- spike
+gTileIsDeadly[12] = true -- spike
+gTileIsDeadly[13] = true -- spike
+gTileIsDeadly[61] = true -- water
 
 
-function IsBlockDestructible (tx,ty) return gDestroyBlockSequence[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] end
+ 
+function CheatShowMapMetaData ()
+	gTileMap_LayerInvisByName = {}
+end
+
+
+function IsTileDeadly			(tx,ty)
+	return	gTileIsDeadly[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] or 
+			gTileIsDeadly[TiledMap_GetMapTile(tx,ty,kMapLayer_Meta)] or 
+			gTileIsDeadly[TiledMap_GetMapTile(tx,ty,kMapLayer_AI)]
+end
+function IsBlockDestructible	(tx,ty) return gDestroyBlockSequence[TiledMap_GetMapTile(tx,ty,kMapLayer_Main)] end
+
+
 function GameDamageBlock (tx,ty) 
 	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
 	local t2 = gDestroyBlockSequence[t]
@@ -109,6 +129,9 @@ function GameInit ()
 	
 	for k,v in pairs(gMapLayers) do print("maplayer",type(k),k) end
 	
+	if (gMapMetaInvis) then gTileMap_LayerInvisByName["meta"] = true end
+	if (gMapMetaInvis) then gTileMap_LayerInvisByName["ai"] = true end
+
 	PlayerInit()
 	EnemyInit()
 	CoinInit()
@@ -134,9 +157,15 @@ end
 
 function DebugMouseClick (x,y,button) -- button = "l" , "r" , "m"
 	local tx,ty = GetTileUnderMouse(x,y)
-	local t = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
+	local t1 = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
+	local t2 = TiledMap_GetMapTile(tx,ty,kMapLayer_Meta)
+	local t3 = TiledMap_GetMapTile(tx,ty,kMapLayer_AI)
 	GameDamageBlock(tx,ty)
-	print("DebugMouseClick",tx,ty,button,t)
+	print("DebugMouseClick x,y="..tx..","..ty.." main="..tostring(t1).." meta="..tostring(t2).." ai="..tostring(t3))
+	
+	
+	
+	
 end
 
 function GameDraw ()
@@ -173,8 +202,8 @@ function GameDraw ()
 	
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
-	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
-	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
+	--~ love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+	--~ love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
 	
 	Objects_Draw()
 	CollisionDrawDebug_Step()
@@ -233,6 +262,10 @@ function GameStep (dt)
 	
 	local mapw = gMapUsedW*kTileSize
 	if (gPlayer.x > mapw) then 
+		if gMinCamX > 0 then
+			gRunCount = gRunCount + 1
+			EnemiesRespawn(gRunCount)
+		end	
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
 		gMinCamX = gCamX
