@@ -117,7 +117,7 @@ function PlayerDraw ()
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)
-	for psId = 1, 11 do
+	for psId = 1, 12 do
 		if gPlayerKillParticleSystemTimeLeft[psId] > 0 then
 			love.graphics.draw(gPlayerKillParticleSystems[psId], gPlayerKillParticlePosition[psId].x + gCamAddX, gPlayerKillParticlePosition[psId].y + gCamAddY)
 		end
@@ -131,6 +131,13 @@ end
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
+function isWater(tileid)
+	for i = 4, 11 do if tileid == 6 + 8*i then return true end end
+	for i = 5, 11 do if tileid == 5 + 8*i then return true end end
+	if tileid == 88 or tileid == 89 or tileid == 90 then return true end
+	return false
+end
+
 function CheckPlayerTouchesDeadlyBlock ()
 	local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
 	local e = kTileSize
@@ -140,10 +147,20 @@ function CheckPlayerTouchesDeadlyBlock ()
 	for ty = ty0,ty1 do
 		if (IsTileDeadly(tx,ty)) then
 			print("player touch deadly tile",tx,ty) 
-			gPlayerKillParticleSystems[11]:reset()
-			gPlayerKillParticlePosition[11].x = x
-			gPlayerKillParticlePosition[11].y = y + kTileSize / 2
-			gPlayerKillParticleSystemTimeLeft[11] = 15.0
+			tileid = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
+			if (isWater(tileid) == true) then
+				print("water")
+				gPlayerKillParticleSystems[12]:reset()
+				gPlayerKillParticlePosition[12].x = x
+				gPlayerKillParticlePosition[12].y = y + kTileSize / 2
+				gPlayerKillParticleSystemTimeLeft[12] = 15.0
+			else
+				print("floor")
+				gPlayerKillParticleSystems[11]:reset()
+				gPlayerKillParticlePosition[11].x = x
+				gPlayerKillParticlePosition[11].y = y + kTileSize / 2
+				gPlayerKillParticleSystemTimeLeft[11] = 15.0
+			end
 			return true 
 		end
 	end
@@ -329,7 +346,7 @@ function PlayerUpdate(dt)
 	
 	CheckCoinCollision(gPlayer.x, gPlayer.y)
 
-	for psId = 1, 11 do
+	for psId = 1, 12 do
 		if(gPlayerKillParticleSystemTimeLeft[psId] > 0) then
 			gPlayerKillParticleSystems[psId]:start()
 			gPlayerKillParticleSystems[psId]:update(dt)
@@ -402,4 +419,27 @@ function createPlayerParticleSystems()
 	gPlayerKillParticleSystems[11] = p
 	gPlayerKillParticlePosition[11] = { x = -500, y = -500 }
 	gPlayerKillParticleSystemTimeLeft[11] = 0
+
+	i = love.graphics.newImage(id)
+	p = love.graphics.newParticleSystem(i, 256)
+	p:setEmissionRate          (75 )
+	p:setLifetime              (15)
+	p:setParticleLife          (1.5, 3.75)
+	p:setPosition              (0, 0)
+	p:setDirection             (3)
+	p:setSpread                (6.28)
+	p:setSpeed                 (20, 50)
+	p:setGravity               (30)
+	p:setRadialAcceleration    (20)
+	p:setTangentialAcceleration(10)
+	p:setSize                  (2)
+	p:setSizeVariation         (1.5)
+	p:setRotation              (0)
+	p:setSpin                  (1)
+	p:setSpinVariation         (3)
+	p:setColor                 (192, 192, 255, 255, 128, 128, 192, 10)
+	p:stop();
+	gPlayerKillParticleSystems[12] = p
+	gPlayerKillParticlePosition[12] = { x = -500, y = -500 }
+	gPlayerKillParticleSystemTimeLeft[12] = 0
 end
