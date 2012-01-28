@@ -54,15 +54,17 @@ function PlayerDraw ()
 	--~ love.graphics.draw(gImgPlayer, screen_w/2,screen_h/2)
 	
 	-- draw idle animation
-  if (gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerAnimationIdleLeft:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
+	local px = floor(gPlayer.x+gPlayer.drawx+gCamAddX)
+	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
+	if (gPlayerState == kPlayerStateIdleLeft) then
+		gPlayerAnimationIdleLeft:draw(px,py, 0, 1, 1, 0, 0)
 	elseif (gPlayerState == kPlayerStateIdleRight) then
-		gPlayerAnimationIdleRight:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
+		gPlayerAnimationIdleRight:draw(px,py, 0, 1, 1, 0, 0)
 	-- draw move animation
 	elseif (gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationMoveLeft:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
+		gPlayerAnimationMoveLeft:draw(px,py, 0, 1, 1, 0, 0)
 	elseif (gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationMoveRight:draw(gPlayer.x+gPlayer.drawx+gCamAddX, gPlayer.y+gPlayer.drawy+gCamAddY, 0, 1, 1, 0, 0)
+		gPlayerAnimationMoveRight:draw(px,py, 0, 1, 1, 0, 0)
 	end
 	
 	--~ local l,t,r,b = GetPlayerBBox()

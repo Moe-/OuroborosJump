@@ -19,8 +19,8 @@ function CollisionDebugDraw ()
 	local my = love.mouse.getY()
 	o.x = mx - gCamAddX
 	o.y = my - gCamAddY
-	HandleCollision2(o)
-	gPlayerAnimationIdleLeft:draw(o.x+o.drawx+gCamAddX, o.y+o.drawy+gCamAddY, 0, 1, 1, 0, 0)
+	--~ HandleCollision2(o)
+	--~ gPlayerAnimationIdleLeft:draw(o.x+o.drawx+gCamAddX, o.y+o.drawy+gCamAddY, 0, 1, 1, 0, 0)
 end
 
 function HandleCollision (o)
