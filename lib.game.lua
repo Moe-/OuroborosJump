@@ -144,21 +144,22 @@ function GameStep (dt)
 			joystickaxes[kLeft] = 0
 		end	
 	end
-	if keyboard[kUp] == 1 or joystickaxes[kUp] == 1 then
-		gCamY = gCamY - s
-	end
-	if keyboard[kDown] == 1 or joystickaxes[kDown] == 1 then
-		gCamY = gCamY + s
-	end
-	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
-		gCamX = gCamX - s
-	end
-	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
-		gCamX = gCamX + s
-	end
+--	if keyboard[kUp] == 1 or joystickaxes[kUp] == 1 then
+--		gCamY = gCamY - s
+--	end
+--	if keyboard[kDown] == 1 or joystickaxes[kDown] == 1 then
+--		gCamY = gCamY + s
+--	end
+--	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
+--		gCamX = gCamX - s
+--	end
+--	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
+--		gCamX = gCamX + s
+--	end
 	
-	--Objects_Step(dt)
-	--PlayerUpdate(dt)
+	PlayerUpdate(dt)
+	Objects_Step(dt)
+	
 end
 
 function GameCleanUp ()
