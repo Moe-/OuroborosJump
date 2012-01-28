@@ -112,6 +112,22 @@ end
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry return x-rx,y-ry,x+rx,y+ry end
 
+function CheckPlayerTouchesDeadlyBlock ()
+	local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
+	local e = kTileSize
+	local tx0,tx1 = floor((x-rx)/e),floor((x+rx)/e)
+	local ty0,ty1 = floor((y-ry)/e),floor((y+ry)/e)
+	for tx = tx0,tx1 do
+	for ty = ty0,ty1 do
+		if (IsTileDeadly(tx,ty)) then print("player touch deadly tile",tx,ty) return true end
+	end
+	end
+end
+function CheckPlayerDied ()
+	local died = CheckEnemyCollision(gPlayer)
+	if (died) then return true end
+	if (CheckPlayerTouchesDeadlyBlock()) then return true end
+end
 
 function PlayerUpdate(dt)
   local s = 500*dt
@@ -240,8 +256,8 @@ function PlayerUpdate(dt)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
 
-	local died = CheckEnemyCollision(gPlayer)
-	print("died? ", died)
+	local died = CheckPlayerDied()
+	if (died) then print("died? ", died) end
 
 	-- update player animation depending on state of player
 	if (died == true or gPlayerState == kPlayerStateDied) then
