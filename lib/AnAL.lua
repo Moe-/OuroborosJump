@@ -75,6 +75,7 @@ end
 function animation:update(dt)
 	if not self.playing then return end
 	self.timer = self.timer + dt * self.speed
+	--print("update Animation ", self.timer, self.position, self.delays[self.position])
 	if self.timer > self.delays[self.position] then
 		self.timer = self.timer - self.delays[self.position]
 		self.position = self.position + 1 * self.direction

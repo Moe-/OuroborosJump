@@ -51,7 +51,7 @@ kPlayerStateDied = 16
 
 gPlayerState = kPlayerStateIdleRight
 
-kPlayerNumberAnimations = 6*32
+kPlayerNumberAnimations = 8*32
 function PlayerCheatStep ()
 	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
 end
@@ -241,7 +241,6 @@ function PlayerUpdate(dt)
 	--~ gCamY = max(screen_h/2,gCamY)
 
 	local died = CheckEnemyCollision(gPlayer)
-	print("died? ", died)
 
 	-- update player animation depending on state of player
 	if (died == true or gPlayerState == kPlayerStateDied) then
