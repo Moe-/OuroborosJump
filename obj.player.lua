@@ -17,19 +17,35 @@ gPlayerAnimationMoveLeft = nil
 gPlayerAnimationJumpUpLeft = nil
 gPlayerAnimationJumpTurnLeft = nil
 gPlayerAnimationJumpFallLeft = nil
-gPlayerAnimationFallLeft = nil
+gPlayerAnimationJumpLandLeft = nil
 
 gPlayerAnimationJumpUpRight = nil
 gPlayerAnimationJumpTurnRight = nil
 gPlayerAnimationJumpFallRight = nil
-gPlayerAnimationFallRight = nil
+gPlayerAnimationJumpLandRight = nil
 
-kPlayerStateMoveRight = 0
-kPlayerStateMoveLeft = 1
-kPlayerStateIdleRight = 2
-kPlayerStateIdleLeft = 3
+gPlayerAnimations = {}
+kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02}
+
+kPlayerStateIdleRight = 1
+kPlayerStateIdleLeft = 2
+kPlayerStateMoveRight = 3
+kPlayerStateMoveLeft = 4
+
+gPlayerStateJumpUpLeft = 5
+gPlayerStateJumpTurnLeft = 6
+gPlayerStateJumpFallLeft = 7
+gPlayerStateJumpLandRight = 8
+
+gPlayerStateJumpUpRight = 10
+gPlayerStateJumpTurnRight = 11
+gPlayerStateJumpFallRight = 12
+gPlayerStateJumpLandRight = 13
 
 gPlayerState = kPlayerStateIdleRight
+
+kPlayerNumberAnimations = 6*32
 
 function PlayerInit ()
 	gImgPlayer		= getCachedPaddedImage("data/player_tileset.png")
@@ -39,10 +55,11 @@ function PlayerInit ()
 	gCamX = screen_w/2
 	gCamY = screen_h/2 + 0.5*kTileSize
 
-	gPlayerAnimationIdleRight = newAnimation(gImgPlayer, 128, 128, 0.06, 4*32, 1, 1*32)
-	gPlayerAnimationIdleLeft = newAnimation(gImgPlayer, 128, 128, 0.06, 4*32, 1*32+1, 2*32)
-	gPlayerAnimationMoveRight = newAnimation(gImgPlayer, 128, 128, 0.02, 4*32, 2*32+1, 3*32)
-	gPlayerAnimationMoveLeft = newAnimation(gImgPlayer, 128, 128, 0.02, 4*32, 3*32+1, 4*32)
+	local animationStartIndex = 1
+	for k, v in pairs(kPlayerAnimationFrameNumbers) do
+		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1)
+		animationStartIndex = animationStartIndex + kPlayerAnimationFrameNumbers[k]
+	end
 end
 
 function PlayerSpawnAtStart ()
@@ -66,16 +83,7 @@ function PlayerDraw ()
 	-- draw idle animation
 	local px = floor(gPlayer.x+gPlayer.drawx+gCamAddX)
 	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
-	if (gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerAnimationIdleLeft:draw(px,py, 0, 1, 1, 0, 0)
-	elseif (gPlayerState == kPlayerStateIdleRight) then
-		gPlayerAnimationIdleRight:draw(px,py, 0, 1, 1, 0, 0)
-	-- draw move animation
-	elseif (gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationMoveLeft:draw(px,py, 0, 1, 1, 0, 0)
-	elseif (gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationMoveRight:draw(px,py, 0, 1, 1, 0, 0)
-	end
+	gPlayerAnimations[gPlayerState]:draw(px, py, 0, 1,1, 0, 0)
 	
 	--~ local l,t,r,b = GetPlayerBBox()
 	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
@@ -135,15 +143,7 @@ function PlayerUpdate(dt)
 	end
 
 	-- update player animation depending on state of player
-	if (gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerAnimationIdleLeft:update(dt)
-	elseif (gPlayerState == kPlayerStateIdleRight) then
-		gPlayerAnimationIdleRight:update(dt)
-	elseif (gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerAnimationMoveLeft:update(dt)
-	elseif (gPlayerState == kPlayerStateMoveRight) then
-		gPlayerAnimationMoveRight:update(dt)
-	end
+	gPlayerAnimations[gPlayerState]:update(dt)
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end
     --~ if (bPressed_Down) then gCamY = gCamY + s end
