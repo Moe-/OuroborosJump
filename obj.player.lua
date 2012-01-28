@@ -51,7 +51,7 @@ kPlayerStateDied = 16
 
 gPlayerState = kPlayerStateIdleRight
 
-kPlayerNumberAnimations = 6*32
+kPlayerNumberAnimations = 8*32
 function PlayerCheatStep ()
 	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
 end
@@ -94,11 +94,11 @@ function PlayerDraw ()
 	local py = floor(gPlayer.y+gPlayer.drawy+gCamAddY)
 	gPlayerAnimations[gPlayerState]:draw(px, py, 0, 1,1, 0, 0)
 	
-	local l,t,r,b = GetPlayerBBox()
-	local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
-	local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local l,t,r,b = GetPlayerBBox()
+	--~ local x,y = l,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = l,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,t	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
+	--~ local x,y = r,b	love.graphics.draw(gImgDot, x+gCamAddX, y+gCamAddY )
 	
 	--~ local mx = 0.5*(l+r)
 	--~ local my = 0.5*(t+b)

@@ -54,7 +54,9 @@ gTileIsDeadly[61] = true -- water
 
 
  
-
+function CheatShowMapMetaData ()
+	gTileMap_LayerInvisByName = {}
+end
 
 
 function IsTileDeadly			(tx,ty)
