@@ -56,12 +56,13 @@ function PlayerDraw ()
 
 end
 
-function DrawDebugBlock (tx,ty) 
-	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTileGreen or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+function DrawDebugBlock (img,tx,ty) 
+	love.graphics.draw(img, tx*kTileSize+gCamAddX, ty*kTileSize+gCamAddY )
 end
 
 -- local l,t,r,b = GetPlayerBBox()
 function GetPlayerBBox () return gPlayerX,gPlayerY,gPlayerX+gPlayerW,gPlayerY+gPlayerH end
+
 
 -- local minx,maxx,miny,maxy = GetPlayerPosLimits()
 function GetPlayerPosLimits (bDraw)
@@ -71,24 +72,41 @@ function GetPlayerPosLimits (bDraw)
 	local my = 0.5*(t+b)
 	local e = kTileSize
 	
-	-- vertical : 
+	local m = 10
+	
+	-- horizontal : right
+	local tx0,tx1 = floor(mx/e),floor(r/e)
+	local ty0,ty1 = floor((t+m)/e),floor((b-m)/e)
+	for tx = tx0,tx1 do 
+	for ty = ty0,ty1 do 
+		if (IsMapBlockSolid(tx,ty)) then local v = tx*e - gPlayerW maxx = min(maxx or v,v) end
+		if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
+	end
+	end
+	
+	
+	-- vertical : bottom
 	local tx0,tx1 = floor(l/e),floor(r/e)
 	local ty0,ty1 = floor(b/e-1),floor(b/e+1)
 	for tx = tx0,tx1 do 
 	for ty = ty0,ty1 do 
-		if (IsMapBlockSolid(tx,ty)) then maxy = min(maxy or ty*e,ty*e) end
+		if (IsMapBlockSolid(tx,ty)) then local v = ty*e - gPlayerH maxy = min(maxy or v,v) end
+		--~ if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
 	end
 	end
 	
-
-	--~ local ty0,ty1 = floor(t/e-1),floor(t/e)
-	--~ for tx = tx0,tx1 do 
-	--~ for ty = ty0,ty1 do 
-		--~ if (IsMapBlockSolid(tx,ty)) then miny = max(miny or ty*e,ty*e) end
-	--~ end
-	--~ end
+	-- vertical : bottom
+	local ty0,ty1 = floor(t/e-1),floor(t/e)
+	for tx = tx0,tx1 do 
+	for ty = ty0,ty1 do 
+		if (IsMapBlockSolid(tx,ty)) then local v = ty*e + e miny = max(miny or v,v) end
+		--~ if (bDraw) then DrawDebugBlock(IsMapBlockSolid(tx,ty) and gImgMarkTile_blue or gImgMarkTile_yellow,tx,ty) end
+	end
+	end
 	
-	maxy = kTileSize * 8
+	
+	
+	--~ maxy = kTileSize * 8
 	return minx,maxx,miny,maxy
 end
 
@@ -136,8 +154,16 @@ function PlayerUpdate(dt)
 	local bOnGround = false
 	
 	
-	local minx,maxx,miny,maxy = GetPlayerPosLimits()
 
+	-- first x limit
+	local minx,maxx,miny,maxy = GetPlayerPosLimits()
+	if (minx and gPlayerX < minx) then gPlayerX = minx if (gPlayerVX < 0) then gPlayerVX = 0 end end
+	if (maxx and gPlayerX > maxx) then gPlayerX = maxx if (gPlayerVX > 0) then gPlayerVX = 0 end end
+	
+	
+	-- then top and bottom
+	local minx,maxx,miny,maxy = GetPlayerPosLimits()
+	if (miny and gPlayerY < miny) then gPlayerY = miny if (gPlayerVY < 0) then gPlayerVY = 0 end end
 	if (maxy) then 
 		if (gPlayerY >= maxy) then
 			gPlayerY = maxy
@@ -145,11 +171,8 @@ function PlayerUpdate(dt)
 			if (gPlayerVY > 0) then gPlayerVY = 0 end
 		end
 	end
-	if (miny and gPlayerY < miny) then gPlayerY = miny if (gPlayerVY < 0) then gPlayerVY = 0 end end
-	if (minx and gPlayerX < minx) then gPlayerX = minx if (gPlayerVX < 0) then gPlayerVX = 0 end end
-	if (maxx and gPlayerX > maxx) then gPlayerX = maxx if (gPlayerVX > 0) then gPlayerVX = 0 end end
 	
-	
+	-- jump and left-right movement
 	if (bPressed_Up and bOnGround) then gPlayerVY = gPlayerJumpVY end
 	local vxadd = 0
 	if (bPressed_Left ) then vxadd = vxadd + -gPlayerVXAccelPerSecond end
@@ -165,7 +188,7 @@ function PlayerUpdate(dt)
 	-- limit x speed
 	gPlayerVX = max(-gPlayerVXMax,min(gPlayerVXMax,gPlayerVX))
 	
-	
+	-- apply velocity and gravity
 	gPlayerX = gPlayerX + gPlayerVX * dt 
 	gPlayerY = gPlayerY + gPlayerVY * dt 
 	if (not bOnGround) then gPlayerVY = gPlayerVY + gPlayerGravity*dt end

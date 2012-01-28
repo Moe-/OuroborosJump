@@ -53,7 +53,13 @@ function GameInit ()
 	print("GameInit")
 		
 	gImgMarkTile		= getCachedPaddedImage("data/mark-tile.png")
-	gImgMarkTileGreen	= getCachedPaddedImage("data/mark-tile-green.png")
+	gImgMarkTile_black	= getCachedPaddedImage("data/mark-tile-black.png")
+	gImgMarkTile_white	= getCachedPaddedImage("data/mark-tile-white.png")
+	gImgMarkTile_green	= getCachedPaddedImage("data/mark-tile-green.png")
+	gImgMarkTile_red	= getCachedPaddedImage("data/mark-tile-red.png")
+	gImgMarkTile_yellow	= getCachedPaddedImage("data/mark-tile-yellow.png")
+	gImgMarkTile_blue	= getCachedPaddedImage("data/mark-tile-blue.png")
+	
 	gImgDot				= getCachedPaddedImage("data/dot.png")
 
 	gMapPath = "data/level01.tmx"
@@ -109,7 +115,7 @@ function GameDraw ()
 	PlayerDraw()
 	
 	local mtx,mty,mx,my = GetTileUnderMouse()
-	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTileGreen or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
+	love.graphics.draw(IsMapBlockSolid(mtx,mty) and gImgMarkTile_green or gImgMarkTile, mtx*kTileSize+gCamAddX, mty*kTileSize+gCamAddY )
 	love.graphics.draw(gImgDot, mx+gCamAddX, my+gCamAddY )
 	
 	Objects_Draw()
