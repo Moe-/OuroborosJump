@@ -1,9 +1,9 @@
-cScreenMenu = {}
+cScreenGame = {}
 
 
 function cScreenGame:LoadData	() end
 function cScreenGame:Start		()
-	gCurrentScreen = this
+	gCurrentScreen = self
 	GameInit()
 end
 

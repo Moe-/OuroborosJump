@@ -1,7 +1,6 @@
 -- oruborum: the snake eating itself, endless repetition of jump+run with level becoming harder
 -- sizes : player 128x64 block 64x64
 -- TODO : hiscore/meter
--- TODO : startscreen 
 -- TODO : game over screen 
 -- TODO : partikel 
 -- TODO : sounds / musik 

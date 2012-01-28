@@ -1,10 +1,12 @@
 cScreenGameOver = {}
 
 function cScreenGameOver:LoadData ()
-	gScreenImage_GameOver		= getCachedPaddedImage("data/gameover01.png")
+	self.bgimg		= getCachedPaddedImage("data/gameover01.png")
 end
 
 function cScreenGameOver:Start ()
-	gCurrentScreen = this
+	gCurrentScreen = self
 end
 
+
+function cScreenGameOver:draw( ) love.graphics.draw(self.bgimg,0,0) end
