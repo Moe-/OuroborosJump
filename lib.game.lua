@@ -5,6 +5,9 @@ Objects_InitLayerOrder({
 
 gMapGfxPrefix = "data/"
 
+gMapPath = "data/level01.tmx"
+gMapPath = "data/level02.tmx"
+
 floor = math.floor
 ceil = math.ceil
 abs = math.abs
@@ -67,7 +70,6 @@ function GameInit ()
 	
 	gImgDot				= getCachedPaddedImage("data/dot.png")
 
-	gMapPath = "data/level01.tmx"
 	TiledMap_Load(gMapPath,nil,nil,gMapGfxPrefix)
 	kMapLayer_Meta = TiledMap_GetLayerZByName("meta")
 	kMapLayer_Main = TiledMap_GetLayerZByName("main")

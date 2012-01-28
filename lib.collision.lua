@@ -1,10 +1,14 @@
 
 gCollisionDebugDrawList = {}
 function CollisionDrawDebug_Step ()
-	for k,v in ipairs(gCollisionDebugDrawList) do love.graphics.draw(unpack(v)) end
-	gCollisionDebugDrawList = {}
+	if (next(gCollisionDebugDrawList)) then
+		for k,v in ipairs(gCollisionDebugDrawList) do love.graphics.draw(unpack(v)) end
+		gCollisionDebugDrawList = {}
+	end
 end
-function CollisionDrawDebug_Add (img,x,y) table.insert(gCollisionDebugDrawList,{img,x+gCamAddX,y+gCamAddY}) end
+function CollisionDrawDebug_Add (img,x,y) 
+	table.insert(gCollisionDebugDrawList,{img,x+gCamAddX,y+gCamAddY}) 
+end
 
 function CollisionDebugStep ()
 end
@@ -15,8 +19,8 @@ function CollisionDebugDraw ()
 	local my = love.mouse.getY()
 	o.x = mx - gCamAddX
 	o.y = my - gCamAddY
-	HandleCollision2(o)
-	gPlayerAnimationIdleLeft:draw(o.x+o.drawx+gCamAddX, o.y+o.drawy+gCamAddY, 0, 1, 1, 0, 0)
+	--~ HandleCollision2(o)
+	--~ gPlayerAnimationIdleLeft:draw(o.x+o.drawx+gCamAddX, o.y+o.drawy+gCamAddY, 0, 1, 1, 0, 0)
 end
 
 function HandleCollision (o)
@@ -24,11 +28,11 @@ function HandleCollision (o)
 	
 	HandleCollision2(o)
 	
-	local bottom_y = 11*kTileSize
-	if (o.y > bottom_y) then
-		o.y = bottom_y
-		if (o.vy > 0) then o.vy = 0 o.bIsOnGround = true end
-	end
+	--~ local bottom_y = 11*kTileSize
+	--~ if (o.y > bottom_y) then
+		--~ o.y = bottom_y
+		--~ if (o.vy > 0) then o.vy = 0 o.bIsOnGround = true end
+	--~ end
 end
 
 function HandleCollision2 (o)
@@ -74,14 +78,15 @@ function CollisionPushOutBox (o,bx,by,bw,bh)
 	local out_x
 	local out_y
 	
-	CollisionDrawDebug_Add(gImgMarkTile_white,bx,by)
+	--~ CollisionDrawDebug_Add(gImgMarkTile_white,bx,by)
 	
 	
 	-- calc moved-out-positions, either x or y
-	if (x < bx   ) then out_x = bx   -r CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end
-	if (x > bx+bw) then out_x = bx+bw+r CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end
-	if (y < by   ) then out_y = by   -r CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end
-	if (y > by+bh) then out_y = by+bh+r CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end
+	local bDebugDraw = false
+	if (x < bx   ) then out_x = bx   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (x > bx+bw) then out_x = bx+bw+r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (y < by   ) then out_y = by   -r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
+	if (y > by+bh) then out_y = by+bh+r if (bDebugDraw) then CollisionDrawDebug_Add(gImgMarkTile_white,bx,by) end end
 	--~ print("CollisionPushOutBox",out_x,out_y)
 	
 	-- if both moveouts are possible, choose the shorter distance and disable the other
