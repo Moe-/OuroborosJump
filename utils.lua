@@ -107,3 +107,6 @@ function Point2PointDistance(x1, y1, x2, y2) return VectorLength(x2 - x1,y2 - y1
 
 function rand2 (vmin,vmax) return vmin + (vmax-vmin)*math.random() end
 
+function sign(x) return (x/abs(x)) end
+
+

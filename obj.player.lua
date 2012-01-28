@@ -159,10 +159,11 @@ function PlayerUpdate(dt)
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
 	
+	-- damage ground
+	local ground_tx = floor((o.x)/kTileSize)
+	local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
+	--~ CollisionDrawDebug_Add(gImgMarkTile_red,ground_tx*kTileSize,ground_ty*kTileSize)
 	if (bIsOnGround) then 
-		local ground_tx = floor((o.x)/kTileSize)
-		local ground_ty = floor((o.y + o.r + 0.1*kTileSize)/kTileSize)
-		--~ CollisionDrawDebug_Add(gImgMarkTile_white,ground_tx*kTileSize,ground_ty*kTileSize)
 		if (o.ground_tx ~= ground_tx or 
 			o.ground_ty ~= ground_ty) then
 			o.ground_tx  = ground_tx
