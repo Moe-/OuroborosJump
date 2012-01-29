@@ -109,4 +109,7 @@ function rand2 (vmin,vmax) return vmin + (vmax-vmin)*math.random() end
 
 function sign(x) return (x/abs(x)) end
 
-
+function playSFX(effect)
+	love.audio.stop(effect)
+	love.audio.play(effect)
+end

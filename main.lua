@@ -54,7 +54,7 @@ function love.load()
 	print("bla1", love.joystick)
 	mapKeys()
 	UpdateMyTicks()
-	
+	loadSounds()
 	-- load hiscore from disk
 	-- local path = love.filesystem.getSaveDirectory( )
 	gHighScore = {}
@@ -175,3 +175,14 @@ function InvokeLater (dt,fun)
 		if (t > ti) then fun() return true end 
 		end) 
 end -- dt in seconds from now
+
+function loadSounds()
+--	gBackgroundMusic = love.audio.newSource("bgm.ogg", "stream")
+--	love.audio.play(gBackgroundMusic)
+	gCoinSound = love.audio.newSource("data/Coin.wav", "static")
+	gCoinSound:setVolume( 0.25 )
+	gJumpSound = love.audio.newSource("data/Jump.wav", "static")
+	gJumpSound:setVolume( 0.25 )
+	gRandomSound = love.audio.newSource("data/Random.wav", "static")
+	gRandomSound:setVolume( 2.0 )
+end

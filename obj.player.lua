@@ -278,6 +278,7 @@ function PlayerUpdate(dt)
 		o.ground_tx = nil
 		o.ground_ty = nil
 		gJumpEnemyKill = false
+		playSFX(gJumpSound)
 	end
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2
@@ -332,22 +333,20 @@ function PlayerUpdate(dt)
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
 	-- update player animation depending on state of player
-	if (not (gPlayerState == kPlayerStateSpawn)) then
-		if (died == true or gPlayerState == kPlayerStateDied) then
-			gPlayerState = kPlayerStateDied
-		elseif (bIsOnGround and bPressed_Right) then
-			gPlayerState = kPlayerStateMoveRight
-		elseif (bIsOnGround and bPressed_Left) then
-			gPlayerState = kPlayerStateMoveLeft
-		elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
-			gPlayerState = kPlayerStateIdleRight
-		elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
-			gPlayerState = kPlayerStateIdleLeft
-		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
-			gPlayerState = kPlayerStateJumpFallRight
-		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
-			gPlayerState = kPlayerStateJumpFallLeft
-		end
+	if (died == true or gPlayerState == kPlayerStateDied) then
+		gPlayerState = kPlayerStateDied
+	elseif (bIsOnGround and bPressed_Right) then
+		gPlayerState = kPlayerStateMoveRight
+	elseif (bIsOnGround and bPressed_Left) then
+		gPlayerState = kPlayerStateMoveLeft
+	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
+		gPlayerState = kPlayerStateIdleRight
+	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
+		gPlayerState = kPlayerStateIdleLeft
+	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
+		gPlayerState = kPlayerStateJumpFallRight
+	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
+		gPlayerState = kPlayerStateJumpFallLeft
 	end
 
 	gPlayerAnimations[gPlayerState]:update(dt)
