@@ -20,4 +20,7 @@ http://globalgamejam.org/users/moe
 http://globalgamejam.org/users/search89
 music: Filippo Beck Peccoz (mail@fbpsound.com)
 
+vids:
+http://youtu.be/yBzqZ4eYWjI
+
 Some sound effects from freesound.org; authors: petenice, freqman, soundcollectah, halleck, noisecollector, soaper, acclivity
