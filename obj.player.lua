@@ -30,7 +30,9 @@ gJumpEnemyKill = false
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12, 32, 32}
-kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.04}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.08, 0.04}
+kPlayerAnimationModes = {"loop", "loop", "loop", "loop", "loop", "once", "loop", "once", "loop", "loop", "once", "loop", "once", "loop", "once", "once"}
+kPlayerAnimationCallbacks = { }
 
 kPlayerStateIdleRight = 1
 kPlayerStateIdleLeft = 2
@@ -50,7 +52,7 @@ kPlayerStateJumpLandLeft = 13
 kPlayerStateSpawn = 15
 kPlayerStateDied = 16
 
-gPlayerState = kPlayerStateIdleRight
+gPlayerState = kPlayerStateSpawn
 
 gPlayerKillParticleSystems = { }
 gPlayerKillParticlePosition = { }
@@ -63,6 +65,7 @@ function PlayerCheatStep ()
 end
 
 function PlayerInit ()
+	kPlayerAnimationCallbacks = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, callbackSpawn, false}
 
 	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
@@ -78,9 +81,15 @@ function PlayerInit ()
 
 	local animationStartIndex = 1
 	for k, v in pairs(kPlayerAnimationFrameNumbers) do
-		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1)
+		local callback = nil
+		if (kPlayerAnimationCallbacks[k] ~= false) then
+			callback = kPlayerAnimationCallbacks[k]
+		end
+		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1, kPlayerAnimationCallbacks[k])
+		gPlayerAnimations[k]:setMode(kPlayerAnimationModes[k])
 		animationStartIndex = animationStartIndex + kPlayerAnimationFrameNumbers[k]
-	end
+	end	
+
 	createPlayerParticleSystems()
 end
 
@@ -207,14 +216,6 @@ function PlayerUpdate(dt)
 		bPressed_Up = false
 		bPressed_Down = false
 	end
-
-	if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
-		if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
-			gPlayerState = kPlayerStateIdleLeft
-		else
-			gPlayerState = kPlayerStateIdleRight
-		end
-	end
 	
     --~ if (bPressed_Up) then gCamY = gCamY - s end
     --~ if (bPressed_Down) then gCamY = gCamY + s end
@@ -296,10 +297,7 @@ function PlayerUpdate(dt)
 	
 	-- limit x speed
 	gPlayer.vx = max(-gPlayer.vxMax,min(gPlayer.vxMax,gPlayer.vx))
-	
-	
-	
-	
+
 	-- move cam to player
 	
 	local f = gCamAdjustSpeed
@@ -326,20 +324,31 @@ function PlayerUpdate(dt)
 	end
 
 	-- update player animation depending on state of player
-	if (died == true or gPlayerState == kPlayerStateDied) then
-		gPlayerState = kPlayerStateDied
-	elseif (bIsOnGround and bPressed_Right) then
-		gPlayerState = kPlayerStateMoveRight
-	elseif (bIsOnGround and bPressed_Left) then
-		gPlayerState = kPlayerStateMoveLeft
-	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
-		gPlayerState = kPlayerStateIdleRight
-	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
-		gPlayerState = kPlayerStateIdleLeft
-	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
-		gPlayerState = kPlayerStateJumpFallRight
-	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerState = kPlayerStateJumpFallLeft
+	if (not (gPlayerState == kPlayerStateSpawn)) then
+		--[[if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
+			if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
+				gPlayerState = kPlayerStateIdleLeft
+			else
+				gPlayerState = kPlayerStateIdleRight
+			end
+		end]]
+
+		if (died == true or gPlayerState == kPlayerStateDied) then
+			gPlayerState = kPlayerStateDied
+		elseif (bIsOnGround and bPressed_Right) then
+			gPlayerState = kPlayerStateMoveRight
+		elseif (bIsOnGround and bPressed_Left) then
+			gPlayerState = kPlayerStateMoveLeft
+		elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
+			gPlayerState = kPlayerStateIdleRight
+		elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
+			gPlayerState = kPlayerStateIdleLeft
+		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
+			print("falling now")
+			gPlayerState = kPlayerStateJumpFallRight
+		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
+			gPlayerState = kPlayerStateJumpFallLeft
+		end
 	end
 
 	gPlayerAnimations[gPlayerState]:update(dt)
@@ -353,6 +362,11 @@ function PlayerUpdate(dt)
 			gPlayerKillParticleSystemTimeLeft[psId] = gPlayerKillParticleSystemTimeLeft[psId] - dt
 		end
 	end
+end
+
+function callbackSpawn(animation)
+	print("finished spawning")
+	gPlayerState = kPlayerStateIdleRight
 end
 
 function createPlayerParticleSystems()

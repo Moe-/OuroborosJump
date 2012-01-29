@@ -49,7 +49,7 @@ function newAnimation(image, fw, fh, delay, frames, position_first, position_las
 	a.playing = true
 	a.speed = 1
 	a.mode = 1
-	a.callback = callback 
+	a.callback = callback
 	a.direction = 1	
 	local imgw = image:getWidth()
 	local imgh = image:getHeight()
