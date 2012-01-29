@@ -11,6 +11,7 @@ function CoinInit()
 	local gImgCoin = getCachedPaddedImage("data/coins.png")
 	gCoinAnimation = newAnimation(gImgCoin, 64, 64, 0.02, 0)
 	local coinsList = TiledMap_ListAllOfTypeOnLayer(kMapLayer_Meta, kTileType_Coin)
+	gCoins = {}
 	for k, v in pairs(coinsList) do
 		gCoins[{x=v.x*kTileSize, y=v.y*kTileSize}] = true
 	end
@@ -37,7 +38,8 @@ function CheckCoinCollision(posX, posY)
 			local posXPow = math.pow(posX-coinMidX,2)
 			local posYPow = math.pow(posY-coinMidY,2)
 			local	distance = math.sqrt(posXPow + posYPow)
-			if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then
+			if (distance < (kTileSize / 2 + kPlayerCoinCollectRadius)) then	
+				--~ print("+CoinCollected",gCoinsCollected)
 				gCoins[k] = false
 				gCoinsCollected = gCoinsCollected + 1
 				kPointsPlayer = kPointsPlayer + 10000
@@ -48,6 +50,7 @@ function CheckCoinCollision(posX, posY)
 end
 
 function RespawnCoins()
+	--~ print("RespawnCoins")
 	for k, v in pairs(gCoins) do
 		if gCoins[k] == false and math.random(kCoinPropability) == 1 then
 			gCoins[k] = true
