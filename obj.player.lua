@@ -8,9 +8,9 @@ gPlayerOnGroundStopXMult = 0.70
 --gPlayerJumpVY = -600
 
 gPlayerGravity = 9.81 * 250
-gPlayerJumpVY = -1100
+gPlayerJumpVY = -1200
 
-gPlayerJumpStopYFriction = 0.50 -- reduce jump height when player releases jump key early
+gPlayerJumpStopYFriction = 0.90 -- reduce jump height when player releases jump key early
 
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
@@ -43,9 +43,9 @@ kPlayerAnimationFrameNumbers = {
 					4, 4, 8, 4, 12, 
 					32, 32}
 kPlayerAnimationDelay = {0.06,	0.06,	0.02,	0.02, 	
-						0.1,	0.1, 	0.07,	0.1,   0.2,	
-						0.1,	0.1, 	0.07,	0.1,   0.2, 
-						0.08, 0.04}
+						0.1,	0.1, 	0.04,	0.05,   0.99999,	
+						0.1,	0.1, 	0.04,	0.05,   0.99999, 
+						0.04, 0.04}
 kPlayerAnimationModes = {"loop", "loop", "loop", "loop", 
 						"once", "once", "loop", "once", "loop", 
 						"once", "once", "loop", "once", "loop", 

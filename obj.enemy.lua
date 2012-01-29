@@ -12,7 +12,7 @@ gImgEnemy2 = nil
 gImgEnemy3 = nil
 gImgEnemy4 = nil
 
-kEnemyAnimationDelay = {0.08, 0.08}
+kEnemyAnimationDelay = {0.04, 0.04}
 
 -- maximum number of frames for each enemy type
 kEnemy1NumberAnimations = {32, 24}
@@ -368,7 +368,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 	local died = false
 	for i,v in pairs(group) do
 		-- only check for collision if enemy is not dying
-		if (not v.dying) then
+		if ((not v.dying) and (not gPlayer.bDead)) then
 			local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
 			local mr = kTileSize/2
 			local mx = v.x + mr  -- v.x,v.y = top left corner
