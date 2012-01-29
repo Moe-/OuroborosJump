@@ -231,7 +231,7 @@ function PlayerUpdate(dt)
 	local bPressed_Right	= 0
 	local bPressed_Up		= 0
 	local bPressed_Down	= 0
-	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 or gJumpEnemyKill then
+	if keyboard[kUp] == 1 or joystickbuttons[kA] == 1 or joystickbuttons[kB] == 1 or joystickbuttons[kX] == 1 or joystickbuttons[kY] == 1 or gJumpEnemyKill then
 		bPressed_Up = true
 	else
 		bPressed_Up = false
