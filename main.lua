@@ -182,14 +182,27 @@ function InvokeLater (dt,fun)
 end -- dt in seconds from now
 
 function loadSounds()
-	gBackgroundMusic = love.audio.newSource("data/ouroboros.ogg", "stream")
+--	gBackgroundMusic = love.audio.newSource("data/ouroboros.ogg", "stream")
+--	gBackgroundMusic:setLooping( true )
+--	gBackgroundMusic:setPitch( 0.5 )
+--	love.audio.play(gBackgroundMusic)
+--	gBackgroundMusicLoop = love.audio.newSource("data/Loop.ogg", "stream")
+--	gBackgroundMusicLoop:setLooping( true )
+--	gBackgroundMusicLoop:setPitch( 0.6 )
+--	love.audio.play(gBackgroundMusicLoop)
+	gBackgroundAmbient = love.audio.newSource("data/newSo1124/sfx_jungle_ambi.ogg", "stream")
+	gBackgroundAmbient:setLooping( true )
+	love.audio.play(gBackgroundAmbient)
+	musicSong = math.random(3)
+	if musicSong == 1 then
+		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_1.ogg", "stream")
+	elseif musicSong == 2 then
+		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_2.ogg", "stream")
+	elseif musicSong == 3 then
+		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_3.ogg", "stream")
+	end
 	gBackgroundMusic:setLooping( true )
-	gBackgroundMusic:setPitch( 0.5 )
 	love.audio.play(gBackgroundMusic)
-	gBackgroundMusicLoop = love.audio.newSource("data/Loop.ogg", "stream")
-	gBackgroundMusicLoop:setLooping( true )
-	gBackgroundMusicLoop:setPitch( 0.6 )
-	love.audio.play(gBackgroundMusicLoop)
 	gCoinSound = love.audio.newSource("data/Coin.wav", "static")
 	gCoinSound:setVolume( 0.25 )
 	gJumpSound = love.audio.newSource("data/Jump.wav", "static")
