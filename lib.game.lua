@@ -5,22 +5,12 @@ Objects_InitLayerOrder({
 
 gMapGfxPrefix = "data/"
 
-
-kMapPath_Level01 = "data/level03.tmx"
-kMapPath_Level02 = "data/level02.tmx"
-
 gFirstLevelStarted = 0
 kFirstLevelStartCount = 4
 kPointsPlayer = 0
 
 function MyStartLevel ()
-	--[[if (gFirstLevelStarted < kFirstLevelStartCount) then 
-		gMapPath = kMapPath_Level01
-	else
-		gMapPath = kMapPath_Level02
-	end
-	gFirstLevelStarted = gFirstLevelStarted + 1]]
-	gMapPath = "data/level0" .. gCurrentLevel .. ".tmx"
+	gMapPath = "data/level" .. gCurrentLevel .. ".tmx"
 end
 
 
