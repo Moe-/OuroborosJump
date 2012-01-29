@@ -111,5 +111,7 @@ function sign(x) return (x/abs(x)) end
 
 function playSFX(effect)
 	love.audio.stop(effect)
-	love.audio.play(effect)
+	if(effect:isPaused() == true or effect:isStopped() == true) then
+		love.audio.play(effect)
+	end
 end

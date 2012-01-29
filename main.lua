@@ -196,4 +196,6 @@ function loadSounds()
 	gJumpSound:setVolume( 0.25 )
 	gRandomSound = love.audio.newSource("data/Random.wav", "static")
 	gRandomSound:setVolume( 2.0 )
+	gStonesCrackingSound = love.audio.newSource("data/stonesCracking.wav", "static")
+	gSplashSound = love.audio.newSource("data/splash.wav", "static")
 end
