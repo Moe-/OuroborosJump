@@ -197,13 +197,23 @@ function EnemyGroupUpdate(dt, group)
 			local mx = v.x + mr  -- v.x,v.y = top left corner
 			local my = v.y + mr  -- v.x,v.y = top left corner
 			
-			local bThink = true
-			--~ if (v.target_x == 
 			
+			
+			local bThink = true
+			if (v.target_x) then 
+				if (v.dX < 0 and mx > v.target_x) then bThink = false end
+				if (v.dX > 0 and mx < v.target_x) then bThink = false end
+			end
+			if (v.target_y) then 
+				if (v.dY < 0 and my > v.target_y) then bThink = false end
+				if (v.dY > 0 and my < v.target_y) then bThink = false end
+			end
 			
 			if (bThink) then 
 				local tx = floor((mx)/kTileSize)
 				local ty = floor((my)/kTileSize)
+				
+				
 				
 				--~ CollisionDrawDebug_Add(gImgDot,mx,my)
 				--~ CollisionDrawDebug_Add(gImgMarkTile_red,tx*kTileSize,ty*kTileSize)
@@ -249,6 +259,16 @@ function EnemyGroupUpdate(dt, group)
 					v.dX = -v.dX;
 					v.dY = -v.dY;
 				end
+				
+				local tx = floor((mx)/kTileSize)
+				local ty = floor((my)/kTileSize)
+				v.target_x = nil
+				v.target_y = nil
+				if (v.dX < 0) then v.target_x = (tx - 1) * kTileSize + kTileSize/2 end 
+				if (v.dX > 0) then v.target_x = (tx + 1) * kTileSize + kTileSize/2 end 
+				if (v.dY < 0) then v.target_y = (ty - 1) * kTileSize + kTileSize/2 end 
+				if (v.dY > 0) then v.target_y = (ty + 1) * kTileSize + kTileSize/2 end 
+				
 			end
 			v.x = v.x + v.dX
 			v.y = v.y + v.dY
