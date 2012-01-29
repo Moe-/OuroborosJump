@@ -142,6 +142,7 @@ function GameInit ()
 	local lname = "meta"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Meta = lid
 	local lname = "main"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Main = lid
 	local lname = "ai"		local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_AI = lid
+	local lname = "player"	local lid = TiledMap_GetLayerZByName(lname) kMapLayer_Player = lid -- not fatal if missing
 	
 	gMapUsedW = TiledMap_GetMapWUsed()
 	print("gMapUsedW",gMapUsedW)
@@ -208,11 +209,13 @@ function GameDraw ()
 	
 	CoinDraw()
 	EnemyDraw()
-	PlayerDraw()
+	
+	
+	if (not kMapLayer_Player) then PlayerDraw() end
 	
 	
 	
-    TiledMap_DrawNearCam(gCamX,gCamY)
+    TiledMap_DrawNearCam(gCamX,gCamY,function (z,layer) if (z == kMapLayer_Player) then PlayerDraw() end end)
 	local mapw = gMapUsedW*kTileSize
 	if (gCamX < 0.5*mapw) then 
 		TiledMap_DrawNearCam(gCamX+mapw,gCamY)
