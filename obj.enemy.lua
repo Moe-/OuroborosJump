@@ -393,9 +393,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					gEnemiesKillParticlePosition[gEnemiesPSCur].y = v.y + kTileSize / 2
 					gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
 					gEnemiesPSCur = gEnemiesPSCur + 1
-					if gEnemiesPSCur == 6 then
-						gEnemiesPSCur = 1
-					end
+					if gEnemiesPSCur == 6 then gEnemiesPSCur = 1 end
 					kPointsPlayer = kPointsPlayer + 7500
 					playSFX(gRandomSound)
 				else
@@ -408,14 +406,31 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 	return died;
 end
 
-function CheatTestEnemyDieParticleOnPlayer ()
+function CheatTestEnemyDieParticleOnPlayer (x,y)
 	gEnemiesKillParticleSystems[gEnemiesPSCur]:reset()
-	gEnemiesKillParticlePosition[gEnemiesPSCur].x = gPlayer.x + kTileSize / 2
-	gEnemiesKillParticlePosition[gEnemiesPSCur].y = gPlayer.y + kTileSize / 2 - 100
+	gEnemiesKillParticlePosition[gEnemiesPSCur].x = (x or gPlayer and gPlayer.x or 0) + kTileSize / 2
+	gEnemiesKillParticlePosition[gEnemiesPSCur].y = (y or gPlayer and gPlayer.y or 0) + kTileSize / 2 - 100
 	gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
 	gEnemiesPSCur = gEnemiesPSCur + 1
+	if gEnemiesPSCur == 6 then gEnemiesPSCur = 1 end
 end
 
+function CheatTestEnemyDieParticleOnPlayer_Update (dt) 
+	for psId = 1, 5 do
+		if(gEnemiesKillParticleSystemTimeLeft[psId] > 0) then
+			gEnemiesKillParticleSystems[psId]:start()
+			gEnemiesKillParticleSystems[psId]:update(dt)
+			gEnemiesKillParticleSystemTimeLeft[psId] = gEnemiesKillParticleSystemTimeLeft[psId] - dt
+		end
+	end
+end
+function CheatTestEnemyDieParticleOnPlayer_Draw () 
+	for psId = 1, 5 do
+		if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
+			love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + (gCamAddX or 0), gEnemiesKillParticlePosition[psId].y + (gCamAddY or 0))
+		end
+	end
+end
 
 function createEnemyParticleSystems()
 	for psId = 1, 5 do
