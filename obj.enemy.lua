@@ -94,6 +94,7 @@ function EnemiesRespawn(runCount)
 	EnemiesRespawnTable(gEnemiesListType4, gEnemiesType4, runCount + 1)
 end
 
+
 function EnemiesRespawnTable(inArray, outArray, distance)
 	local index = min(distance, #inArray)
 	for i,v in pairs(inArray) do
@@ -105,6 +106,10 @@ function EnemiesRespawnTable(inArray, outArray, distance)
 			outArray[insertIndex].dX = 0
 			outArray[insertIndex].dY = 0
 			outArray[insertIndex].dying = false
+			
+			local speed_var = 0.1
+			outArray[insertIndex].walk_speed_factor = rand2(1-speed_var,1+speed_var)
+			
 		end
 	end
 end
@@ -175,6 +180,10 @@ end
 function EnemyGroupUpdate(dt, group)
 	for i,v in pairs(group) do
 		if (v.dying == false) then
+			local myspeed = kWalkSpeed * (v.walk_speed_factor or 1.0)
+			
+			
+			
 	--		local diffX = v.x/kTileSize - floor(v.x/kTileSize + 0.5);
 	--		local diffY = v.y/kTileSize - floor(v.y/kTileSize + 0.5);
 	--		if(v.lastTiletype == 47 or tiletype == 71 or tiletype == 79) then -- left
@@ -183,46 +192,63 @@ function EnemyGroupUpdate(dt, group)
 	--		if(v.lastTiletype == 31 or tiletype == 55 or tiletype == 71) then --top
 	--			diffY = -diffY;
 	--		end
-			local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.05 * v.dX + 0.5),floor(v.y/kTileSize + 0.05 * v.dY + 0.5),kMapLayer_AI)
-	--		local tiletype = TiledMap_GetMapTile(floor((v.x + kTileSize/2)/kTileSize + 0.5)*kTileSize,floor((v.y + kTileSize/2)/kTileSize)*kTileSize,kMapLayer_AI)
+	
+			local mr = kTileSize/2
+			local mx = v.x + mr  -- v.x,v.y = top left corner
+			local my = v.y + mr  -- v.x,v.y = top left corner
+			
+			local bThink = true
+			--~ if (v.target_x == 
+			
+			
+			if (bThink) then 
+				local tx = floor((mx)/kTileSize)
+				local ty = floor((my)/kTileSize)
+				
+				--~ CollisionDrawDebug_Add(gImgDot,mx,my)
+				--~ CollisionDrawDebug_Add(gImgMarkTile_red,tx*kTileSize,ty*kTileSize)
+				
+				local tiletype = TiledMap_GetMapTile(tx,ty,kMapLayer_AI)
+				--~ local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.05 * v.dX + 0.5),floor(v.y/kTileSize + 0.05 * v.dY + 0.5),kMapLayer_AI)
+				--~ local tiletype = TiledMap_GetMapTile(floor((v.x + kTileSize/2)/kTileSize + 0.5)*kTileSize,floor((v.y + kTileSize/2)/kTileSize)*kTileSize,kMapLayer_AI)
 
-
-	--		if(diffX ~= 0 and diffY ~= 0) then
-	--			print("diffX " .. diffX .. " diffY " .. diffY);	
-	--		end
-	--		local dist = sqrt(diffX * diffX + diffY * diffY);
-			if(tiletype == 23) then --up
-				v.dX = 0
-				v.dY = - kWalkSpeed * v.walkDir * kTileSize * dt
-			elseif(tiletype == 31) then --right
-				v.dX = kWalkSpeed * v.walkDir * kTileSize * dt
-				v.dY = 0
-			elseif(tiletype == 39) then --down
-				v.dX = 0
-				v.dY = kWalkSpeed * v.walkDir * kTileSize * dt
-			elseif(tiletype == 47) then --left
-				v.dX = - kWalkSpeed * v.walkDir * kTileSize * dt
-				v.dY = 0
-			elseif(tiletype == 55) then --upright
-				v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-				v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			elseif(tiletype == 63) then --downright
-				v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-				v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			elseif(tiletype == 71) then --upleft
-				v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-				v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			elseif(tiletype == 79) then --downleft
-				v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-				v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			elseif(tiletype == 87 and vWalkDir ~= 1) then --normal mode
-				v.walkDir = 1;
-				v.dX = -v.dX;
-				v.dY = -v.dY;
-			elseif(tiletype == 95 and vWalkDir ~= -1) then --invert mode
-				v.walkDir = -1;
-				v.dX = -v.dX;
-				v.dY = -v.dY;
+		--		if(diffX ~= 0 and diffY ~= 0) then
+		--			print("diffX " .. diffX .. " diffY " .. diffY);	
+		--		end
+		--		local dist = sqrt(diffX * diffX + diffY * diffY);
+				if(tiletype == 23) then --up
+					v.dX = 0
+					v.dY = - myspeed * v.walkDir * kTileSize * dt
+				elseif(tiletype == 31) then --right
+					v.dX = myspeed * v.walkDir * kTileSize * dt
+					v.dY = 0
+				elseif(tiletype == 39) then --down
+					v.dX = 0
+					v.dY = myspeed * v.walkDir * kTileSize * dt
+				elseif(tiletype == 47) then --left
+					v.dX = - myspeed * v.walkDir * kTileSize * dt
+					v.dY = 0
+				elseif(tiletype == 55) then --upright
+					v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+					v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				elseif(tiletype == 63) then --downright
+					v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+					v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				elseif(tiletype == 71) then --upleft
+					v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+					v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				elseif(tiletype == 79) then --downleft
+					v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+					v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				elseif(tiletype == 87 and vWalkDir ~= 1) then --normal mode
+					v.walkDir = 1;
+					v.dX = -v.dX;
+					v.dY = -v.dY;
+				elseif(tiletype == 95 and vWalkDir ~= -1) then --invert mode
+					v.walkDir = -1;
+					v.dX = -v.dX;
+					v.dY = -v.dY;
+				end
 			end
 			v.x = v.x + v.dX
 			v.y = v.y + v.dY
