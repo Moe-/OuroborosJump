@@ -174,102 +174,104 @@ end
 
 function EnemyGroupUpdate(dt, group)
 	for i,v in pairs(group) do
---		local diffX = v.x/kTileSize - floor(v.x/kTileSize + 0.5);
---		local diffY = v.y/kTileSize - floor(v.y/kTileSize + 0.5);
---		if(v.lastTiletype == 47 or tiletype == 71 or tiletype == 79) then -- left
---			diffX = -diffX;
---		end
---		if(v.lastTiletype == 31 or tiletype == 55 or tiletype == 71) then --top
---			diffY = -diffY;
---		end
-		local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.05 * v.dX + 0.5),floor(v.y/kTileSize + 0.05 * v.dY + 0.5),kMapLayer_AI)
---		local tiletype = TiledMap_GetMapTile(floor((v.x + kTileSize/2)/kTileSize + 0.5)*kTileSize,floor((v.y + kTileSize/2)/kTileSize)*kTileSize,kMapLayer_AI)
+		if (v.dying == false) then
+	--		local diffX = v.x/kTileSize - floor(v.x/kTileSize + 0.5);
+	--		local diffY = v.y/kTileSize - floor(v.y/kTileSize + 0.5);
+	--		if(v.lastTiletype == 47 or tiletype == 71 or tiletype == 79) then -- left
+	--			diffX = -diffX;
+	--		end
+	--		if(v.lastTiletype == 31 or tiletype == 55 or tiletype == 71) then --top
+	--			diffY = -diffY;
+	--		end
+			local tiletype = TiledMap_GetMapTile(floor(v.x/kTileSize + 0.05 * v.dX + 0.5),floor(v.y/kTileSize + 0.05 * v.dY + 0.5),kMapLayer_AI)
+	--		local tiletype = TiledMap_GetMapTile(floor((v.x + kTileSize/2)/kTileSize + 0.5)*kTileSize,floor((v.y + kTileSize/2)/kTileSize)*kTileSize,kMapLayer_AI)
 
 
---		if(diffX ~= 0 and diffY ~= 0) then
---			print("diffX " .. diffX .. " diffY " .. diffY);	
---		end
---		local dist = sqrt(diffX * diffX + diffY * diffY);
-		if(tiletype == 23) then --up
-			v.dX = 0
-			v.dY = - kWalkSpeed * v.walkDir * kTileSize * dt
-		elseif(tiletype == 31) then --right
-			v.dX = kWalkSpeed * v.walkDir * kTileSize * dt
-			v.dY = 0
-		elseif(tiletype == 39) then --down
-			v.dX = 0
-			v.dY = kWalkSpeed * v.walkDir * kTileSize * dt
-		elseif(tiletype == 47) then --left
-			v.dX = - kWalkSpeed * v.walkDir * kTileSize * dt
-			v.dY = 0
-		elseif(tiletype == 55) then --upright
-			v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-		elseif(tiletype == 63) then --downright
-			v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-		elseif(tiletype == 71) then --upleft
-			v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-		elseif(tiletype == 79) then --downleft
-			v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
-			v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
-		elseif(tiletype == 87 and vWalkDir ~= 1) then --normal mode
-			v.walkDir = 1;
-			v.dX = -v.dX;
-			v.dY = -v.dY;
-		elseif(tiletype == 95 and vWalkDir ~= -1) then --invert mode
-			v.walkDir = -1;
-			v.dX = -v.dX;
-			v.dY = -v.dY;
+	--		if(diffX ~= 0 and diffY ~= 0) then
+	--			print("diffX " .. diffX .. " diffY " .. diffY);	
+	--		end
+	--		local dist = sqrt(diffX * diffX + diffY * diffY);
+			if(tiletype == 23) then --up
+				v.dX = 0
+				v.dY = - kWalkSpeed * v.walkDir * kTileSize * dt
+			elseif(tiletype == 31) then --right
+				v.dX = kWalkSpeed * v.walkDir * kTileSize * dt
+				v.dY = 0
+			elseif(tiletype == 39) then --down
+				v.dX = 0
+				v.dY = kWalkSpeed * v.walkDir * kTileSize * dt
+			elseif(tiletype == 47) then --left
+				v.dX = - kWalkSpeed * v.walkDir * kTileSize * dt
+				v.dY = 0
+			elseif(tiletype == 55) then --upright
+				v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			elseif(tiletype == 63) then --downright
+				v.dX = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			elseif(tiletype == 71) then --upleft
+				v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				v.dY = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			elseif(tiletype == 79) then --downleft
+				v.dX = - kWalkSpeedDiag * v.walkDir * kTileSize * dt
+				v.dY = kWalkSpeedDiag * v.walkDir * kTileSize * dt
+			elseif(tiletype == 87 and vWalkDir ~= 1) then --normal mode
+				v.walkDir = 1;
+				v.dX = -v.dX;
+				v.dY = -v.dY;
+			elseif(tiletype == 95 and vWalkDir ~= -1) then --invert mode
+				v.walkDir = -1;
+				v.dX = -v.dX;
+				v.dY = -v.dY;
+			end
+			v.x = v.x + v.dX
+			v.y = v.y + v.dY
 		end
-		v.x = v.x + v.dX
-		v.y = v.y + v.dY
 	end
-end
 
-function EnemyDraw()
-	for i,v in pairs(gEnemiesType1) do
-		if (not gEnemiesType1[i].dying == true) then
-			gEnemy1Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
-		else 
-			for key, value in pairs (gEnemyDyingAnimations) do
-				if (key.groupNumber == 1 and key.enemyNumber==i) then
-					key:draw(v.x+gCamAddX, v.y+gCamAddY)
+	function EnemyDraw()
+		for i,v in pairs(gEnemiesType1) do
+			if (not gEnemiesType1[i].dying == true) then
+				gEnemy1Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			else 
+				for key, value in pairs (gEnemyDyingAnimations) do
+					if (key.groupNumber == 1 and key.enemyNumber==i) then
+						key:draw(v.x+gCamAddX, v.y+gCamAddY)
+					end
 				end
 			end
-		end
-		--love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
---		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
---		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
-		--~ love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
+			--love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
+	--		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
+	--		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
+			--~ love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
 
-	end
-	for i,v in pairs(gEnemiesType2) do
-		if (gEnemiesType2[i].dying == true) then
-			gEnemy2Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-		else
-			gEnemy2Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 		end
-	end
-	for i,v in pairs(gEnemiesType3) do
-		if (gEnemiesType3[i].dying == true) then
-			gEnemy3Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-		else
-			gEnemy3Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		for i,v in pairs(gEnemiesType2) do
+			if (gEnemiesType2[i].dying == true) then
+				gEnemy2Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			else
+				gEnemy2Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			end
 		end
-	end
-	for i,v in pairs(gEnemiesType4) do
-		if (gEnemiesType4[i].dying == true) then
-			gEnemy4Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-		else
-			gEnemy4Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		for i,v in pairs(gEnemiesType3) do
+			if (gEnemiesType3[i].dying == true) then
+				gEnemy3Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			else
+				gEnemy3Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			end
 		end
-	end
+		for i,v in pairs(gEnemiesType4) do
+			if (gEnemiesType4[i].dying == true) then
+				gEnemy4Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			else
+				gEnemy4Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+			end
+		end
 
-	for psId = 1, 5 do
-		if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
-			love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + gCamAddX, gEnemiesKillParticlePosition[psId].y + gCamAddY)
+		for psId = 1, 5 do
+			if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
+				love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + gCamAddX, gEnemiesKillParticlePosition[psId].y + gCamAddY)
+			end
 		end
 	end
 end
