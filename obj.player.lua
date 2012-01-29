@@ -278,6 +278,7 @@ function PlayerUpdate(dt)
 		o.ground_tx = nil
 		o.ground_ty = nil
 		gJumpEnemyKill = false
+		playSFX(gJumpSound)
 	end
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2

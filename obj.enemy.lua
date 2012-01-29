@@ -229,8 +229,10 @@ function EnemyGroupUpdate(dt, group)
 		end
 	end
 
+		
 	function EnemyDraw()
 		for i,v in pairs(gEnemiesType1) do
+			MyEnemyDrawDebug(v,1)
 			if (not gEnemiesType1[i].dying == true) then
 				gEnemy1Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 			else 
@@ -247,6 +249,7 @@ function EnemyGroupUpdate(dt, group)
 
 		end
 		for i,v in pairs(gEnemiesType2) do
+			MyEnemyDrawDebug(v,2)
 			if (gEnemiesType2[i].dying == true) then
 				gEnemy2Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
 			else
@@ -254,6 +257,7 @@ function EnemyGroupUpdate(dt, group)
 			end
 		end
 		for i,v in pairs(gEnemiesType3) do
+			MyEnemyDrawDebug(v,3)
 			if (gEnemiesType3[i].dying == true) then
 				gEnemy3Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
 			else
@@ -261,6 +265,7 @@ function EnemyGroupUpdate(dt, group)
 			end
 		end
 		for i,v in pairs(gEnemiesType4) do
+			MyEnemyDrawDebug(v,4)
 			if (gEnemiesType4[i].dying == true) then
 				gEnemy4Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
 			else
@@ -300,13 +305,36 @@ function animationEnded(animation)
 	gEnemyDyingAnimations[animation] = nil
 end
 
+function MyEnemyDrawDebug (o,groupid)
+	--~ local x,y = o.x,o.y
+	--~ love.graphics.draw(gImgDot,x+gCamAddX,y+gCamAddY)
+end
+
+function TestBBoxOverlap (x1,y1,w1,h1, x2,y2,w2,h2)
+	if (x1+w1 < x2   ) then return end -- 1 left of 2
+	if (x1    > x2+w2) then return end -- 1 right of 2
+	if (y1+h1 < y2   ) then return end -- 1 top of 2
+	if (y1    > y2+h2) then return end -- 1 bottom of 2
+	return true
+end
+
 function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, groupNumber)
 	local died = false
 	for i,v in pairs(group) do
 		-- only check for collision if enemy is not dying
 		if (not v.dying) then
-			if v.x - kTileSize/2 <= player.x and v.x + kTileSize > player.x and v.y <= player.y and v.y + kTileSize > player.y then
-				if v.y + kTileSize/2 >= player.y and player.vy > 0 then
+			local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
+			local mr = kTileSize/2
+			local mx = v.x + mr  -- v.x,v.y = top left corner
+			local my = v.y + mr  -- v.x,v.y = top left corner
+			local mbot = my + mr
+			
+			local playerbottom = player.y
+			local bBBoxOverlap = TestBBoxOverlap(x-rx,y-ry,rx*2,ry*2, mx-mr,my-mr,mr*2,mr*2)
+			
+			
+			if	bBBoxOverlap then
+				if	my >= player.y and player.vy > 0 then
 					group[i].dying = true
 					local enemyDyingAnimation = newAnimation(imgEnemy, 64, 64, kEnemyAnimationDelay[2], 0, animationStartIndex, animationStartIndex + kEnemy1NumberAnimations[2] - 1, animationEnded)
 					enemyDyingAnimation:setMode("once")
@@ -323,6 +351,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 						gEnemiesPSCur = 1
 					end
 					kPointsPlayer = kPointsPlayer + 7500
+					playSFX(gRandomSound)
 				else
 					died = true	
 				end
