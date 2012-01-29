@@ -207,6 +207,7 @@ function CheckPlayerTouchesDeadlyBlock ()
 				gPlayerKillParticlePosition[11].x = x
 				gPlayerKillParticlePosition[11].y = y + kTileSize / 2
 				gPlayerKillParticleSystemTimeLeft[11] = 15.0
+				love.audio.play(gScreamSound)
 			end
 			return true 
 		end
