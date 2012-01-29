@@ -322,10 +322,14 @@ function PlayerUpdate(dt)
 		if (not gPlayer.bDead) then 
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
+			
 			if (kPointsPlayer > 0) then SaveHighScore(kPointsPlayer) end
 			gPlayerState = kPlayerStateDied
 		end
 	end
+	
+	if (gPlayer.bDead) then gPlayer.vx = 0 end
+	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
 	-- update player animation depending on state of player
 	if (not (gPlayerState == kPlayerStateSpawn)) then
