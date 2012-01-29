@@ -19,8 +19,10 @@ http://globalgamejam.org/users/k-melli
 http://globalgamejam.org/users/moe
 http://globalgamejam.org/users/search89
 music: Filippo Beck Peccoz (mail@fbpsound.com)
+hagish (hagish@schattenkind.net)
 
 vids:
 http://youtu.be/yBzqZ4eYWjI
+old: http://www.youtube.com/watch?feature=player_embedded&v=l9MHpfaDOHo
 
 Some sound effects from freesound.org; authors: petenice, freqman, soundcollectah, halleck, noisecollector, soaper, acclivity
