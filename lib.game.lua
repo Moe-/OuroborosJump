@@ -234,11 +234,14 @@ function GameDraw ()
 	local ptxt = TausenderTrenner(max(0,floor(kPointsPlayer)))
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.setFont(gMyFont)
-	love.graphics.print("Points: " .. ptxt, 30, 650)
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
+	love.graphics.print("Laps: " .. gRunCount, 30, 650)
+	love.graphics.print("" .. ptxt, 500, 650) -- points
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 1000, 650)
 	love.graphics.setColor(255, 0, 0)
-	love.graphics.print("Points: " .. ptxt, 26, 650)
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 896, 650)
+	love.graphics.print("Laps: " .. gRunCount, 26, 650)
+	love.graphics.print("" .. ptxt, 496, 650) -- points
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 996, 650)
+
 	love.graphics.setColor(255, 255, 255)
 end
 
