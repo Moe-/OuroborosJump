@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -f build/ouroborosjump.love build/ouroborosjump.exe
+rm -f build/ouroborosjump.love build/ouroborosjump.exe build/ouroborosjump-src.zip
 zip /tmp/ouroborosjump.zip `find . |grep -v .git|grep -v screencapture|grep -v build`
 cp /tmp/ouroborosjump.zip build/ouroborosjump-src.zip
 mv /tmp/ouroborosjump.zip build/ouroborosjump.love
