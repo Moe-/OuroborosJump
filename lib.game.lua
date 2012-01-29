@@ -114,8 +114,9 @@ function GameInit ()
 	
 	
 	gMapIsBlockSolid[57] = nil	-- small stone bottom deco
-	gMapIsBlockSolid[58] = nil	-- small stone bottom deco
-	gMapIsBlockSolid[59] = nil	-- small stone bottom deco
+	
+	
+	gMapIsBlockSolid[59+8] = nil	-- small stone bottom deco
 	
 	-- solid block types : 1,2,3
 	-- solid block types : 9,10,11
