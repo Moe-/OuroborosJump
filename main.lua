@@ -51,6 +51,7 @@ function UpdateMyTicks ()
 end
 
 function love.load()
+	--~ for k,v in pairs(argv) do print("argv",k,v) end
 	print("bla1", love.joystick)
 	mapKeys()
 	UpdateMyTicks()
@@ -60,11 +61,11 @@ function love.load()
 	gHighScore = {}
 	kHighScoreFile = "ouroboros-jump-hiscore.lst"
 	--~ kHighScoreFile = (love.filesystem.getSaveDirectory() or "") .. "/" .. "ouroboros-jump-hiscore.lst"
-	print("hiscore path",kHighScoreFile)
+	--~ print("hiscore path",kHighScoreFile)
 	if (love.filesystem.exists(kHighScoreFile)) then
 		gHighScore = {}
 		for line in love.filesystem.lines(kHighScoreFile) do
-			print("hiscore line",line)
+			--~ print("hiscore line",line)
 			table.insert(gHighScore,line)
 		end
 	end

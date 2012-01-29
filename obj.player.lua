@@ -177,6 +177,7 @@ function CheckPlayerTouchesDeadlyBlock ()
 	end
 end
 function CheckPlayerDied ()
+	if (gGodMode) then return end
 	local died = CheckEnemyCollision(gPlayer)
 	if (died) then return true end
 	if (CheckPlayerTouchesDeadlyBlock()) then return true end

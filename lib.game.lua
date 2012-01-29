@@ -270,6 +270,8 @@ end
 gScoreLastX = 0
 function GameStep (dt)
 	dt = min(0.1, dt)
+	Background_Step(dt)
+	
   local s = 500*dt
 	joystick0 = 0
 	if(love.joystick.getNumJoysticks( ) > 0) then
