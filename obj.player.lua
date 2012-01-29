@@ -66,7 +66,7 @@ end
 
 function PlayerInit ()
 	gPlayerState = kPlayerStateSpawn
-	kPlayerAnimationCallbacks = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, callbackSpawn, callbackDied}
+	kPlayerAnimationCallbacks = {false, false, false, false, false, callbackTurn, false, callbackLand, false, false, callbackTurn, false, callbackLand, false, callbackSpawn, callbackDied}
 
 	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
@@ -326,14 +326,6 @@ function PlayerUpdate(dt)
 
 	-- update player animation depending on state of player
 	if (not (gPlayerState == kPlayerStateSpawn)) then
-		--[[if ((not bPressed_Left) and (not bPressed_Right) and (not bPressed_Up) and (not bPressed_Down)) then
-			if (gPlayerState == kPlayerStateIdleLeft or gPlayerState == kPlayerStateMoveLeft) then
-				gPlayerState = kPlayerStateIdleLeft
-			else
-				gPlayerState = kPlayerStateIdleRight
-			end
-		end]]
-
 		if (died == true or gPlayerState == kPlayerStateDied) then
 			gPlayerState = kPlayerStateDied
 		elseif (bIsOnGround and bPressed_Right) then
@@ -345,7 +337,6 @@ function PlayerUpdate(dt)
 		elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
 			gPlayerState = kPlayerStateIdleLeft
 		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
-			print("falling now")
 			gPlayerState = kPlayerStateJumpFallRight
 		elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
 			gPlayerState = kPlayerStateJumpFallLeft
@@ -372,6 +363,14 @@ end
 
 function callbackDied(animation)
 	InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
+end
+
+function callbackLand(animation)
+
+end
+
+function callbackTurn(animation)
+
 end
 
 function createPlayerParticleSystems()
