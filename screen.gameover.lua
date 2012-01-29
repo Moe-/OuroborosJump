@@ -24,12 +24,19 @@ function cScreenGameOver:draw( )
 	for i=1,min(#gHighScore,10) do
 		local line = gHighScore[i]
 		local _,_,score1 = string.find(line,"(%d+)$")
-		local ptxt = TausenderTrenner(max(0,score1 or 0))
+		score1 = score1 and tonumber(score1) or 0
+		local starty = 100
+		
+		local ptxt = TausenderTrenner(max(0,score1))
 		love.graphics.setColor(0, 0, 0)
 		love.graphics.setFont(gMyFont)
-		love.graphics.print("#"..i..": " .. ptxt, 50+30, 200+ 50*i)
+		love.graphics.print("#"..i..": " .. ptxt, 50+30, starty+ 50*i)
+		if (gLastScore == score1) then 
+		love.graphics.setColor(0,255, 0)
+		else
 		love.graphics.setColor(255, 0, 0)
-		love.graphics.print("#"..i..": " .. ptxt, 50+26, 200+ 50*i)
+		end
+		love.graphics.print("#"..i..": " .. ptxt, 50+26, starty+ 50*i)
 		love.graphics.setColor(255, 255, 255)
 	end
 end

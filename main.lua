@@ -77,8 +77,9 @@ function love.load()
 end
 
 function SaveHighScore (score)
-	score = floor(score or 0)
+	score = floor(tonumber(score) or 0)
 	if (score <= 0) then return end
+	gLastScore = score
 	local line = tostring(os.date()).." "..tostring(score)
 	table.insert(gHighScore,line)
 	local data = table.concat(gHighScore,"\n")
