@@ -126,6 +126,7 @@ function GameInit ()
 
 	print("GameInit")
 		
+	gImgGui				= getCachedPaddedImage("data/gui.png")
 	gImgMarkTile		= getCachedPaddedImage("data/mark-tile.png")
 	gImgMarkTile_black	= getCachedPaddedImage("data/mark-tile-black.png")
 	gImgMarkTile_white	= getCachedPaddedImage("data/mark-tile-white.png")
@@ -234,16 +235,20 @@ function GameDraw ()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
 	
+	love.graphics.draw(gImgGui, 0, screen_h-128+32)
+	
+	
 	local ptxt = TausenderTrenner(max(0,floor(kPointsPlayer)))
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.setFont(gMyFont)
-	love.graphics.print("Laps: " .. gRunCount, 30, 650)
-	love.graphics.print("" .. ptxt, 500, 650) -- points
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 1000, 650)
+	local y0 = 630+32
+	love.graphics.print("   " .. gRunCount, 30, y0)
+	love.graphics.print("    " .. ptxt, 500, y0) -- points
+	love.graphics.print("    " .. floor(gCoinsCollected), 1000, y0)
 	love.graphics.setColor(255, 0, 0)
-	love.graphics.print("Laps: " .. gRunCount, 26, 650)
-	love.graphics.print("" .. ptxt, 496, 650) -- points
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 996, 650)
+	love.graphics.print("   " .. gRunCount, 26, y0)
+	love.graphics.print("    " .. ptxt, 496, y0) -- points
+	love.graphics.print("    " .. floor(gCoinsCollected), 996, y0)
 
 	love.graphics.setColor(255, 255, 255)
 end
