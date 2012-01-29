@@ -32,30 +32,46 @@ gPlayerAnimationJumpLandRight = nil
 gJumpEnemyKill = false
 
 gPlayerAnimations = {}
-kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12, 32, 32}
-kPlayerAnimationDelay = {0.06,	 0.06,	 0.02, 	0.02, 	1.5, 
-						0.5, 	0.07, 	1.5, 	0.2,	1.5, 
-						0.5, 0.07, 1.5, 0.2, 0.08, 0.04}
-kPlayerAnimationModes = {"loop", "loop", "loop", "loop", "once", "once", "loop", "once", "loop", "once", "once", "loop", "once", "loop", "once", "once"}
+kPlayerAnimationFrameNumbers = {
+					32, 32, 32, 32, 
+					4, 4, 8, 4, 12, 
+					4, 4, 8, 4, 12, 
+					32, 32}
+kPlayerAnimationDelay = {0.06,	0.06,	0.02,	0.02, 	
+						0.1,	0.1, 	0.07,	0.1,   0.2,	
+						0.1,	0.1, 	0.07,	0.1,   0.2, 
+						0.08, 0.04}
+kPlayerAnimationModes = {"loop", "loop", "loop", "loop", 
+						"once", "once", "loop", "once", "loop", 
+						"once", "once", "loop", "once", "loop", 
+						"once", "once"}
 kPlayerAnimationCallbacks = { }
 
-kPlayerStateIdleRight = 1
-kPlayerStateIdleLeft = 2
-kPlayerStateMoveRight = 3
-kPlayerStateMoveLeft = 4
+gPlayerStateNames = {}
+gPlayerStateNames.kPlayerStateIdleRight = 1		
+gPlayerStateNames.kPlayerStateIdleLeft = 2
+gPlayerStateNames.kPlayerStateMoveRight = 3
+gPlayerStateNames.kPlayerStateMoveLeft = 4
 
-kPlayerStateJumpUpRight = 5
-kPlayerStateJumpTurnRight = 6
-kPlayerStateJumpFallRight = 7
-kPlayerStateJumpLandRight = 8
+gPlayerStateNames.kPlayerStateJumpUpRight = 5
+gPlayerStateNames.kPlayerStateJumpTurnRight = 6
+gPlayerStateNames.kPlayerStateJumpFallRight = 7
+gPlayerStateNames.kPlayerStateJumpLandRight = 8
 
-kPlayerStateJumpUpLeft = 10
-kPlayerStateJumpTurnLeft = 11
-kPlayerStateJumpFallLeft = 12
-kPlayerStateJumpLandLeft = 13
+gPlayerStateNames.kPlayerStateJumpUpLeft = 10
+gPlayerStateNames.kPlayerStateJumpTurnLeft = 11
+gPlayerStateNames.kPlayerStateJumpFallLeft = 12
+gPlayerStateNames.kPlayerStateJumpLandLeft = 13
 
-kPlayerStateSpawn = 15
-kPlayerStateDied = 16
+gPlayerStateNames.kPlayerStateSpawn = 15
+gPlayerStateNames.kPlayerStateDied = 16		
+
+for k,v in pairs(gPlayerStateNames) do _G[k] = v end
+
+function PState2Txt (stateid) 
+	for k,v in pairs(gPlayerStateNames) do if stateid == v then return k end end
+	return "unkown"
+end
 
 gPlayerState = kPlayerStateSpawn
 
@@ -95,7 +111,7 @@ function PlayerInit ()
 	gCamY = screen_h/2 + 0.5*kTileSize
 
 	local animationStartIndex = 1
-	for k, v in pairs(kPlayerAnimationFrameNumbers) do
+	for k, v in ipairs(kPlayerAnimationFrameNumbers) do
 		local callback = nil
 		if (kPlayerAnimationCallbacks[k] ~= false) then
 			callback = kPlayerAnimationCallbacks[k]
@@ -337,15 +353,16 @@ function PlayerUpdate(dt)
 	if (gPlayer.bDead) then gPlayer.vx = 0 end
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
-	print("bIsOnGround",bIsOnGround,"gPlayerDirection=",gPlayerDirection)
-	local oldPlayerState = gPlayerState
-	local bWasFalling = (oldPlayerState == kPlayerStateJumpFallLeft or oldPlayerState == kPlayerStateJumpFallRight)
-	local bWasLanding = (oldPlayerState == kPlayerStateJumpLandLeft or oldPlayerState == kPlayerStateJumpLandRight)
-	
+	--~ print("bIsOnGround",bIsOnGround,"gPlayerDirection=",gPlayerDirection)
+	local bWasFalling = (gPlayerState == kPlayerStateJumpFallLeft or gPlayerState == kPlayerStateJumpFallRight)
+	local bWasLanding = (gPlayerState == kPlayerStateJumpLandLeft or gPlayerState == kPlayerStateJumpLandRight)
+	local bWasSpawning = gPlayerState == kPlayerStateSpawn
 	
 	
 	-- update player animation depending on state of player	
-	if (died == true or gPlayerState == kPlayerStateDied) then
+	if (gCharAnimDebugCheat) then
+		-- override
+	elseif (died == true or gPlayerState == kPlayerStateDied) then
 		gPlayerState = kPlayerStateDied
 	-- move on ground
 	elseif (bIsOnGround and bPressed_Right) then
@@ -357,10 +374,10 @@ function PlayerUpdate(dt)
 		-- stay
 	-- idle on ground
 	elseif (bIsOnGround and (not bWasFalling) and (not bWasLanding) and gPlayerDirection == kPlayerFacingRight) then
-		print("gPlayerState = kPlayerStateIdleRight")
+		--~ print("gPlayerState = kPlayerStateIdleRight")
 		gPlayerState = kPlayerStateIdleRight
 	elseif (bIsOnGround and (not bWasFalling) and (not bWasLanding) and gPlayerDirection == kPlayerFacingLeft) then
-		print("gPlayerState = kPlayerStateIdleLeft")
+		--~ print("gPlayerState = kPlayerStateIdleLeft")
 		gPlayerState = kPlayerStateIdleLeft
 	-- player jumps until he gets too slow then switch to turn
 	elseif ((not bIsOnGround) and gPlayer.vy < -150) then
@@ -378,7 +395,7 @@ function PlayerUpdate(dt)
 		else
 			gPlayerState = kPlayerStateJumpTurnRight
 		end
-	elseif ((not bIsOnGround) and gPlayer.vy > 0 and oldPlayerState ~= kPlayerStateJumpFallLeft and oldPlayerState ~= kPlayerStateJumpFallRight) and oldPlayerState ~= kPlayerStateSpawn then
+	elseif ((not bIsOnGround) and gPlayer.vy > 0 and (not bWasFalling)) and (not bWasSpawning) then
 		print("falling")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpFallLeft
@@ -394,7 +411,10 @@ function PlayerUpdate(dt)
 		end
 	end
 
-	if (gPlayerState ~= oldPlayerState) then
+	
+	if (gPlayerState ~= gPlayerStateOld) then
+		print("gPlayerState changed",PState2Txt(gPlayerStateOld),PState2Txt(gPlayerState))
+		gPlayerStateOld = gPlayerState
 		--gPlayerAnimations[oldPlayerState]:stop()
 		gPlayerAnimations[gPlayerState]:reset()
 		gPlayerAnimations[gPlayerState]:play()
@@ -411,6 +431,13 @@ function PlayerUpdate(dt)
 			gPlayerKillParticleSystemTimeLeft[psId] = gPlayerKillParticleSystemTimeLeft[psId] - dt
 		end
 	end
+end
+
+function CharAnimDebugCheat ()
+	print("CharAnimDebugCheat")
+	gCharAnimDebugCheat = true
+	gPlayerState = kPlayerStateIdleRight
+	InvokeLater(1,function () gPlayerState = kPlayerStateJumpUpRight end)
 end
 
 function callbackSpawn(animation)

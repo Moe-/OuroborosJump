@@ -12,6 +12,7 @@ end
 function cScreenGame:keypressed( key, unicode ) 
 	if key == "f6" then gGodMode = true end
 	if key == "f5" then CheatShowMapMetaData() end
+	if key == "f7" then CharAnimDebugCheat() end
 	if key == "up" or key == "w" or key == " " then
 		keyboard[kUp] = 1
 	end
