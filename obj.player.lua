@@ -65,7 +65,8 @@ function PlayerCheatStep ()
 end
 
 function PlayerInit ()
-	kPlayerAnimationCallbacks = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, callbackSpawn, false}
+	gPlayerState = kPlayerStateSpawn
+	kPlayerAnimationCallbacks = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, callbackSpawn, callbackDied}
 
 	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
@@ -318,8 +319,7 @@ function PlayerUpdate(dt)
 		if (not gPlayer.bDead) then 
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
-			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
-			InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
+			gPlayerState = kPlayerStateDied
 		end
 	end
 
@@ -367,6 +367,10 @@ end
 function callbackSpawn(animation)
 	print("finished spawning")
 	gPlayerState = kPlayerStateIdleRight
+end
+
+function callbackDied(animation)
+	InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 end
 
 function createPlayerParticleSystems()
