@@ -27,6 +27,7 @@ love.filesystem.load("obj.coin.lua")()
 love.filesystem.load("screen.menu.lua")()
 love.filesystem.load("screen.game.lua")()
 love.filesystem.load("screen.gameover.lua")()
+love.filesystem.load("screen.levelselection.lua")()
 
 gShowDebug = false
 
@@ -73,6 +74,7 @@ function love.load()
 	cScreenMenu:LoadData()
 	cScreenGame:LoadData()
 	cScreenGameOver:LoadData()
+	cScreenLevelSelect:LoadData()
 
 	cScreenMenu:Start()
 end
