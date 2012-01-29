@@ -2,6 +2,7 @@
 
 rm -f build/ouroborosjump.love build/ouroborosjump.exe
 zip /tmp/ouroborosjump.zip `find . |grep -v .git|grep -v screencapture|grep -v build`
+cp /tmp/ouroborosjump.zip build/ouroborosjump-src.zip
 mv /tmp/ouroborosjump.zip build/ouroborosjump.love
 cat build/love/love.exe build/ouroborosjump.love > build/ouroborosjump.exe
 
