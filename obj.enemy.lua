@@ -368,7 +368,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 	local died = false
 	for i,v in pairs(group) do
 		-- only check for collision if enemy is not dying
-		if (not v.dying) then
+		if ((not v.dying) and (not gPlayer.bDead)) then
 			local x,y,rx,ry = gPlayer.x,gPlayer.y,gPlayer.rx,gPlayer.ry
 			local mr = kTileSize/2
 			local mx = v.x + mr  -- v.x,v.y = top left corner
