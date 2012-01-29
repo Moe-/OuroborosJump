@@ -274,55 +274,55 @@ function EnemyGroupUpdate(dt, group)
 			v.y = v.y + v.dY
 		end
 	end
+end
 
 		
-	function EnemyDraw()
-		for i,v in pairs(gEnemiesType1) do
-			MyEnemyDrawDebug(v,1)
-			if (not gEnemiesType1[i].dying == true) then
-				gEnemy1Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			else 
-				for key, value in pairs (gEnemyDyingAnimations) do
-					if (key.groupNumber == 1 and key.enemyNumber==i) then
-						key:draw(v.x+gCamAddX, v.y+gCamAddY)
-					end
+function EnemyDraw()
+	for i,v in pairs(gEnemiesType1) do
+		MyEnemyDrawDebug(v,1)
+		if (not gEnemiesType1[i].dying == true) then
+			gEnemy1Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		else 
+			for key, value in pairs (gEnemyDyingAnimations) do
+				if (key.groupNumber == 1 and key.enemyNumber==i) then
+					key:draw(v.x+gCamAddX, v.y+gCamAddY)
 				end
 			end
-			--love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
-	--		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
-	--		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
-			--~ love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
+		end
+		--love.graphics.draw(gImgEnemy1, v.x+gCamAddX, v.y+gCamAddY )
+--		love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.5)*kTileSize+gCamAddX, floor(v.y/kTileSize + 0.5)*kTileSize+gCamAddY )
+--		love.graphics.draw(gImgDot, v.x + kTileSize/2+gCamAddX, v.y + kTileSize/2+gCamAddY )
+		--~ love.graphics.draw(gImgDot, floor(v.x/kTileSize + 0.05 * v.dX + 0.5)*kTileSize +gCamAddX, floor(v.y/kTileSize + 0.05 * v.dY + 0.5)*kTileSize +gCamAddY )
 
+	end
+	for i,v in pairs(gEnemiesType2) do
+		MyEnemyDrawDebug(v,2)
+		if (gEnemiesType2[i].dying == true) then
+			gEnemy2Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		else
+			gEnemy2Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 		end
-		for i,v in pairs(gEnemiesType2) do
-			MyEnemyDrawDebug(v,2)
-			if (gEnemiesType2[i].dying == true) then
-				gEnemy2Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			else
-				gEnemy2Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			end
+	end
+	for i,v in pairs(gEnemiesType3) do
+		MyEnemyDrawDebug(v,3)
+		if (gEnemiesType3[i].dying == true) then
+			gEnemy3Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		else
+			gEnemy3Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 		end
-		for i,v in pairs(gEnemiesType3) do
-			MyEnemyDrawDebug(v,3)
-			if (gEnemiesType3[i].dying == true) then
-				gEnemy3Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			else
-				gEnemy3Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			end
+	end
+	for i,v in pairs(gEnemiesType4) do
+		MyEnemyDrawDebug(v,4)
+		if (gEnemiesType4[i].dying == true) then
+			gEnemy4Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
+		else
+			gEnemy4Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
 		end
-		for i,v in pairs(gEnemiesType4) do
-			MyEnemyDrawDebug(v,4)
-			if (gEnemiesType4[i].dying == true) then
-				gEnemy4Animations[2]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			else
-				gEnemy4Animations[1]:draw(v.x+gCamAddX, v.y+gCamAddY)
-			end
-		end
+	end
 
-		for psId = 1, 5 do
-			if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
-				love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + gCamAddX, gEnemiesKillParticlePosition[psId].y + gCamAddY)
-			end
+	for psId = 1, 5 do
+		if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
+			love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + gCamAddX, gEnemiesKillParticlePosition[psId].y + gCamAddY)
 		end
 	end
 end
@@ -393,9 +393,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					gEnemiesKillParticlePosition[gEnemiesPSCur].y = v.y + kTileSize / 2
 					gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
 					gEnemiesPSCur = gEnemiesPSCur + 1
-					if gEnemiesPSCur == 6 then
-						gEnemiesPSCur = 1
-					end
+					if gEnemiesPSCur == 6 then gEnemiesPSCur = 1 end
 					kPointsPlayer = kPointsPlayer + 7500
 					playSFX(gRandomSound)
 				else
@@ -406,6 +404,32 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 		end
 	end
 	return died;
+end
+
+function CheatTestEnemyDieParticleOnPlayer (x,y)
+	gEnemiesKillParticleSystems[gEnemiesPSCur]:reset()
+	gEnemiesKillParticlePosition[gEnemiesPSCur].x = (x or gPlayer and gPlayer.x or 0) + kTileSize / 2
+	gEnemiesKillParticlePosition[gEnemiesPSCur].y = (y or gPlayer and gPlayer.y or 0) + kTileSize / 2 - 100
+	gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
+	gEnemiesPSCur = gEnemiesPSCur + 1
+	if gEnemiesPSCur == 6 then gEnemiesPSCur = 1 end
+end
+
+function CheatTestEnemyDieParticleOnPlayer_Update (dt) 
+	for psId = 1, 5 do
+		if(gEnemiesKillParticleSystemTimeLeft[psId] > 0) then
+			gEnemiesKillParticleSystems[psId]:start()
+			gEnemiesKillParticleSystems[psId]:update(dt)
+			gEnemiesKillParticleSystemTimeLeft[psId] = gEnemiesKillParticleSystemTimeLeft[psId] - dt
+		end
+	end
+end
+function CheatTestEnemyDieParticleOnPlayer_Draw () 
+	for psId = 1, 5 do
+		if gEnemiesKillParticleSystemTimeLeft[psId] > 0 then
+			love.graphics.draw(gEnemiesKillParticleSystems[psId], gEnemiesKillParticlePosition[psId].x + (gCamAddX or 0), gEnemiesKillParticlePosition[psId].y + (gCamAddY or 0))
+		end
+	end
 end
 
 function createEnemyParticleSystems()
