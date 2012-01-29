@@ -399,6 +399,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					kPointsPlayer = kPointsPlayer + 7500
 					playSFX(gRandomSound)
 				else
+					love.audio.play(gElectricShockSound)
 					died = true	
 				end
 			end

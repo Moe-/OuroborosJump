@@ -212,4 +212,6 @@ function loadSounds()
 	gStonesCrackingSound = love.audio.newSource("data/stonesCracking.wav", "static")
 	gSplashSound = love.audio.newSource("data/splash.wav", "static")
 	gScreamSound = love.audio.newSource("data/scream.wav", "static")
+	gElectricShockSound = love.audio.newSource("data/electricShock.wav", "static")
+
 end
