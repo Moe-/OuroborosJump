@@ -122,10 +122,11 @@ function GameInit ()
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
 
-	gMyFont = love.graphics.newFont( 48 )
+	gMyFont = love.graphics.newFont( "data/Ascension_0.ttf", 48 ) or love.graphics.newFont( 48 )
 
 	print("GameInit")
 		
+	gImgGui				= getCachedPaddedImage("data/gui.png")
 	gImgMarkTile		= getCachedPaddedImage("data/mark-tile.png")
 	gImgMarkTile_black	= getCachedPaddedImage("data/mark-tile-black.png")
 	gImgMarkTile_white	= getCachedPaddedImage("data/mark-tile-white.png")
@@ -142,6 +143,7 @@ function GameInit ()
 	local lname = "meta"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Meta = lid
 	local lname = "main"	local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_Main = lid
 	local lname = "ai"		local lid = TiledMap_GetLayerZByName(lname) assert(lid,"missing layer: '"..tostring(lname).."'") kMapLayer_AI = lid
+	local lname = "player"	local lid = TiledMap_GetLayerZByName(lname) kMapLayer_Player = lid -- not fatal if missing
 	
 	gMapUsedW = TiledMap_GetMapWUsed()
 	print("gMapUsedW",gMapUsedW)
@@ -208,11 +210,13 @@ function GameDraw ()
 	
 	CoinDraw()
 	EnemyDraw()
-	PlayerDraw()
+	
+	
+	if (not kMapLayer_Player) then PlayerDraw() end
 	
 	
 	
-    TiledMap_DrawNearCam(gCamX,gCamY)
+    TiledMap_DrawNearCam(gCamX,gCamY,function (z,layer) if (z == kMapLayer_Player) then PlayerDraw() end end)
 	local mapw = gMapUsedW*kTileSize
 	if (gCamX < 0.5*mapw) then 
 		TiledMap_DrawNearCam(gCamX+mapw,gCamY)
@@ -231,14 +235,21 @@ function GameDraw ()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
 	
+	love.graphics.draw(gImgGui, 0, screen_h-128+32)
+	
+	
 	local ptxt = TausenderTrenner(max(0,floor(kPointsPlayer)))
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.setFont(gMyFont)
-	love.graphics.print("Points: " .. ptxt, 30, 650)
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
+	local y0 = 630+32
+	love.graphics.print("   " .. gRunCount, 30, y0)
+	love.graphics.print("    " .. ptxt, 500, y0) -- points
+	love.graphics.print("    " .. floor(gCoinsCollected), 1000, y0)
 	love.graphics.setColor(255, 0, 0)
-	love.graphics.print("Points: " .. ptxt, 26, 650)
-	love.graphics.print("Coins: " .. floor(gCoinsCollected), 896, 650)
+	love.graphics.print("   " .. gRunCount, 26, y0)
+	love.graphics.print("    " .. ptxt, 496, y0) -- points
+	love.graphics.print("    " .. floor(gCoinsCollected), 996, y0)
+
 	love.graphics.setColor(255, 255, 255)
 end
 
@@ -328,6 +339,7 @@ function GameStep (dt)
 			gRunCount = gRunCount + 1
 			EnemiesRespawn(gRunCount%kSpawnDistance)
 			RespawnCoins()
+			love.audio.play(gCheerSound)
 		end	
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw

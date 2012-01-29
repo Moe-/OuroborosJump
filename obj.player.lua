@@ -1,11 +1,16 @@
 
 gPlayerOnGroundStopXMult = 0.70
 
-gPlayerGravity = 9.81 * 300
-gPlayerJumpVY = -1300
+--gPlayerGravity = 9.81 * 300
+--gPlayerJumpVY = -1300
 
-gPlayerGravity = 9.81 * 100
-gPlayerJumpVY = -600
+--gPlayerGravity = 9.81 * 100
+--gPlayerJumpVY = -600
+
+gPlayerGravity = 9.81 * 250
+gPlayerJumpVY = -1200
+
+gPlayerJumpStopYFriction = 0.90 -- reduce jump height when player releases jump key early
 
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
@@ -30,6 +35,7 @@ gPlayerAnimationJumpTurnRight = nil
 gPlayerAnimationJumpFallRight = nil
 gPlayerAnimationJumpLandRight = nil
 gJumpEnemyKill = false
+gPlayWalkSound = false
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {
@@ -38,9 +44,9 @@ kPlayerAnimationFrameNumbers = {
 					4, 4, 8, 4, 12, 
 					32, 32}
 kPlayerAnimationDelay = {0.06,	0.06,	0.02,	0.02, 	
-						0.1,	0.1, 	0.07,	0.1,   0.2,	
-						0.1,	0.1, 	0.07,	0.1,   0.2, 
-						0.08, 0.04}
+						0.1,	0.1, 	0.04,	0.05,   0.99999,	
+						0.1,	0.1, 	0.04,	0.05,   0.99999, 
+						0.04, 0.04}
 kPlayerAnimationModes = {"loop", "loop", "loop", "loop", 
 						"once", "once", "loop", "once", "loop", 
 						"once", "once", "loop", "once", "loop", 
@@ -98,7 +104,7 @@ function PlayerInit ()
 	
 	gPlayerDirection = kPlayerFacingRight
 
-	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
+	gPlayer = {x=0,y=0,vx=0,vy=0,rx=25,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
 	gPlayer.vxMax = 400
 	gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
@@ -133,6 +139,7 @@ function PlayerSpawnAtStart ()
 	gPlayer.x = 0
 	gPlayer.y = 0
 	if (o) then gPlayer.x = o.x * kTileSize + kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
+	playSFX(gSpawnSound)
 end
 
 function PlayerDraw ()
@@ -195,12 +202,14 @@ function CheckPlayerTouchesDeadlyBlock ()
 				gPlayerKillParticlePosition[12].x = x
 				gPlayerKillParticlePosition[12].y = y + kTileSize / 2
 				gPlayerKillParticleSystemTimeLeft[12] = 15.0
+				love.audio.play(gSplashSound)
 			else
 				--~ print("floor")
 				gPlayerKillParticleSystems[11]:reset()
 				gPlayerKillParticlePosition[11].x = x
 				gPlayerKillParticlePosition[11].y = y + kTileSize / 2
 				gPlayerKillParticleSystemTimeLeft[11] = 15.0
+				love.audio.play(gScreamSound)
 			end
 			return true 
 		end
@@ -215,7 +224,7 @@ function CheckPlayerDied ()
 end
 
 function PlayerUpdate(dt)
-  local s = 500*dt
+	local s = 500 * dt
 	PlayerCheatStep()
 	
 	local bPressed_Left	= 0
@@ -280,6 +289,7 @@ function PlayerUpdate(dt)
 				gPlayerKillParticlePosition[gPlayerPSCur].y = o.y + kTileSize
 				gPlayerKillParticleSystemTimeLeft[gPlayerPSCur] = 1.0
 				gPlayerPSCur = gPlayerPSCur + 1
+				playSFX(gStonesCrackingSound)
 				if gPlayerPSCur == 11 then
 					gPlayerPSCur = 1
 				end
@@ -301,6 +311,12 @@ function PlayerUpdate(dt)
 		gJumpEnemyKill = false
 		playSFX(gJumpSound)
 	end
+	
+	-- reduce jump height when player releases jump key early
+	if (gPlayer.vy < 0 and (not bPressed_Up)) then 
+		gPlayer.vy = gPlayer.vy * gPlayerJumpStopYFriction
+	end
+	
 	local vxadd = 0
 	local screenMin = gMinCamX - screen_w/2
 --	print("player: " .. gPlayer.x .. " min " .. screenMin)
@@ -353,6 +369,15 @@ function PlayerUpdate(dt)
 	if (gPlayer.bDead) then gPlayer.vx = 0 end
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
+	if gPlayWalkSound == false and gPlayer.vx ~= 0 and gPlayer.vy == 0 then
+		love.audio.play(gFootstepsSound)
+		gPlayWalkSound = true
+	elseif gPlayWalkSound == true and (gPlayer.vx == 0 or gPlayer.vy ~= 0 
+			or (bPressed_Left == false and bPressed_Right == false)) then
+		love.audio.stop(gFootstepsSound)
+		gPlayWalkSound = false
+	end
+
 	--~ print("bIsOnGround",bIsOnGround,"gPlayerDirection=",gPlayerDirection)
 	local bWasFalling = (gPlayerState == kPlayerStateJumpFallLeft or gPlayerState == kPlayerStateJumpFallRight)
 	local bWasLanding = (gPlayerState == kPlayerStateJumpLandLeft or gPlayerState == kPlayerStateJumpLandRight)
@@ -381,7 +406,7 @@ function PlayerUpdate(dt)
 		gPlayerState = kPlayerStateIdleLeft
 	-- player jumps until he gets too slow then switch to turn
 	elseif ((not bIsOnGround) and gPlayer.vy < -150) then
-		print("up fast")
+--		print("up fast")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpUpLeft
 		else
@@ -389,21 +414,21 @@ function PlayerUpdate(dt)
 		end
 	-- player is on turnpoint of jump
 	elseif ((not bIsOnGround) and gPlayer.vy > -150 and gPlayer.vy < 0) then
-		print("up slow")
+--		print("up slow")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpTurnLeft
 		else
 			gPlayerState = kPlayerStateJumpTurnRight
 		end
 	elseif ((not bIsOnGround) and gPlayer.vy > 0 and (not bWasFalling)) and (not bWasSpawning) then
-		print("falling")
+--		print("falling")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpFallLeft
 		else
 			gPlayerState = kPlayerStateJumpFallRight
 		end
 	elseif (bIsOnGround and bWasFalling) then
-		print("landing")
+--		print("landing")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpLandLeft
 		else
@@ -413,7 +438,7 @@ function PlayerUpdate(dt)
 
 	
 	if (gPlayerState ~= gPlayerStateOld) then
-		print("gPlayerState changed",PState2Txt(gPlayerStateOld),PState2Txt(gPlayerState))
+--		print("gPlayerState changed",PState2Txt(gPlayerStateOld),PState2Txt(gPlayerState))
 		gPlayerStateOld = gPlayerState
 		--gPlayerAnimations[oldPlayerState]:stop()
 		gPlayerAnimations[gPlayerState]:reset()
@@ -434,40 +459,40 @@ function PlayerUpdate(dt)
 end
 
 function CharAnimDebugCheat ()
-	print("CharAnimDebugCheat")
+--	print("CharAnimDebugCheat")
 	gCharAnimDebugCheat = true
 	gPlayerState = kPlayerStateIdleRight
 	InvokeLater(1,function () gPlayerState = kPlayerStateJumpUpRight end)
 end
 
 function callbackSpawn(animation)
-	print("finished spawning")
+--	print("finished spawning")
 	gPlayerState = kPlayerStateIdleRight
 end
 
 function callbackDied(animation)
-	print("finished dying")
+--	print("finished dying")
 	InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 end
 
 function callbackLand(animation)
-	print("land callback")
+--	print("land callback")
 	if (gPlayerDirection == kPlayerFacingLeft) then
-		print("land left")
+--		print("land left")
 		gPlayerState = kPlayerStateIdleLeft
 	elseif (gPlayerDirection == kPlayerFacingRight) then
-		print("land right")
+--		print("land right")
 		gPlayerState = kPlayerStateIdleRight
 	end
 end
 
 function callbackTurn(animation)
-	print("turn callback")
+--	print("turn callback")
 	if (gPlayerDirection == kPlayerFacingLeft) then
-		print("fall left")
+--		print("fall left")
 		gPlayerState = kPlayerStateJumpFallLeft
 	elseif (gPlayerDirection == kPlayerFacingRight) then
-		print("fall right")
+--		print("fall right")
 		gPlayerState = kPlayerStateJumpFallRight
 	end
 end
@@ -486,7 +511,7 @@ function createPlayerParticleSystems()
 		p = love.graphics.newParticleSystem(i, 256)
 		p:setEmissionRate          (45 )
 		p:setLifetime              (0.5)
-		p:setParticleLife          (0.5, 0.75)
+		p:setParticleLife          (0.3, 0.55)
 		p:setPosition              (0, 0)
 		p:setDirection             (0)
 		p:setSpread                (2.09)
@@ -520,17 +545,17 @@ function createPlayerParticleSystems()
 	p:setLifetime              (15)
 	p:setParticleLife          (1.5, 3.75)
 	p:setPosition              (0, 0)
-	p:setDirection             (3)
+	p:setDirection             (3.14)
 	p:setSpread                (6.28)
-	p:setSpeed                 (20, 50)
+	p:setSpeed                 (50, 85)
 	p:setGravity               (30)
 	p:setRadialAcceleration    (20)
 	p:setTangentialAcceleration(10)
-	p:setSize                  (2)
-	p:setSizeVariation         (1.5)
+	p:setSize                  (0.25)
+	p:setSizeVariation         (0.15)
 	p:setRotation              (0)
-	p:setSpin                  (1)
-	p:setSpinVariation         (3)
+	p:setSpin                  (0, 6.28, 1)
+	p:setSpinVariation         (1)
 	p:setColor                 (255, 0, 0, 255, 192, 16, 0, 10)
 	p:stop();
 	gPlayerKillParticleSystems[11] = p
