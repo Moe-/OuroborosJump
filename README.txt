@@ -5,7 +5,7 @@ Joypad/joystick:
 Keyboard: 
 	Left: a or left cursor
 	Right: d or right cursor
-	Jump: w or cursor up
+	Jump: w or cursor up or space
 
 Engine: Love2D: http://www.love2d.org
 
