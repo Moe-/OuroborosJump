@@ -152,7 +152,7 @@ end
 --- Reset
 -- Go back to the first frame.
 function animation:reset()
-	self:seek(1)
+	self:seek(self.position_first)
 end
 
 --- Seek to a frame
