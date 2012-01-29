@@ -35,6 +35,7 @@ gPlayerAnimationJumpTurnRight = nil
 gPlayerAnimationJumpFallRight = nil
 gPlayerAnimationJumpLandRight = nil
 gJumpEnemyKill = false
+gPlayWalkSound = false
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {
@@ -367,6 +368,15 @@ function PlayerUpdate(dt)
 	
 	if (gPlayer.bDead) then gPlayer.vx = 0 end
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
+
+	if gPlayWalkSound == false and gPlayer.vx ~= 0 and gPlayer.vy == 0 then
+		love.audio.play(gFootstepsSound)
+		gPlayWalkSound = true
+	elseif gPlayWalkSound == true and (gPlayer.vx == 0 or gPlayer.vy ~= 0 
+			or (bPressed_Left == false and bPressed_Right == false)) then
+		love.audio.stop(gFootstepsSound)
+		gPlayWalkSound = false
+	end
 
 	--~ print("bIsOnGround",bIsOnGround,"gPlayerDirection=",gPlayerDirection)
 	local bWasFalling = (gPlayerState == kPlayerStateJumpFallLeft or gPlayerState == kPlayerStateJumpFallRight)

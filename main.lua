@@ -193,14 +193,15 @@ function loadSounds()
 	gBackgroundAmbient = love.audio.newSource("data/newSo1124/sfx_jungle_ambi.ogg", "stream")
 	gBackgroundAmbient:setLooping( true )
 	love.audio.play(gBackgroundAmbient)
-	musicSong = math.random(3)
-	if musicSong == 1 then
-		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_1.ogg", "stream")
-	elseif musicSong == 2 then
-		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_2.ogg", "stream")
-	elseif musicSong == 3 then
-		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_3.ogg", "stream")
-	end
+--	musicSong = math.random(3)
+--	if musicSong == 1 then
+--		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_1.ogg", "stream")
+--	elseif musicSong == 2 then
+--		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_2.ogg", "stream")
+--	elseif musicSong == 3 then
+--		gBackgroundMusic = love.audio.newSource("data/newSo1124/mx_jungle_3.ogg", "stream")
+--	end
+	gBackgroundMusic = love.audio.newSource("data/mx_jungle_complete.ogg", "stream")
 	gBackgroundMusic:setLooping( true )
 	love.audio.play(gBackgroundMusic)
 	gCoinSound = love.audio.newSource("data/Coin.wav", "static")
@@ -214,4 +215,6 @@ function loadSounds()
 	gScreamSound = love.audio.newSource("data/scream.wav", "static")
 	gElectricShockSound = love.audio.newSource("data/electricShock.wav", "static")
 	gSpawnSound = love.audio.newSource("data/spawn.wav", "static")
+	gFootstepsSound = love.audio.newSource("data/footsteps.wav", "static")
+	gFootstepsSound:setLooping( true )
 end
