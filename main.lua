@@ -177,8 +177,9 @@ function InvokeLater (dt,fun)
 end -- dt in seconds from now
 
 function loadSounds()
---	gBackgroundMusic = love.audio.newSource("bgm.ogg", "stream")
---	love.audio.play(gBackgroundMusic)
+	gBackgroundMusic = love.audio.newSource("data/ouroboros.ogg", "stream")
+	gBackgroundMusic:setLooping( true )
+	love.audio.play(gBackgroundMusic)
 	gCoinSound = love.audio.newSource("data/Coin.wav", "static")
 	gCoinSound:setVolume( 0.25 )
 	gJumpSound = love.audio.newSource("data/Jump.wav", "static")
