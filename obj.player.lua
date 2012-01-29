@@ -341,6 +341,9 @@ function PlayerUpdate(dt)
 		gPlayerState = kPlayerStateMoveRight
 	elseif (bIsOnGround and bPressed_Left) then
 		gPlayerState = kPlayerStateMoveLeft
+	-- stay in spawning
+	elseif (gPlayerState == kPlayerStateSpawn) then 
+		-- stay
 	-- idle on ground
 	elseif (bIsOnGround and gPlayerDirection == kPlayerFacingRight) then
 		print("gPlayerState = kPlayerStateIdleRight")
