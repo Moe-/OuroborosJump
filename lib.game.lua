@@ -11,6 +11,7 @@ kMapPath_Level02 = "data/level02.tmx"
 
 gFirstLevelStarted = 0
 kFirstLevelStartCount = 4
+kPointsPlayer = 0
 
 function MyStartLevel ()
 	if (gFirstLevelStarted < kFirstLevelStartCount) then 
@@ -120,7 +121,7 @@ function GameInit ()
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
 
-
+	gMyFont = love.graphics.newFont( 48 )
 
 	print("GameInit")
 		
@@ -229,7 +230,30 @@ function GameDraw ()
 	CollisionDrawDebug_Step()
 	CollisionDebugDraw()
 	
+	local ptxt = TausenderTrenner(max(0,floor(kPointsPlayer)))
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.setFont(gMyFont)
+	love.graphics.print("Points: " .. ptxt, 30, 650)
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 900, 650)
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.print("Points: " .. ptxt, 26, 650)
+	love.graphics.print("Coins: " .. floor(gCoinsCollected), 896, 650)
+	love.graphics.setColor(255, 255, 255)
+end
+
+function TausenderTrenner (v)
+	local txt = tostring(abs(v))
+	local len = #txt
+	local res = ""
+	for i=1,len do 
+		local cpos = len-i+1
+		local c = string.sub(txt,cpos,cpos)
+		res = c .. res
+		if ((i % 3) == 0 and i < len) then res = "," .. res end
+	end
 	
+	
+	return (v<0) and ("-"..res) or res
 end
 
 function GameNotifyNextMapCycle()
@@ -237,6 +261,7 @@ function GameNotifyNextMapCycle()
 	gFirstLevelStarted = gFirstLevelStarted + 1
 end
 
+gScoreLastX = 0
 function GameStep (dt)
 	dt = min(0.1, dt)
   local s = 500*dt
@@ -286,6 +311,10 @@ function GameStep (dt)
 	CollisionDebugStep()
 	
 	local mapw = gMapUsedW*kTileSize
+	if abs(gPlayer.x - gScoreLastX) < love.graphics.getWidth() then
+		kPointsPlayer = kPointsPlayer + (gPlayer.x - gScoreLastX)
+	end
+	gScoreLastX = gPlayer.x
 	if (gPlayer.x > mapw) then 
 		if gMinCamX > 0 then
 			gRunCount = gRunCount + 1
