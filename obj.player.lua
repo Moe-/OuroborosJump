@@ -62,7 +62,7 @@ gPlayerPSCur = 1
 kPlayerFacingRight = 1
 kPlayerFacingLeft = 2
 
-gPlayerDirection = kPlayerSavingRight
+gPlayerDirection = kPlayerFacingRight
 
 kPlayerNumberAnimations = 8*32
 function PlayerCheatStep ()
@@ -73,7 +73,7 @@ function PlayerInit ()
 	gPlayerState = kPlayerStateSpawn
 	kPlayerAnimationCallbacks = {false, false, false, false, false, callbackTurn, false, callbackLand, false, false, callbackTurn, false, callbackLand, false, callbackSpawn, callbackDied}
 
-	gPlayerDirection = kPlayerSavingRight
+	gPlayerDirection = kPlayerFacingRight
 
 	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
@@ -330,7 +330,8 @@ function PlayerUpdate(dt)
 	if (gPlayer.bDead) then gPlayer.vx = 0 end
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
-
+	print("bIsOnGround",bIsOnGround,"gPlayerDirection=",gPlayerDirection)
+	
 	local oldPlayerState = gPlayerState
 	-- update player animation depending on state of player	
 	if (died == true or gPlayerState == kPlayerStateDied) then
@@ -342,8 +343,10 @@ function PlayerUpdate(dt)
 		gPlayerState = kPlayerStateMoveLeft
 	-- idle on ground
 	elseif (bIsOnGround and gPlayerDirection == kPlayerFacingRight) then
+		print("gPlayerState = kPlayerStateIdleRight")
 		gPlayerState = kPlayerStateIdleRight
 	elseif (bIsOnGround and gPlayerDirection == kPlayerFacingLeft) then
+		print("gPlayerState = kPlayerStateIdleLeft")
 		gPlayerState = kPlayerStateIdleLeft
 	-- player jumps until he gets too slow then switch to turn
 	elseif ((not bIsOnGround) and gPlayer.vy < -150) then
@@ -365,7 +368,7 @@ function PlayerUpdate(dt)
 		else
 			gPlayerState = kPlayerStateJumpFallRight
 		end
-	elseif (bIsOnGround and oldPlayerState ~= kPlayerStateJumpFallLeft and oldPlayerState ~= kPlayerStateJumpFallRight) then
+	elseif (bIsOnGround and oldPlayerState == kPlayerStateJumpFallLeft and oldPlayerState == kPlayerStateJumpFallRight) then
 		print("landing")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpLandLeft
