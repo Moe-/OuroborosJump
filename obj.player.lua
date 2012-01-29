@@ -310,7 +310,10 @@ function PlayerUpdate(dt)
 		gMinCamX = gCamX
 		gCamX = newCamX
 	end
-	gCamY = fi * gCamY + f * (gPlayer.y + 0.0*screen_h)
+	
+	local view_y = 0.15*screen_h
+	if (gPlayer.vx < -5) then view_y = 0.0*screen_h end
+	gCamY = fi * gCamY + f * (gPlayer.y + view_y)
 	--~ gCamX = max(screen_w/2,gCamX)
 	--~ gCamY = max(screen_h/2,gCamY)
 
@@ -319,10 +322,14 @@ function PlayerUpdate(dt)
 		if (not gPlayer.bDead) then 
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
+			
 			if (kPointsPlayer > 0) then SaveHighScore(kPointsPlayer) end
 			gPlayerState = kPlayerStateDied
 		end
 	end
+	
+	if (gPlayer.bDead) then gPlayer.vx = 0 end
+	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
 	-- update player animation depending on state of player
 	if (not (gPlayerState == kPlayerStateSpawn)) then
