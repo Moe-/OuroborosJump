@@ -133,6 +133,7 @@ function GameInit ()
 	gImgMarkTile_red	= getCachedPaddedImage("data/mark-tile-red.png")
 	gImgMarkTile_yellow	= getCachedPaddedImage("data/mark-tile-yellow.png")
 	gImgMarkTile_blue	= getCachedPaddedImage("data/mark-tile-blue.png")
+	gImgBackgroundColour		= getCachedPaddedImage("data/Himmel.jpg")
 	
 	gImgDot				= getCachedPaddedImage("data/dot.png")
 	
@@ -202,8 +203,7 @@ function GameDraw ()
 	
 	
 	love.graphics.setColor(255,255,255,255)
-    love.graphics.setBackgroundColor(0xb7,0xd3,0xd4)
-	
+	love.graphics.draw(gImgBackgroundColour, 0, 0)
 	Background_Draw()
 	
 	CoinDraw()

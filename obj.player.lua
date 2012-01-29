@@ -30,8 +30,8 @@ gJumpEnemyKill = false
 
 gPlayerAnimations = {}
 kPlayerAnimationFrameNumbers = {32, 32, 32, 32, 4, 4, 8, 4, 12, 4, 4, 8, 4, 12, 32, 32}
-kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.08, 0.04}
-kPlayerAnimationModes = {"loop", "loop", "loop", "loop", "loop", "once", "loop", "once", "loop", "loop", "once", "loop", "once", "loop", "once", "once"}
+kPlayerAnimationDelay = {0.06, 0.06, 0.02, 0.02, 0.5, 0.5, 0.07, 1.5, 0.2, 0.5, 0.5, 0.07, 1.5, 0.2, 0.08, 0.04}
+kPlayerAnimationModes = {"loop", "loop", "loop", "loop", "once", "once", "loop", "once", "loop", "once", "once", "loop", "once", "loop", "once", "once"}
 kPlayerAnimationCallbacks = { }
 
 kPlayerStateIdleRight = 1
@@ -59,6 +59,11 @@ gPlayerKillParticlePosition = { }
 gPlayerKillParticleSystemTimeLeft = { }
 gPlayerPSCur = 1
 
+kPlayerFacingRight = 1
+kPlayerFacingLeft = 2
+
+gPlayerDirection = kPlayerSavingRight
+
 kPlayerNumberAnimations = 8*32
 function PlayerCheatStep ()
 	if gMyKeyPressed["f3"] then gPlayer.x = (gMapUsedW-5)*kTileSize gPlayer.y = 5*kTileSize end
@@ -67,6 +72,8 @@ end
 function PlayerInit ()
 	gPlayerState = kPlayerStateSpawn
 	kPlayerAnimationCallbacks = {false, false, false, false, false, callbackTurn, false, callbackLand, false, false, callbackTurn, false, callbackLand, false, callbackSpawn, callbackDied}
+
+	gPlayerDirection = kPlayerSavingRight
 
 	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
@@ -89,6 +96,7 @@ function PlayerInit ()
 		gPlayerAnimations[k] = newAnimation(gImgPlayer, 128, 128, kPlayerAnimationDelay[k], kPlayerNumberAnimations, animationStartIndex, animationStartIndex + kPlayerAnimationFrameNumbers[k] - 1, kPlayerAnimationCallbacks[k])
 		gPlayerAnimations[k]:setMode(kPlayerAnimationModes[k])
 		animationStartIndex = animationStartIndex + kPlayerAnimationFrameNumbers[k]
+		print("Animation ", k, gPlayerAnimations[k])
 	end	
 
 	createPlayerParticleSystems()
@@ -203,11 +211,13 @@ function PlayerUpdate(dt)
 	end
 	if keyboard[kLeft] == 1 or joystickaxes[kLeft] == 1 then 
 		bPressed_Left = true
+		gPlayerDirection = kPlayerFacingLeft
 	else
 		bPressed_Left = false
 	end
 	if keyboard[kRight] == 1 or joystickaxes[kRight] == 1 then
 		bPressed_Right = true
+		gPlayerDirection = kPlayerFacingRight
 	else
 		bPressed_Right = false
 	end
@@ -219,28 +229,15 @@ function PlayerUpdate(dt)
 		bPressed_Down = false
 	end
 	
-    --~ if (bPressed_Up) then gCamY = gCamY - s end
-    --~ if (bPressed_Down) then gCamY = gCamY + s end
-    --~ if (bPressed_Left) then gCamX = gCamX - s end
-    --~ if (bPressed_Right) then gCamX = gCamX + s end
-	
-    --~ if (bPressed_Up) then gPlayer.y = gPlayer.y - s end
-    --~ if (bPressed_Down) then gPlayer.y = gPlayer.y + s end
-    --~ if (bPressed_Left) then gPlayer.x = gPlayer.x - s end
-    --~ if (bPressed_Right) then gPlayer.x = gPlayer.x + s end
-	
 	-- apply velocity and gravity
 	gPlayer.vy = gPlayer.vy + gPlayerGravity*dt
 	gPlayer.x = gPlayer.x + gPlayer.vx * dt 
 	gPlayer.y = gPlayer.y + gPlayer.vy * dt 
-	--~ if (not bIsOnGround) then gPlayer.vy = gPlayer.vy + gPlayerGravity*dt end
 	
 	HandleCollision(gPlayer)
 	
 	local o = gPlayer
 	local bIsOnGround = gPlayer.bIsOnGround
-
-	--~ print("bIsOnGround",bIsOnGround)
 	
 	if (bIsOnGround and o.vy >= 0) then gPlayer.bJumpRecharged = true end -- jump recharged only on downward movement
 	
@@ -333,23 +330,56 @@ function PlayerUpdate(dt)
 	if (gPlayer.bDead) then gPlayer.vx = 0 end
 	if (gPlayer.bDead) then gPlayer.vy = 0 end
 
-	-- update player animation depending on state of player
+
+	local oldPlayerState = gPlayerState
+	-- update player animation depending on state of player	
 	if (died == true or gPlayerState == kPlayerStateDied) then
 		gPlayerState = kPlayerStateDied
+	-- move on ground
 	elseif (bIsOnGround and bPressed_Right) then
 		gPlayerState = kPlayerStateMoveRight
 	elseif (bIsOnGround and bPressed_Left) then
 		gPlayerState = kPlayerStateMoveLeft
-	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveRight) then
+	-- idle on ground
+	elseif (bIsOnGround and gPlayerDirection == kPlayerFacingRight) then
 		gPlayerState = kPlayerStateIdleRight
-	elseif (bIsOnGround and gPlayerState == kPlayerStateMoveLeft) then
+	elseif (bIsOnGround and gPlayerDirection == kPlayerFacingLeft) then
 		gPlayerState = kPlayerStateIdleLeft
-	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleRight) then
-		gPlayerState = kPlayerStateJumpFallRight
-	elseif ((not bIsOnGround) and gPlayerState == kPlayerStateIdleLeft) then
-		gPlayerState = kPlayerStateJumpFallLeft
+	-- player jumps until he gets too slow then switch to turn
+	elseif ((not bIsOnGround) and gPlayer.vy < -150) then
+		if (gPlayerDirection == kPlayerFacingLeft) then
+			gPlayerState = kPlayerStateJumpUpLeft
+		else
+			gPlayerState = kPlayerStateJumpUpRight
+		end
+	-- player is on turnpoint of jump
+	elseif ((not bIsOnGround) and gPlayer.vy > -150 and gPlayer.vy < 0) then
+		if (gPlayerDirection == kPlayerFacingLeft) then
+			gPlayerState = kPlayerStateJumpTurnLeft
+		else
+			gPlayerState = kPlayerStateJumpTurnRight
+		end
+	elseif ((not bIsOnGround) and gPlayer.vy > 0 and oldPlayerState ~= kPlayerStateJumpFallLeft and oldPlayerState ~= kPlayerStateJumpFallRight) and oldPlayerState ~= kPlayerStateSpawn then
+		if (gPlayerDirection == kPlayerFacingLeft) then
+			gPlayerState = kPlayerStateJumpFallLeft
+		else
+			gPlayerState = kPlayerStateJumpFallRight
+		end
+	elseif (bIsOnGround and oldPlayerState ~= kPlayerStateJumpFallLeft and oldPlayerState ~= kPlayerStateJumpFallRight) then
+		print("landing")
+		if (gPlayerDirection == kPlayerFacingLeft) then
+			gPlayerState = kPlayerStateJumpLandLeft
+		else
+			gPlayerState = kPlayerStateJumpLandRight
+		end
 	end
 
+	--if (gPlayerState ~= oldPlayerState) then
+		--gPlayerAnimations[oldPlayerState]:stop()
+		--gPlayerAnimations[oldPlayerState]:reset()
+		--gPlayerAnimations[gPlayerState]:play()
+		--print("oldstate, newstate ", oldPlayerState, gPlayerState)
+	--end
 	gPlayerAnimations[gPlayerState]:update(dt)
 	
 	CheckCoinCollision(gPlayer.x, gPlayer.y)
@@ -369,15 +399,30 @@ function callbackSpawn(animation)
 end
 
 function callbackDied(animation)
+	print("finished dying")
 	InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 end
 
 function callbackLand(animation)
-
+	print("land callback")
+	if (gPlayerDirection == kPlayerFacingLeft) then
+		print("land left")
+		gPlayerState = kPlayerStateJumpLandLeft
+	elseif (gPlayerDirection == kPlayerFacingRight) then
+		print("land right")
+		gPlayerState = kPlayerStateJumpLandRight
+	end
 end
 
 function callbackTurn(animation)
-
+	print("turn callback")
+	if (gPlayerDirection == kPlayerFacingLeft) then
+		print("fall left")
+		gPlayerState = kPlayerStateJumpFallLeft
+	elseif (gPlayerDirection == kPlayerFacingRight) then
+		print("fall right")
+		gPlayerState = kPlayerStateJumpFallRight
+	end
 end
 
 function createPlayerParticleSystems()
