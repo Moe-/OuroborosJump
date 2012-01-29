@@ -198,6 +198,7 @@ function CheckPlayerTouchesDeadlyBlock ()
 				gPlayerKillParticlePosition[12].x = x
 				gPlayerKillParticlePosition[12].y = y + kTileSize / 2
 				gPlayerKillParticleSystemTimeLeft[12] = 15.0
+				love.audio.play(gSplashSound)
 			else
 				--~ print("floor")
 				gPlayerKillParticleSystems[11]:reset()
@@ -283,6 +284,7 @@ function PlayerUpdate(dt)
 				gPlayerKillParticlePosition[gPlayerPSCur].y = o.y + kTileSize
 				gPlayerKillParticleSystemTimeLeft[gPlayerPSCur] = 1.0
 				gPlayerPSCur = gPlayerPSCur + 1
+				playSFX(gStonesCrackingSound)
 				if gPlayerPSCur == 11 then
 					gPlayerPSCur = 1
 				end
