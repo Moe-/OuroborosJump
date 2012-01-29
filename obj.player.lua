@@ -98,7 +98,7 @@ function PlayerInit ()
 	
 	gPlayerDirection = kPlayerFacingRight
 
-	gPlayer = {x=0,y=0,vx=0,vy=0,rx=35,ry=55,drawx=-64,drawy=-64}
+	gPlayer = {x=0,y=0,vx=0,vy=0,rx=25,ry=55,drawx=-64,drawy=-64}
 	gPlayer.bJumpRecharged = false
 	gPlayer.vxMax = 400
 	gPlayer.vxAccelPerSecond = gPlayer.vxMax * 200
@@ -215,7 +215,7 @@ function CheckPlayerDied ()
 end
 
 function PlayerUpdate(dt)
-  local s = 500*dt
+	local s = 500 * dt
 	PlayerCheatStep()
 	
 	local bPressed_Left	= 0
