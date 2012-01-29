@@ -9,6 +9,7 @@ cat build/love/love.exe build/ouroborosjump.love > build/ouroborosjump.exe
 cd build
 cp love/* .
 rm love.exe
+cp ../README.txt .
 
 rm -rf ouroborosjump
 mkdir -p ouroborosjump
