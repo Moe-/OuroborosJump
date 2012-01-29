@@ -146,16 +146,16 @@ function CheckPlayerTouchesDeadlyBlock ()
 	for tx = tx0,tx1 do
 	for ty = ty0,ty1 do
 		if (IsTileDeadly(tx,ty)) then
-			print("player touch deadly tile",tx,ty) 
+			--~ print("player touch deadly tile",tx,ty) 
 			tileid = TiledMap_GetMapTile(tx,ty,kMapLayer_Main)
 			if (isWater(tileid) == true) then
-				print("water")
+				--~ print("water")
 				gPlayerKillParticleSystems[12]:reset()
 				gPlayerKillParticlePosition[12].x = x
 				gPlayerKillParticlePosition[12].y = y + kTileSize / 2
 				gPlayerKillParticleSystemTimeLeft[12] = 15.0
 			else
-				print("floor")
+				--~ print("floor")
 				gPlayerKillParticleSystems[11]:reset()
 				gPlayerKillParticlePosition[11].x = x
 				gPlayerKillParticlePosition[11].y = y + kTileSize / 2
@@ -321,6 +321,7 @@ function PlayerUpdate(dt)
 			print("PLAYER DIED!", died) 
 			gPlayer.bDead = true
 			gPlayer.dead_hide_after = gMyTime + kPlayerHideAfterDeathTime
+			if (kPointsPlayer > 0) then SaveHighScore(kPointsPlayer) end
 			InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 		end
 	end

@@ -54,12 +54,34 @@ function love.load()
 	print("bla1", love.joystick)
 	mapKeys()
 	UpdateMyTicks()
+	
+	-- load hiscore from disk
+	-- local path = love.filesystem.getSaveDirectory( )
+	gHighScore = {}
+	kHighScoreFile = "ouroboros-jump-hiscore.lst"
+	if (love.filesystem.exists(kHighScoreFile)) then
+		local gHighScore = {}
+		for line in love.filesystem.lines(kHighScoreFile) do
+			print("hiscore line",line)
+			table.insert(gHighScore,line)
+		end
+	end
 		
 	cScreenMenu:LoadData()
 	cScreenGame:LoadData()
 	cScreenGameOver:LoadData()
 
 	cScreenMenu:Start()
+end
+
+function SaveHighScore (score)
+	score = floor(score or 0)
+	if (score <= 0) then return end
+	local line = tostring(os.date).." "..tostring(score)
+	table.insert(gHighScore,line)
+	local data = table.concat(gHighScore,"\n")
+	local bWriteOK = love.filesystem.write(kHighScoreFile, data)
+	print("SaveHighScore",line,bWriteOK)
 end
 
 	
