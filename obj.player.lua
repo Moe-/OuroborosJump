@@ -138,6 +138,7 @@ function PlayerSpawnAtStart ()
 	gPlayer.x = 0
 	gPlayer.y = 0
 	if (o) then gPlayer.x = o.x * kTileSize + kTileSize  gPlayer.y = o.y * kTileSize - kTileSize* 3 end
+	playSFX(gSpawnSound)
 end
 
 function PlayerDraw ()
