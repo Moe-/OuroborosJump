@@ -10,7 +10,7 @@ gPlayerOnGroundStopXMult = 0.70
 gPlayerGravity = 9.81 * 250
 gPlayerJumpVY = -1100
 
-gPlayerJumpStopYFriction = 0.50 -- reduce jump height when player releases jump key early
+gPlayerJumpStopYFriction = 0.90 -- reduce jump height when player releases jump key early
 
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
