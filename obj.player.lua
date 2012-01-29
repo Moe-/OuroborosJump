@@ -381,7 +381,7 @@ function PlayerUpdate(dt)
 		gPlayerState = kPlayerStateIdleLeft
 	-- player jumps until he gets too slow then switch to turn
 	elseif ((not bIsOnGround) and gPlayer.vy < -150) then
-		print("up fast")
+--		print("up fast")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpUpLeft
 		else
@@ -389,21 +389,21 @@ function PlayerUpdate(dt)
 		end
 	-- player is on turnpoint of jump
 	elseif ((not bIsOnGround) and gPlayer.vy > -150 and gPlayer.vy < 0) then
-		print("up slow")
+--		print("up slow")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpTurnLeft
 		else
 			gPlayerState = kPlayerStateJumpTurnRight
 		end
 	elseif ((not bIsOnGround) and gPlayer.vy > 0 and (not bWasFalling)) and (not bWasSpawning) then
-		print("falling")
+--		print("falling")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpFallLeft
 		else
 			gPlayerState = kPlayerStateJumpFallRight
 		end
 	elseif (bIsOnGround and bWasFalling) then
-		print("landing")
+--		print("landing")
 		if (gPlayerDirection == kPlayerFacingLeft) then
 			gPlayerState = kPlayerStateJumpLandLeft
 		else
@@ -413,7 +413,7 @@ function PlayerUpdate(dt)
 
 	
 	if (gPlayerState ~= gPlayerStateOld) then
-		print("gPlayerState changed",PState2Txt(gPlayerStateOld),PState2Txt(gPlayerState))
+--		print("gPlayerState changed",PState2Txt(gPlayerStateOld),PState2Txt(gPlayerState))
 		gPlayerStateOld = gPlayerState
 		--gPlayerAnimations[oldPlayerState]:stop()
 		gPlayerAnimations[gPlayerState]:reset()
@@ -434,40 +434,40 @@ function PlayerUpdate(dt)
 end
 
 function CharAnimDebugCheat ()
-	print("CharAnimDebugCheat")
+--	print("CharAnimDebugCheat")
 	gCharAnimDebugCheat = true
 	gPlayerState = kPlayerStateIdleRight
 	InvokeLater(1,function () gPlayerState = kPlayerStateJumpUpRight end)
 end
 
 function callbackSpawn(animation)
-	print("finished spawning")
+--	print("finished spawning")
 	gPlayerState = kPlayerStateIdleRight
 end
 
 function callbackDied(animation)
-	print("finished dying")
+--	print("finished dying")
 	InvokeLater(kGameOverDelayAfterDeath,function () cScreenGameOver:Start() end)
 end
 
 function callbackLand(animation)
-	print("land callback")
+--	print("land callback")
 	if (gPlayerDirection == kPlayerFacingLeft) then
-		print("land left")
+--		print("land left")
 		gPlayerState = kPlayerStateIdleLeft
 	elseif (gPlayerDirection == kPlayerFacingRight) then
-		print("land right")
+--		print("land right")
 		gPlayerState = kPlayerStateIdleRight
 	end
 end
 
 function callbackTurn(animation)
-	print("turn callback")
+--	print("turn callback")
 	if (gPlayerDirection == kPlayerFacingLeft) then
-		print("fall left")
+--		print("fall left")
 		gPlayerState = kPlayerStateJumpFallLeft
 	elseif (gPlayerDirection == kPlayerFacingRight) then
-		print("fall right")
+--		print("fall right")
 		gPlayerState = kPlayerStateJumpFallRight
 	end
 end
