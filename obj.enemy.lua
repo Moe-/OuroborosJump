@@ -170,7 +170,6 @@ function EnemyUpdate(dt)
 	end
 	for psId = 1, 5 do
 		if(gEnemiesKillParticleSystemTimeLeft[psId] > 0) then
-			gEnemiesKillParticleSystems[psId]:start()
 			gEnemiesKillParticleSystems[psId]:update(dt)
 			gEnemiesKillParticleSystemTimeLeft[psId] = gEnemiesKillParticleSystemTimeLeft[psId] - dt
 		end
@@ -389,6 +388,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 					gEnemyDyingAnimations[enemyDyingAnimation] = true
 					gJumpEnemyKill = true
 					gEnemiesKillParticleSystems[gEnemiesPSCur]:reset()
+					gEnemiesKillParticleSystems[gEnemiesPSCur]:start()
 					gEnemiesKillParticlePosition[gEnemiesPSCur].x = v.x + kTileSize / 2
 					gEnemiesKillParticlePosition[gEnemiesPSCur].y = v.y + kTileSize / 2
 					gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
@@ -408,6 +408,7 @@ end
 
 function CheatTestEnemyDieParticleOnPlayer (x,y)
 	gEnemiesKillParticleSystems[gEnemiesPSCur]:reset()
+	gEnemiesKillParticleSystems[gEnemiesPSCur]:start()
 	gEnemiesKillParticlePosition[gEnemiesPSCur].x = (x or gPlayer and gPlayer.x or 0) + kTileSize / 2
 	gEnemiesKillParticlePosition[gEnemiesPSCur].y = (y or gPlayer and gPlayer.y or 0) + kTileSize / 2 - 100
 	gEnemiesKillParticleSystemTimeLeft[gEnemiesPSCur] = 1.0
@@ -418,7 +419,6 @@ end
 function CheatTestEnemyDieParticleOnPlayer_Update (dt) 
 	for psId = 1, 5 do
 		if(gEnemiesKillParticleSystemTimeLeft[psId] > 0) then
-			gEnemiesKillParticleSystems[psId]:start()
 			gEnemiesKillParticleSystems[psId]:update(dt)
 			gEnemiesKillParticleSystemTimeLeft[psId] = gEnemiesKillParticleSystemTimeLeft[psId] - dt
 		end
@@ -444,17 +444,17 @@ function createEnemyParticleSystems()
 	  
 		i = love.graphics.newImage(id)
 		p = love.graphics.newParticleSystem(i, 256)
-		p:setEmissionRate          (75 )
-		p:setLifetime              (0.5)
+		p:setEmissionRate          (75*2 )
+		p:setLifetime              (0.2)
 		p:setParticleLife          (0.4, 0.65)
 		p:setPosition              (0, 0)
 		p:setDirection             (1.57)
 		p:setSpread                (3.14)
-		p:setSpeed                 (45, 75)
-		p:setGravity               (30)
+		p:setSpeed                 (45, 75*4)
+		p:setGravity               (90)
 		p:setRadialAcceleration    (10)
 		p:setTangentialAcceleration(0)
-		p:setSize                  (0.5)
+		p:setSize                  (0.5*2)
 		p:setSizeVariation         (0.15)
 		p:setRotation              (0)
 		p:setSpin                  (0)
