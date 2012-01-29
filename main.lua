@@ -88,6 +88,7 @@ end
 function love.keypressed( key, unicode ) 
 	gMyKeyPressed[key] = true
 	if key == "escape" then os.exit() end
+	if key == "f12" then love.graphics.toggleFullscreen() end
 	if (gCurrentScreen and gCurrentScreen.keypressed) then gCurrentScreen:keypressed( key, unicode )  end
 end
 
