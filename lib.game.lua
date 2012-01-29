@@ -122,7 +122,7 @@ function GameInit ()
 	-- solid block types : 9,10,11
 	-- solid block types : 57,58,59
 
-	gMyFont = love.graphics.newFont( 48 )
+	gMyFont = love.graphics.newFont( "data/Ascension_0.ttf", 48 ) or love.graphics.newFont( 48 )
 
 	print("GameInit")
 		
