@@ -59,8 +59,10 @@ function love.load()
 	-- local path = love.filesystem.getSaveDirectory( )
 	gHighScore = {}
 	kHighScoreFile = "ouroboros-jump-hiscore.lst"
+	--~ kHighScoreFile = (love.filesystem.getSaveDirectory() or "") .. "/" .. "ouroboros-jump-hiscore.lst"
+	print("hiscore path",kHighScoreFile)
 	if (love.filesystem.exists(kHighScoreFile)) then
-		local gHighScore = {}
+		gHighScore = {}
 		for line in love.filesystem.lines(kHighScoreFile) do
 			print("hiscore line",line)
 			table.insert(gHighScore,line)
@@ -77,7 +79,7 @@ end
 function SaveHighScore (score)
 	score = floor(score or 0)
 	if (score <= 0) then return end
-	local line = tostring(os.date).." "..tostring(score)
+	local line = tostring(os.date()).." "..tostring(score)
 	table.insert(gHighScore,line)
 	local data = table.concat(gHighScore,"\n")
 	local bWriteOK = love.filesystem.write(kHighScoreFile, data)
