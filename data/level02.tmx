@@ -2706,7 +2706,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="29"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -9907,7 +9907,7 @@
    <tile gid="0"/>
   </data>
  </layer>
- <layer name="Hintergrund" width="300" height="33">
+ <layer name="Hintergrund" width="300" height="33" visible="0">
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -52226,7 +52226,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="29"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

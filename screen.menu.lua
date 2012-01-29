@@ -22,9 +22,9 @@ function cScreenMenu:draw( )
 end
 
 function cScreenMenu:StartGame(  ) cScreenLevelSelect:Start() end
-function cScreenMenu:keypressed( key, unicode ) self:StartGame() end
-function cScreenMenu:mousepressed( x, y, button ) self:StartGame()  end
-function cScreenMenu:joystickpressed() self:StartGame()  end
+function cScreenMenu:keypressed( key, unicode ) cScreenLevelSelect:Start() end
+function cScreenMenu:mousepressed( x, y, button ) cScreenLevelSelect:Start()  end
+function cScreenMenu:joystickpressed() cScreenLevelSelect:Start()  end
 
 function cScreenMenu:keypressed( key, unicode ) 
 	if key == "f2" then CheatTestEnemyDieParticleOnPlayer(100,100) return end
