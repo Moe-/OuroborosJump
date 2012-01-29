@@ -1,0 +1,12 @@
+Joypad/joystick: 
+	Left: Dpad left/Stick 1 left
+	Right: Dpad right/Stick 1 right
+	Jump:	First button
+Keyboard: 
+	Left: a or left cursor
+	Right: d or right cursor
+	Jump: w or cursor up
+
+Engine: Löve2D: http://www.love2d.org
+
+Team:
