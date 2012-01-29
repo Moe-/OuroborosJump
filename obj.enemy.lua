@@ -12,7 +12,7 @@ gImgEnemy2 = nil
 gImgEnemy3 = nil
 gImgEnemy4 = nil
 
-kEnemyAnimationDelay = {0.08, 0.08}
+kEnemyAnimationDelay = {0.04, 0.04}
 
 -- maximum number of frames for each enemy type
 kEnemy1NumberAnimations = {32, 24}
