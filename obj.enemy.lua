@@ -351,6 +351,7 @@ function CheckEnemyGroupCollision(player, group, imgEnemy, animationStartIndex, 
 						gEnemiesPSCur = 1
 					end
 					kPointsPlayer = kPointsPlayer + 7500
+					playSFX(gRandomSound)
 				else
 					died = true	
 				end

@@ -41,6 +41,7 @@ function CheckCoinCollision(posX, posY)
 				gCoins[k] = false
 				gCoinsCollected = gCoinsCollected + 1
 				kPointsPlayer = kPointsPlayer + 10000
+				playSFX(gCoinSound)
 			end
 		end
 	end
