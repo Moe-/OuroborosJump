@@ -217,4 +217,5 @@ function loadSounds()
 	gSpawnSound = love.audio.newSource("data/spawn.wav", "static")
 	gFootstepsSound = love.audio.newSource("data/footsteps.wav", "static")
 	gFootstepsSound:setLooping( true )
+	gCheerSound = love.audio.newSource("data/cheer.wav", "static")
 end
