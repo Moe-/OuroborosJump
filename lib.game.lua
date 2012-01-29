@@ -259,7 +259,7 @@ end
 
 function GameNotifyNextMapCycle()
 	Background_NotifyNextMapCycle()
-	gFirstLevelStarted = gFirstLevelStarted + 1
+	gFirstLevelStarted = gFirstLevelStarted + 0.5
 	
 	if (gFirstLevelStarted >= kFirstLevelStartCount and gMapPath ~= kMapPath_Level02) then 
 		-- restart game in next level 
