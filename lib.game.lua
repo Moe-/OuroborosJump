@@ -328,6 +328,7 @@ function GameStep (dt)
 			gRunCount = gRunCount + 1
 			EnemiesRespawn(gRunCount%kSpawnDistance)
 			RespawnCoins()
+			love.audio.play(gCheerSound)
 		end	
 		gPlayer.x = gPlayer.x - mapw
 		gCamX = gCamX - mapw
