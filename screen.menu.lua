@@ -6,8 +6,10 @@ end
 
 function cScreenMenu:Start ()
 	gCurrentScreen = self
+	self.endt = gMyTime + 1.0
 end
 
+function cScreenMenu:update( ) if (gMyTime > self.endt) then self:StartGame() end end
 function cScreenMenu:draw( ) love.graphics.draw(self.bgimg,0,0) end
 
 function cScreenMenu:StartGame(  ) cScreenGame:Start() end

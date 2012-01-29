@@ -10,6 +10,7 @@ function cScreenGame:Start		()
 end
 
 function cScreenGame:keypressed( key, unicode ) 
+	if key == "f2" then CheatTestEnemyDieParticleOnPlayer() end
 	if key == "f6" then gGodMode = true end
 	if key == "f5" then CheatShowMapMetaData() end
 	if key == "f7" then CharAnimDebugCheat() end
