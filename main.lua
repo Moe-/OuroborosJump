@@ -59,8 +59,10 @@ function love.load()
 	-- local path = love.filesystem.getSaveDirectory( )
 	gHighScore = {}
 	kHighScoreFile = "ouroboros-jump-hiscore.lst"
+	--~ kHighScoreFile = (love.filesystem.getSaveDirectory() or "") .. "/" .. "ouroboros-jump-hiscore.lst"
+	print("hiscore path",kHighScoreFile)
 	if (love.filesystem.exists(kHighScoreFile)) then
-		local gHighScore = {}
+		gHighScore = {}
 		for line in love.filesystem.lines(kHighScoreFile) do
 			print("hiscore line",line)
 			table.insert(gHighScore,line)
@@ -75,9 +77,10 @@ function love.load()
 end
 
 function SaveHighScore (score)
-	score = floor(score or 0)
+	score = floor(tonumber(score) or 0)
 	if (score <= 0) then return end
-	local line = tostring(os.date).." "..tostring(score)
+	gLastScore = score
+	local line = tostring(os.date()).." "..tostring(score)
 	table.insert(gHighScore,line)
 	local data = table.concat(gHighScore,"\n")
 	local bWriteOK = love.filesystem.write(kHighScoreFile, data)
@@ -88,6 +91,7 @@ end
 function love.keypressed( key, unicode ) 
 	gMyKeyPressed[key] = true
 	if key == "escape" then os.exit() end
+	if key == "f12" then love.graphics.toggleFullscreen() end
 	if (gCurrentScreen and gCurrentScreen.keypressed) then gCurrentScreen:keypressed( key, unicode )  end
 end
 
@@ -177,8 +181,14 @@ function InvokeLater (dt,fun)
 end -- dt in seconds from now
 
 function loadSounds()
---	gBackgroundMusic = love.audio.newSource("bgm.ogg", "stream")
---	love.audio.play(gBackgroundMusic)
+	gBackgroundMusic = love.audio.newSource("data/ouroboros.ogg", "stream")
+	gBackgroundMusic:setLooping( true )
+	gBackgroundMusic:setPitch( 0.5 )
+	love.audio.play(gBackgroundMusic)
+	gBackgroundMusicLoop = love.audio.newSource("data/Loop.ogg", "stream")
+	gBackgroundMusicLoop:setLooping( true )
+	gBackgroundMusicLoop:setPitch( 0.6 )
+	love.audio.play(gBackgroundMusicLoop)
 	gCoinSound = love.audio.newSource("data/Coin.wav", "static")
 	gCoinSound:setVolume( 0.25 )
 	gJumpSound = love.audio.newSource("data/Jump.wav", "static")

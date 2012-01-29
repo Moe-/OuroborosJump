@@ -11,7 +11,7 @@ end
 
 function cScreenGame:keypressed( key, unicode ) 
 	if key == "f5" then CheatShowMapMetaData() end
-	if key == "up" or key == "w" then
+	if key == "up" or key == "w" or key == " " then
 		keyboard[kUp] = 1
 	end
 	if key == "down" or key == "s" then
@@ -27,7 +27,7 @@ end
 
 function cScreenGame:keyreleased( key, unicode )
 	gMyKeyPressed[key] = false
-	if key == "up" or key == "w" then
+	if key == "up" or key == "w" or key == " " then
 		keyboard[kUp] = 0
 	end
 	if key == "down" or key == "s" then
