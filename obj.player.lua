@@ -1,11 +1,14 @@
 
 gPlayerOnGroundStopXMult = 0.70
 
-gPlayerGravity = 9.81 * 300
-gPlayerJumpVY = -1300
+--gPlayerGravity = 9.81 * 300
+--gPlayerJumpVY = -1300
 
-gPlayerGravity = 9.81 * 100
-gPlayerJumpVY = -600
+--gPlayerGravity = 9.81 * 100
+--gPlayerJumpVY = -600
+
+gPlayerGravity = 9.81 * 250
+gPlayerJumpVY = -1100
 
 gCamAdjustSpeed = 0.1
 kPlayerHideAfterDeathTime = 0.7
