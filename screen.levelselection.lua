@@ -17,7 +17,7 @@ gLevelFont = love.graphics.newFont( "data/Ascension_0.ttf", 80 ) or love.graphic
 
 function cScreenLevelSelect:LoadData()
 	local i = 1
-	while (file_exists("data/level" .. i .. ".png")) do
+	while (love.filesystem.exists("data/level" .. i .. ".png")) do
 		gLevelImages[i] = getCachedPaddedImage("data/level" .. i .. ".png")
 		i = i+1
 	end
@@ -29,11 +29,6 @@ end
 function cScreenLevelSelect:Start ()
 	gCurrentScreen = self
   gEventCountdown = 0
-end
-
-function file_exists(name)
-   local f=io.open(name,"r")
-   if f~=nil then io.close(f) return true else return false end
 end
 
 function cScreenLevelSelect:draw( )
