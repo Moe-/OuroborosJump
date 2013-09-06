@@ -454,12 +454,12 @@ function createEnemyParticleSystems()
 		p:setGravity               (90)
 		p:setRadialAcceleration    (10)
 		p:setTangentialAcceleration(0)
-		p:setSize                  (0.5*2)
+		p:setSizes                  (0.5*2)
 		p:setSizeVariation         (0.15)
 		p:setRotation              (0)
 		p:setSpin                  (0)
 		p:setSpinVariation         (0)
-		p:setColor                 (255, 50, 50, 192, 128, 256, 50, 10)
+		p:setColors                 (255, 50, 50, 192, 128, 256, 50, 10)
 		p:stop();
 		gEnemiesKillParticleSystems[psId] = p
 		gEnemiesKillParticlePosition[psId] = { x = -500, y = -500 }

@@ -519,12 +519,12 @@ function createPlayerParticleSystems()
 		p:setGravity               (30)
 		p:setRadialAcceleration    (10)
 		p:setTangentialAcceleration(0)
-		p:setSize                  (1)
+		p:setSizes                  (1)
 		p:setSizeVariation         (0.5)
 		p:setRotation              (0)
 		p:setSpin                  (0)
 		p:setSpinVariation         (0)
-		p:setColor                 (179, 56, 0, 240, 140, 48, 0, 10)
+		p:setColors                 (179, 56, 0, 240, 140, 48, 0, 10)
 		p:stop();
 		gPlayerKillParticleSystems[psId] = p
 		gPlayerKillParticlePosition[psId] = { x = -500, y = -500 }
@@ -551,12 +551,12 @@ function createPlayerParticleSystems()
 	p:setGravity               (30)
 	p:setRadialAcceleration    (20)
 	p:setTangentialAcceleration(10)
-	p:setSize                  (0.25)
+	p:setSizes                  (0.25)
 	p:setSizeVariation         (0.15)
 	p:setRotation              (0)
 	p:setSpin                  (0, 6.28, 1)
 	p:setSpinVariation         (1)
-	p:setColor                 (255, 0, 0, 255, 192, 16, 0, 10)
+	p:setColors                 (255, 0, 0, 255, 192, 16, 0, 10)
 	p:stop();
 	gPlayerKillParticleSystems[11] = p
 	gPlayerKillParticlePosition[11] = { x = -500, y = -500 }
@@ -574,12 +574,12 @@ function createPlayerParticleSystems()
 	p:setGravity               (30)
 	p:setRadialAcceleration    (20)
 	p:setTangentialAcceleration(10)
-	p:setSize                  (2)
+	p:setSizes                 (2)
 	p:setSizeVariation         (1.5)
 	p:setRotation              (0)
 	p:setSpin                  (1)
 	p:setSpinVariation         (3)
-	p:setColor                 (192, 192, 255, 255, 128, 128, 192, 10)
+	p:setColors                 (192, 192, 255, 255, 128, 128, 192, 10)
 	p:stop();
 	gPlayerKillParticleSystems[12] = p
 	gPlayerKillParticlePosition[12] = { x = -500, y = -500 }
