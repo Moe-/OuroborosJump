@@ -66,7 +66,8 @@ end
 function cScreenLevelSelect:mousepressed( x, y, button ) cScreenGame:Start()  end
 
 function cScreenLevelSelect:joystickpressed() 
-	if(love.joystick.getNumJoysticks( ) > 0) then
+  joystick0 = love.joystick.getNumJoysticks( )
+	if(joystick0 > 0) then
 		leftRightAxis, upDownAxis = love.joystick.getAxes( joystick0 )
 		if (leftRightAxis > joysticksensitivity) then
 			self:switchLevel(-1)
@@ -79,10 +80,12 @@ function cScreenLevelSelect:joystickpressed()
 end
 
 function cScreenLevelSelect:update(dt)
-	if(love.joystick.getNumJoysticks( ) > 0) then
+  joystick0 = love.joystick.getNumJoysticks( )
+	if(joystick0 > 0) then
 		gEventCountdown = gEventCountdown - dt
 		if (gEventCountdown < 0) then
 			leftRightAxis, upDownAxis = love.joystick.getAxes( joystick0 )
+      
 			if (leftRightAxis > joysticksensitivity) then
 				joystickaxes[kRight] = 1
 				joystickaxes[kLeft] = 0

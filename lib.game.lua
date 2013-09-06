@@ -275,8 +275,8 @@ function GameStep (dt)
 	Background_Step(dt)
 	
   local s = 500*dt
-	joystick0 = 0
-	if(love.joystick.getNumJoysticks( ) > 0) then
+	joystick0 = love.joystick.getNumJoysticks( )
+	if(joystick0 > 0) then
 		-- leftRightAxis -1 left +1 right
 		-- up -1 down 1
 		leftRightAxis, upDownAxis = love.joystick.getAxes( joystick0 )
